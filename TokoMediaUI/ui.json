@@ -1,0 +1,2619 @@
+{
+  "app": {
+    "name": "TOKO MEDIA",
+    "brand": {
+      "logo": "assets/logo-icon.png",
+      "color": "#098F3A",
+      "layout": {
+        "width": 152,
+        "height": 30,
+        "baseline": 26,
+        "iconWidth": 23,
+        "fontSize": 17,
+        "parts": [
+          {
+            "text": "T",
+            "x": 28,
+            "width": 9
+          },
+          {
+            "text": "O",
+            "x": 40,
+            "width": 10
+          },
+          {
+            "text": "K",
+            "x": 55,
+            "width": 8
+          },
+          {
+            "play": {
+              "cx": 74.5,
+              "cy": 19,
+              "r": 10.5
+            }
+          },
+          {
+            "text": "M",
+            "x": 88,
+            "width": 11
+          },
+          {
+            "text": "E",
+            "x": 104,
+            "width": 7
+          },
+          {
+            "text": "D",
+            "x": 116,
+            "width": 9
+          },
+          {
+            "pause": {
+              "x": 128,
+              "y": 12,
+              "w": 5,
+              "h": 17,
+              "gap": 1
+            }
+          },
+          {
+            "text": "A",
+            "x": 142,
+            "width": 10
+          }
+        ]
+      }
+    },
+    "lang": "id",
+    "channel": "Tokomedia",
+    "messengerUrl": "https://m.me/tokomedia.org",
+    "messengerIcon": "assets/messenger-icon.png",
+    "siteUrl": "https://www.tokomedia.org"
+  },
+  "data": {
+    "categories": [
+      {
+        "id": "film-riwayat-isa-al-masih",
+        "title": "Film Isa Al-Masih"
+      },
+      {
+        "id": "film-ikatan-ilahi",
+        "title": "Film Ikatan Ilahi"
+      },
+      {
+        "id": "video",
+        "title": "Video Kitab Suci"
+      },
+      {
+        "id": "clip",
+        "title": "Clip Kitab Suci"
+      },
+      {
+        "id": "app",
+        "title": "Aplikasi Kitab Suci"
+      }
+    ],
+    "homeLanguages": [
+      {
+        "name": "Pamona [Wana]",
+        "slug": "pamona-wana",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Tontemboan [Makelai]",
+        "slug": "tontemboan-makelai",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Tonsawang",
+        "slug": "tonsawang",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Lepki",
+        "slug": "lepki",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Madura",
+        "slug": "madura",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Toraja",
+        "slug": "toraja",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Sunda",
+        "slug": "sunda",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Minangkabau",
+        "slug": "minangkabau",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Bugis",
+        "slug": "bugis",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Batak Toba",
+        "slug": "batak-toba",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Batak Simalungun",
+        "slug": "batak-simalungun",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Aceh",
+        "slug": "aceh",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Maluku - Papua",
+        "slug": "maluku-papua",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Sulawesi",
+        "slug": "sulawesi",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Kalimantan",
+        "slug": "kalimantan",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Jawa - Bali - Nusa Tenggara",
+        "slug": "jawa-bali-nusa-tenggara",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Sumatera",
+        "slug": "sumatera",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Indonesia",
+        "slug": "indonesia",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Loloda",
+        "slug": "loloda",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Modole",
+        "slug": "modole",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Pagu (Pagoe)",
+        "slug": "pagu",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Ngad'a",
+        "slug": "ngada",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Ledo [Ta'a]",
+        "slug": "ledo-taa",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Ledo [Ija]",
+        "slug": "ledo-ija",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Ledo [Ta'a]",
+        "slug": "ledo-taa",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Ledo [Ija]",
+        "slug": "ledo-ija",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Mori Bawah [Karunsi'e]",
+        "slug": "karunsie",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Bali (Madya)",
+        "slug": "bali-madya",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Bali (Madya)",
+        "slug": "bali-madya",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Tae'",
+        "slug": "tae",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Mori Atas [Tambee]",
+        "slug": "tambee",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Padoe",
+        "slug": "padoe",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Nduga",
+        "slug": "nduga",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Kambera",
+        "slug": "kambera",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Ekari",
+        "slug": "ekari",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Levuka",
+        "slug": "levuka",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Mori Atas [Tambee]",
+        "slug": "tambee",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Padoe",
+        "slug": "padoe",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Punan Tubu",
+        "slug": "punan-tubu",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Dani Lembah Atas",
+        "slug": "dani-lembah-atas",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Sangir (Sangihe)",
+        "slug": "sangir-sangihe",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Tetun Belu",
+        "slug": "tetun-belu",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Termanu",
+        "slug": "termanu",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Pamona [Taa]",
+        "slug": "taa",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Sangir [Siau]",
+        "slug": "siau",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Meyah",
+        "slug": "meyah",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Ambai",
+        "slug": "ambai",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Ambon (Melayu)",
+        "slug": "ambon-melayu",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Galela",
+        "slug": "galela",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Sula",
+        "slug": "sula",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Lubu",
+        "slug": "lubu",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Hatam",
+        "slug": "hatam",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Bulusu",
+        "slug": "bulusu",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Kaur",
+        "slug": "kaur",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Lundayeh",
+        "slug": "lundayeh",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Agabag",
+        "slug": "agabag",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Meyah",
+        "slug": "meyah",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Yawa",
+        "slug": "yawa",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Kenyah Mainstream",
+        "slug": "kenyah-mainstream",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Sougb",
+        "slug": "sougb",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Lamaholot",
+        "slug": "lamaholot",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Lewo Eleng",
+        "slug": "lewo-eleng",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Lamalera",
+        "slug": "lamalera",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Kedang",
+        "slug": "kedang",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Tomini",
+        "slug": "tomini",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Kaili Da'a",
+        "slug": "kaili-daa",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Enggano",
+        "slug": "enggano",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Buol",
+        "slug": "buol",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Wersing (Kolana)",
+        "slug": "wersing-kolana",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Tehit Imian",
+        "slug": "tehit-imian",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Madura",
+        "slug": "madura",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Sunda",
+        "slug": "sunda",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Bugis [Soppeng]",
+        "slug": "bugis-soppeng",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Adonara",
+        "slug": "adonara",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Andio",
+        "slug": "andio",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Batui",
+        "slug": "batui",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Ile Ape",
+        "slug": "ile-ape",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Bambam",
+        "slug": "bambam",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Yali Ninia (Selatan)",
+        "slug": "yali-ninia-selatan",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Minangkabau",
+        "slug": "minangkabau",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Orya",
+        "slug": "orya",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Aceh",
+        "slug": "aceh",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Wolio",
+        "slug": "wolio",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Pamona",
+        "slug": "pamona",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Tontemboan",
+        "slug": "tontemboan",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Manado (Melayu)",
+        "slug": "manado-melayu",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Tondano",
+        "slug": "tondano",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Teiwa",
+        "slug": "teiwa",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Kupang (Melayu)",
+        "slug": "kupang-melayu",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Sentani",
+        "slug": "sentani",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Hawu (Sabu)",
+        "slug": "hawu-sabu",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Selaru",
+        "slug": "selaru",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Rikou",
+        "slug": "rikou",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Uab Meto [Amfoan]",
+        "slug": "amfoan",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Klon",
+        "slug": "klon",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Dhao",
+        "slug": "dhao",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Batak Angkola",
+        "slug": "batak-angkola",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Uab Meto [Amanuban]",
+        "slug": "amanuban",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Lole",
+        "slug": "lole",
+        "image": "/img/category-thumb/RIA.jpg"
+      },
+      {
+        "name": "Korupun-Sela (Kimyal)",
+        "slug": "korupun-sela-kimyal",
+        "image": "/img/category-thumb/RIA.jpg"
+      }
+    ],
+    "regions": [
+      {
+        "name": "Sumatera",
+        "languages": [
+          {
+            "name": "Aceh",
+            "slug": "aceh"
+          },
+          {
+            "name": "Bangka",
+            "slug": "bangka"
+          },
+          {
+            "name": "Batak Alas-Kluet",
+            "slug": "batak-alas-kluet"
+          },
+          {
+            "name": "Batak Angkola",
+            "slug": "batak-angkola"
+          },
+          {
+            "name": "Batak Dairi (Pakpak Dairi)",
+            "slug": "batak-dairi-pakpak-dairi"
+          },
+          {
+            "name": "Batak Karo",
+            "slug": "batak-karo"
+          },
+          {
+            "name": "Batak Mandailing",
+            "slug": "batak-mandailing"
+          },
+          {
+            "name": "Batak Simalungun",
+            "slug": "batak-simalungun"
+          },
+          {
+            "name": "Batak Toba",
+            "slug": "batak-toba"
+          },
+          {
+            "name": "Col",
+            "slug": "col"
+          },
+          {
+            "name": "Enggano",
+            "slug": "enggano"
+          },
+          {
+            "name": "Gayo",
+            "slug": "gayo"
+          },
+          {
+            "name": "Jambi (Melayu)",
+            "slug": "jambi-melayu"
+          },
+          {
+            "name": "Kaur",
+            "slug": "kaur"
+          },
+          {
+            "name": "Kerinci",
+            "slug": "kerinci"
+          },
+          {
+            "name": "Komering",
+            "slug": "komering"
+          },
+          {
+            "name": "Lampung Api",
+            "slug": "lampung-api"
+          },
+          {
+            "name": "Lampung Nyo",
+            "slug": "lampung-nyo"
+          },
+          {
+            "name": "Lubu",
+            "slug": "lubu"
+          },
+          {
+            "name": "Mentawai",
+            "slug": "mentawai"
+          },
+          {
+            "name": "Minangkabau",
+            "slug": "minangkabau"
+          },
+          {
+            "name": "Musi (Palembang)",
+            "slug": "musi-palembang"
+          },
+          {
+            "name": "Nias",
+            "slug": "nias"
+          },
+          {
+            "name": "Ogan",
+            "slug": "ogan"
+          },
+          {
+            "name": "Pasemah",
+            "slug": "pasemah"
+          },
+          {
+            "name": "Rejang",
+            "slug": "rejang"
+          },
+          {
+            "name": "Serawai",
+            "slug": "serawai"
+          }
+        ]
+      },
+      {
+        "name": "Jawa, Bali, Nusa Tenggara",
+        "languages": [
+          {
+            "name": "Adonara",
+            "slug": "adonara"
+          },
+          {
+            "name": "Badui",
+            "slug": "badui"
+          },
+          {
+            "name": "Bali (Madya)",
+            "slug": "bali-madya"
+          },
+          {
+            "name": "Bali [Nusa Penida]",
+            "slug": "bali-nusa-penida"
+          },
+          {
+            "name": "Betawi",
+            "slug": "betawi"
+          },
+          {
+            "name": "Bima (Mbojo)",
+            "slug": "bima-mbojo"
+          },
+          {
+            "name": "Ende",
+            "slug": "ende"
+          },
+          {
+            "name": "Hawu (Sabu)",
+            "slug": "hawu-sabu"
+          },
+          {
+            "name": "Ile Ape",
+            "slug": "ile-ape"
+          },
+          {
+            "name": "Jawa",
+            "slug": "jawa"
+          },
+          {
+            "name": "Jawa [Banten]",
+            "slug": "banten-jawa"
+          },
+          {
+            "name": "Jawa [Banyumasan]",
+            "slug": "banyumasan-jawa"
+          },
+          {
+            "name": "Jawa [Cirebon]",
+            "slug": "cirebon"
+          },
+          {
+            "name": "Kambera",
+            "slug": "kambera"
+          },
+          {
+            "name": "Kedang",
+            "slug": "kedang"
+          },
+          {
+            "name": "Lamaholot",
+            "slug": "lamaholot"
+          },
+          {
+            "name": "Lamalera",
+            "slug": "lamalera"
+          },
+          {
+            "name": "Lamatuka",
+            "slug": "lamatuka"
+          },
+          {
+            "name": "Levuka",
+            "slug": "levuka"
+          },
+          {
+            "name": "Lewo Eleng",
+            "slug": "lewo-eleng"
+          },
+          {
+            "name": "Li'o",
+            "slug": "lio"
+          },
+          {
+            "name": "Madura",
+            "slug": "madura"
+          },
+          {
+            "name": "Madura [Bawean]",
+            "slug": "bawean"
+          },
+          {
+            "name": "Manggarai",
+            "slug": "manggarai"
+          },
+          {
+            "name": "Nage",
+            "slug": "nage"
+          },
+          {
+            "name": "Ngad'a",
+            "slug": "ngada"
+          },
+          {
+            "name": "Osing",
+            "slug": "osing"
+          },
+          {
+            "name": "Sasak",
+            "slug": "sasak"
+          },
+          {
+            "name": "Sika",
+            "slug": "sika"
+          },
+          {
+            "name": "Sumbawa",
+            "slug": "sumbawa"
+          },
+          {
+            "name": "Sunda",
+            "slug": "sunda"
+          },
+          {
+            "name": "Tengger",
+            "slug": "tengger"
+          },
+          {
+            "name": "Tetun Belu",
+            "slug": "tetun-belu"
+          },
+          {
+            "name": "Wewewa",
+            "slug": "wewewa"
+          }
+        ]
+      },
+      {
+        "name": "Kalimantan",
+        "languages": [
+          {
+            "name": "Agabag",
+            "slug": "agabag"
+          },
+          {
+            "name": "Bakumpai",
+            "slug": "bakumpai"
+          },
+          {
+            "name": "Balangin",
+            "slug": "balangin"
+          },
+          {
+            "name": "Banjar",
+            "slug": "banjar"
+          },
+          {
+            "name": "Benyadu'",
+            "slug": "benyadu"
+          },
+          {
+            "name": "Bidayuh Bau (Jagoi)",
+            "slug": "bidayuh"
+          },
+          {
+            "name": "Bukit (Melayu)",
+            "slug": "bukit-melayu"
+          },
+          {
+            "name": "Bulusu",
+            "slug": "bulusu"
+          },
+          {
+            "name": "Hakka Pontianak",
+            "slug": "hakka-pontianak"
+          },
+          {
+            "name": "Iban",
+            "slug": "iban"
+          },
+          {
+            "name": "Kendayan (Kanayatn)",
+            "slug": "kendayan"
+          },
+          {
+            "name": "Kenyah Mainstream",
+            "slug": "kenyah-mainstream"
+          },
+          {
+            "name": "Kota Bangun Kutai (Melayu)",
+            "slug": "kota-bangun-kutai-melayu"
+          },
+          {
+            "name": "Lawangan",
+            "slug": "lawangan"
+          },
+          {
+            "name": "Lundayeh",
+            "slug": "lundayeh"
+          },
+          {
+            "name": "Ma'anyan (Dayak)",
+            "slug": "maanyan-dayak"
+          },
+          {
+            "name": "Malayik Dayak",
+            "slug": "malayik-dayak"
+          },
+          {
+            "name": "Mualang",
+            "slug": "mualang"
+          },
+          {
+            "name": "Ngaju (Dayak)",
+            "slug": "ngaju-dayak"
+          },
+          {
+            "name": "Ot Danum",
+            "slug": "ot-danum"
+          },
+          {
+            "name": "Punan Tubu",
+            "slug": "punan-tubu"
+          },
+          {
+            "name": "Sanggau",
+            "slug": "sanggau"
+          },
+          {
+            "name": "Siang",
+            "slug": "siang"
+          },
+          {
+            "name": "Tausug",
+            "slug": "tausug"
+          },
+          {
+            "name": "Tenggarong Kutai (Melayu)",
+            "slug": "tenggarong-kutai-melayu"
+          },
+          {
+            "name": "Tidung Selatan",
+            "slug": "tidung-selatan"
+          },
+          {
+            "name": "Tunjung",
+            "slug": "tunjung"
+          },
+          {
+            "name": "Uud Danum",
+            "slug": "uud-danum"
+          }
+        ]
+      },
+      {
+        "name": "Sulawesi",
+        "languages": [
+          {
+            "name": "Andio",
+            "slug": "andio"
+          },
+          {
+            "name": "Aralle",
+            "slug": "aralle"
+          },
+          {
+            "name": "Bada",
+            "slug": "bada"
+          },
+          {
+            "name": "Bajau",
+            "slug": "bajau"
+          },
+          {
+            "name": "Balantak",
+            "slug": "balantak"
+          },
+          {
+            "name": "Bambam",
+            "slug": "bambam"
+          },
+          {
+            "name": "Banggai",
+            "slug": "banggai"
+          },
+          {
+            "name": "Batui",
+            "slug": "batui"
+          },
+          {
+            "name": "Behoa",
+            "slug": "behoa"
+          },
+          {
+            "name": "Bugis",
+            "slug": "bugis"
+          },
+          {
+            "name": "Bugis [Soppeng]",
+            "slug": "bugis-soppeng"
+          },
+          {
+            "name": "Buol",
+            "slug": "buol"
+          },
+          {
+            "name": "Cia-Cia",
+            "slug": "cia-cia"
+          },
+          {
+            "name": "Duri",
+            "slug": "duri"
+          },
+          {
+            "name": "Enrekang",
+            "slug": "enrekang"
+          },
+          {
+            "name": "Gorontalo",
+            "slug": "gorontalo"
+          },
+          {
+            "name": "Kaili Da'a",
+            "slug": "kaili-daa"
+          },
+          {
+            "name": "Kaili Ledo",
+            "slug": "kaili-ledo"
+          },
+          {
+            "name": "Konjo Pegunungan",
+            "slug": "konjo-pegunungan"
+          },
+          {
+            "name": "Ledo [Ija]",
+            "slug": "ledo-ija"
+          },
+          {
+            "name": "Ledo [Ta'a]",
+            "slug": "ledo-taa"
+          },
+          {
+            "name": "Maiwa",
+            "slug": "maiwa"
+          },
+          {
+            "name": "Makassar",
+            "slug": "makassar"
+          },
+          {
+            "name": "Mamasa",
+            "slug": "mamasa"
+          },
+          {
+            "name": "Mamuju",
+            "slug": "mamuju"
+          },
+          {
+            "name": "Manado (Melayu)",
+            "slug": "manado-melayu"
+          },
+          {
+            "name": "Mandar",
+            "slug": "mandar"
+          },
+          {
+            "name": "Moma",
+            "slug": "moma"
+          },
+          {
+            "name": "Mongondow",
+            "slug": "mongondow"
+          },
+          {
+            "name": "Mori Atas [Tambee]",
+            "slug": "tambee"
+          },
+          {
+            "name": "Muna",
+            "slug": "muna"
+          },
+          {
+            "name": "Napu",
+            "slug": "napu"
+          },
+          {
+            "name": "Padoe",
+            "slug": "padoe"
+          },
+          {
+            "name": "Pamona",
+            "slug": "pamona"
+          },
+          {
+            "name": "Pamona [Taa]",
+            "slug": "taa"
+          },
+          {
+            "name": "Pamona [Wana]",
+            "slug": "pamona-wana"
+          },
+          {
+            "name": "Rampi",
+            "slug": "rampi"
+          },
+          {
+            "name": "Saluan",
+            "slug": "saluan"
+          },
+          {
+            "name": "Sangir (Sangihe)",
+            "slug": "sangir-sangihe"
+          },
+          {
+            "name": "Sedoa",
+            "slug": "sedoa"
+          },
+          {
+            "name": "Seko Padang",
+            "slug": "seko-padang"
+          },
+          {
+            "name": "Selayar",
+            "slug": "selayar"
+          },
+          {
+            "name": "Tado (Lindu)",
+            "slug": "tado-lindu"
+          },
+          {
+            "name": "Tae'",
+            "slug": "tae"
+          },
+          {
+            "name": "Talaud",
+            "slug": "talaud"
+          },
+          {
+            "name": "Tolaki",
+            "slug": "tolaki"
+          },
+          {
+            "name": "Tombulu",
+            "slug": "tombulu"
+          },
+          {
+            "name": "Tomini",
+            "slug": "tomini"
+          },
+          {
+            "name": "Tondano",
+            "slug": "tondano"
+          },
+          {
+            "name": "Tonsawang",
+            "slug": "tonsawang"
+          },
+          {
+            "name": "Tonsea",
+            "slug": "tonsea"
+          },
+          {
+            "name": "Tontemboan",
+            "slug": "tontemboan"
+          },
+          {
+            "name": "Tontemboan [Makelai]",
+            "slug": "tontemboan-makelai"
+          },
+          {
+            "name": "Toraja-Sa'dan",
+            "slug": "toraja-sadan"
+          },
+          {
+            "name": "Wakatobi",
+            "slug": "wakatobi"
+          },
+          {
+            "name": "Wolio",
+            "slug": "wolio"
+          }
+        ]
+      },
+      {
+        "name": "Maluku, Papua",
+        "languages": [
+          {
+            "name": "Ambai",
+            "slug": "ambai"
+          },
+          {
+            "name": "Ambon (Melayu)",
+            "slug": "ambon-melayu"
+          },
+          {
+            "name": "Ansus",
+            "slug": "ansus"
+          },
+          {
+            "name": "Biak",
+            "slug": "biak"
+          },
+          {
+            "name": "Dani Barat (Lani)",
+            "slug": "dani-barat-lani"
+          },
+          {
+            "name": "Fordata",
+            "slug": "fordata"
+          },
+          {
+            "name": "Galela",
+            "slug": "galela"
+          },
+          {
+            "name": "Hatam",
+            "slug": "hatam"
+          },
+          {
+            "name": "Ketengban",
+            "slug": "ketengban"
+          },
+          {
+            "name": "Lepki",
+            "slug": "lepki"
+          },
+          {
+            "name": "Lik",
+            "slug": "lik"
+          },
+          {
+            "name": "Loloda",
+            "slug": "loloda"
+          },
+          {
+            "name": "Mai Brat",
+            "slug": "mai-brat"
+          },
+          {
+            "name": "Maluku Utara (Melayu)",
+            "slug": "maluku-utara-melayu"
+          },
+          {
+            "name": "Meyah",
+            "slug": "meyah"
+          },
+          {
+            "name": "Modole",
+            "slug": "modole"
+          },
+          {
+            "name": "Nalca",
+            "slug": "nalca"
+          },
+          {
+            "name": "Pagu (Pagoe)",
+            "slug": "pagu"
+          },
+          {
+            "name": "Papua (Melayu)",
+            "slug": "papua-melayu"
+          },
+          {
+            "name": "Sahu",
+            "slug": "sahu"
+          },
+          {
+            "name": "Selaru",
+            "slug": "selaru"
+          },
+          {
+            "name": "Sougb",
+            "slug": "sougb"
+          },
+          {
+            "name": "Sula",
+            "slug": "sula"
+          },
+          {
+            "name": "Tabaru",
+            "slug": "tabaru"
+          },
+          {
+            "name": "Tehit Imian",
+            "slug": "tehit-imian"
+          },
+          {
+            "name": "Ternate",
+            "slug": "ternate"
+          },
+          {
+            "name": "Tobelo",
+            "slug": "tobelo"
+          },
+          {
+            "name": "Wambon",
+            "slug": "wambon"
+          },
+          {
+            "name": "Wandamen",
+            "slug": "wandamen"
+          },
+          {
+            "name": "Waropen",
+            "slug": "waropen"
+          },
+          {
+            "name": "Yamdena",
+            "slug": "yamdena"
+          },
+          {
+            "name": "Yawa",
+            "slug": "yawa"
+          }
+        ]
+      }
+    ],
+    "videos": [
+      {
+        "title": "Riwayat Isa Al-Masih - {languageName}",
+        "duration": "02:07:54",
+        "views": 992,
+        "date": "2021-04-10",
+        "dateLabel": "10 Apr 21"
+      },
+      {
+        "title": "01 Pada Mulanya Saat Penciptaan - {languageName}",
+        "duration": "08:08",
+        "views": 1097,
+        "date": "2021-04-21",
+        "dateLabel": "21 Apr 21"
+      },
+      {
+        "title": "02 Kelahiran Isa Al-Masih - {languageName}",
+        "duration": "03:44",
+        "views": 2206,
+        "date": "2021-04-24",
+        "dateLabel": "24 Apr 21"
+      },
+      {
+        "title": "03 Masa Kecil Isa Al-Masih - {languageName}",
+        "duration": "02:16",
+        "views": 974,
+        "date": "2021-04-24",
+        "dateLabel": "24 Apr 21"
+      }
+    ],
+    "apps": [
+      {"name": "Kitab Taurat Zabur Injil Indonesia", "image": "/img/appdb/210308142809.png", "link": "https://play.google.com/store/apps/details?id=kitabtzi1912.indonesia"},
+      {"name": "Bahasa Tarangan Barat", "image": "/img/appdb/tarbar.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.txn.bible.taranganbarat"},
+      {"name": "Bahasa Muna (2)", "image": "/img/appdb/muna.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.mnb.kitabkejadianbahasa.muna"},
+      {"name": "Bahasa Muna Selatan", "image": "/img/appdb/munaselatan.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.mnb.alkitabmunaselatan.muna"},
+      {"name": "Bahasa Bidayuh Jagoi", "image": "/img/appdb/bidayuhjagoi.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.sne.bible.jagoi"},
+      {"name": "Bahasa Mualang", "image": "/img/appdb/mualang.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.mtd.bible.mualang"},
+      {"name": "Bahasa Uud Danum", "image": "/img/appdb/uuddanum.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.otd.bible.uuddanum"},
+      {"name": "Bahasa Balangin", "image": "/img/appdb/balangin.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.byd.alkitab.balangin"},
+      {"name": "Bahasa Ahe Kanayatn", "image": "/img/appdb/ahekanayatn.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.knx.bible.ahe"},
+      {"name": "Bahasa Wolio", "image": "/img/appdb/momangkilonawolio.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.wlo.kitab.wolio"},
+      {"name": "Bahasa Makassar (Zabur)", "image": "/img/appdb/makasarzabur.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.id.mak.zbr.makasar"},
+      {"name": "Bahasa Banjar", "image": "/img/appdb/tzibanjar.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.bjn.bible.banjar.tauratzaburinjilbahasabanjar"},
+      {"name": "Bahasa Makassar Injil Wahyu", "image": "/img/appdb/makasarinjilwahyu.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.id.mak.ntp.makasar"},
+      {"name": "Bahasa Behoa (2)", "image": "/img/appdb/alkitabbehoa.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.bep.alkitab.behoa"},
+      {"name": "Bahasa Napu", "image": "/img/appdb/alkitabnapu.webp", "link": "https://play.google.com/store/apps/details?id=org.ips.npyalkitab.napu"},
+      {"name": "Bahasa Bada", "image": "/img/appdb/alkitabbada.webp", "link": "https://play.google.com/store/apps/details?id=com.sulawesi.bhz.alkitab"},
+      {"name": "Bahasa Muna (1)", "image": "/img/appdb/alkitabmuna.webp", "link": "https://play.google.com/store/apps/details?id=com.sulawesi.muna.alkitab"},
+      {"name": "Bahasa Konjo Bulukumba", "image": "/img/appdb/kitabkonjobulukumba.webp", "link": "https://play.google.com/store/apps/details?id=kjc.kjnv.bat"},
+      {"name": "Bahasa Tengger", "image": "/img/appdb/tengger.webp", "link": "https://play.google.com/store/apps/details?id=com.tengger.nusantara.alkitab"},
+      {"name": "Bahasa Berik", "image": "/img/appdb/alkitabberik.webp", "link": "https://play.google.com/store/apps/details?id=com.berik.papua.alkitab"},
+      {"name": "Bahasa Moronene (2)", "image": "/img/appdb/alkitabmoronene.webp", "link": "https://play.google.com/store/apps/details?id=com.moronene.sulawesi.alkitab"},
+      {"name": "Bahasa Rampi", "image": "/img/appdb/alkitabrampi.webp", "link": "https://play.google.com/store/apps/details?id=com.rampi.sulawesi.alkitab"},
+      {"name": "Bahasa Hatam (2)", "image": "/img/appdb/alkitabhatam.webp", "link": "https://play.google.com/store/apps/details?id=com.hatam.papua.alkitab"},
+      {"name": "Bahasa Duri (1)", "image": "/img/appdb/alkitabduri.webp", "link": "https://play.google.com/store/apps/details?id=com.duri.sulawesi.alkitab"},
+      {"name": "Bahasa Uma", "image": "/img/appdb/alkitabuma.webp", "link": "https://play.google.com/store/apps/details?id=com.uma.sulawesi.alkitab"},
+      {"name": "Bahasa Balantak", "image": "/img/appdb/alkitabbalantak.webp", "link": "https://play.google.com/store/apps/details?id=com.balantak.sulawesi.alkitab"},
+      {"name": "Bahasa Mamasa", "image": "/img/appdb/alkitabmamasa.webp", "link": "https://play.google.com/store/apps/details?id=com.sulawesi.mamasa.alkitab"},
+      {"name": "Bahasa Moma", "image": "/img/appdb/alkitabmoma.webp", "link": "https://play.google.com/store/apps/details?id=com.sulawesi.moma.alkitab"},
+      {"name": "Bahasa Kaili Ledo", "image": "/img/appdb/alkitabkaililedo.webp", "link": "https://play.google.com/store/apps/details?id=com.sulawesi.kaililedo.alkitab"},
+      {"name": "Bahasa Da'a", "image": "/img/appdb/alkitabdaa.webp", "link": "https://play.google.com/store/apps/details?id=com.sulawesi.daa.alkitab"},
+      {"name": "Bahasa Tado", "image": "/img/appdb/alkitabtado.webp", "link": "https://play.google.com/store/apps/details?id=com.sulawesi.tado.alkitab"},
+      {"name": "Bahasa Bambam", "image": "/img/appdb/alkitabbambam.webp", "link": "https://play.google.com/store/apps/details?id=com.sulawesi.bambam.alkitab"},
+      {"name": "Bahasa Madura", "image": "/img/appdb/alkitabbahasa-madura-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.madibs.n2.n"},
+      {"name": "Bahasa Minangkabau", "image": "/img/appdb/alkitabbahasa-minangkabau-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.minlai.n2.n.minangkabaubible"},
+      {"name": "Bahasa Dayak Ma'anyan", "image": "/img/appdb/alkitabbahasadayakmaanyan.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mhylai.n2.n"},
+      {"name": "Bahasa Bali", "image": "/img/appdb/alkitabbahasabali.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.banibs.n2"},
+      {"name": "Bahasa Duri", "image": "/img/appdb/alkitabbahasaduri.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mvplai.n2.n"},
+      {"name": "Bahasa Tabaru", "image": "/img/appdb/alkitabbahasatabaru.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.tbylai.n2.n"},
+      {"name": "Bahasa Aceh", "image": "/img/appdb/alkitabbahasa-aceh-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.aceibs.n2.on.acehbible"},
+      {"name": "Kitab Suci Indonesia", "image": "/img/appdb/kitabsuciaudio.webp", "link": "https://play.google.com/store/apps/details?id=kitab.suci.sab"},
+      {"name": "Bahasa Dayak Ngaju", "image": "/img/appdb/alkitabdayakngaju.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.nijlai.n2.n"},
+      {"name": "Bahasa Nuaulu", "image": "/img/appdb/alkitabbahasanuaulu.webp", "link": "https://play.google.com/store/apps/details?id=com.nuaulu.maluku.alkitab"},
+      {"name": "Bahasa Selaru", "image": "/img/appdb/alkitabbahasaselaru.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.selaru"},
+      {"name": "Bahasa Fordata", "image": "/img/appdb/alkitabbahasafordata.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.fordata"},
+      {"name": "Bahasa Melayu Ambon", "image": "/img/appdb/alkitabbahasamelayuambon.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.ambon"},
+      {"name": "Bahasa Dobel", "image": "/img/appdb/alkitabbahasadobel.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.dobel"},
+      {"name": "Bahasa Malayu Aru", "image": "/img/appdb/alkitabbahasamalayuaru.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.malayu.aru"},
+      {"name": "Bahasa Yamdena", "image": "/img/appdb/alkitabbahasayamdena.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.yamdena"},
+      {"name": "Bahasa Janjai Blau (Rejang Lebong)", "image": "/img/appdb/alkitabbahasarejanglebong.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.rejlai.n2.n.rejanglebongbible"},
+      {"name": "Bahasa Jawa", "image": "/img/appdb/alkitabbahasajawa.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.javnrf.n2"},
+      {"name": "Bahasa Sentani", "image": "/img/appdb/alkitabbahasasentani.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.setwyi.n2.n"},
+      {"name": "Bahasa Alune", "image": "/img/appdb/alkitabbahasaalune.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.alune"},
+      {"name": "Bahasa Ambai", "image": "/img/appdb/alkitabbahasaambai.webp", "link": "https://play.google.com/store/apps/details?id=org.scriptureearth.amk.nt.apk"},
+      {"name": "Bahasa Kisar", "image": "/img/appdb/alkitabbahasakisar.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.kisar"},
+      {"name": "Bahasa Galela", "image": "/img/appdb/alkitabbahasagalela.webp", "link": "https://play.google.com/store/apps/details?id=com.galela.maluku.alkitab"},
+      {"name": "Bahasa Lani (2)", "image": "/img/appdb/alkitabbahasalani.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.lani"},
+      {"name": "Bahasa Luang (2)", "image": "/img/appdb/alkitabbahasaluang.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.luang"},
+      {"name": "Bahasa Manado", "image": "/img/appdb/alkitabbahasamanado.webp", "link": "https://play.google.com/store/apps/details?id=alkitab.or.id.pb.manado"},
+      {"name": "Bahasa Meyah", "image": "/img/appdb/alkitabbahasameyah.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mejtbl.n2.n"},
+      {"name": "Bahasa Momuna", "image": "/img/appdb/alkitabbahasamomuna.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mqflai.n2.n"},
+      {"name": "Bahasa Ngaju", "image": "/img/appdb/alkitabbahasangaju.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.nijlai.n2.n"},
+      {"name": "Bahasa Pamona", "image": "/img/appdb/alkitabbahasapamona.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.pmflai.n2.n"},
+      {"name": "Bahasa Serawai", "image": "/img/appdb/alkitabbahasa-serawai-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.pselai.n2.n.serawaibible"},
+      {"name": "Bahasa Siau", "image": "/img/appdb/alkitabbahasasiau.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.sxntsv.n2.n"},
+      {"name": "Bahasa Sougb", "image": "/img/appdb/alkitabbahasasougb.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mnxlai.n2.n"},
+      {"name": "Bahasa Tii", "image": "/img/appdb/alkitabbahasatii.webp", "link": "https://play.google.com/store/apps/details?id=org.wycliffe.bible.tii.playstore"},
+      {"name": "Bahasa Tobelo", "image": "/img/appdb/alkitabbahasatobelo.webp", "link": "https://play.google.com/store/apps/details?id=com.tobelo.maluku.alkitab"},
+      {"name": "Bahasa Tolaki", "image": "/img/appdb/alkitabbahasa-tolaki-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.lbwlai.n2.n.tolakibible"},
+      {"name": "Bahasa Tombulu", "image": "/img/appdb/alkitabbahasatombulu.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.tombulu"},
+      {"name": "Bahasa Tontemboan LAI", "image": "/img/appdb/alkitabbahasatotemboan.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.tontemboan"},
+      {"name": "Bahasa Yali, Selatan (2)", "image": "/img/appdb/alkitabbahasayaliselatan.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.yaliselatan"},
+      {"name": "Bahasa Hupla", "image": "/img/appdb/alkitabbahasahupla.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.haplai.n2.n"},
+      {"name": "Bahasa Moskona", "image": "/img/appdb/alkitabbahasamoskana.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mtjtbl.n2.n"},
+      {"name": "Bahasa Mongondow", "image": "/img/appdb/alkitabbahasa-mongondow-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.moglai.n2.n.mongondowbible"},
+      {"name": "Bahasa Iban", "image": "/img/appdb/alkitabbahasaiban.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.ibativ.n2.n.ibanbible.tiv"},
+      {"name": "Bahasa Aralle-Tabulahan", "image": "/img/appdb/alkitabbahasaaralle.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.atqlai.n2.n"},
+      {"name": "Bahasa Bauzi", "image": "/img/appdb/alkitabbahasabauzi.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.bvzyss.n2.n"},
+      {"name": "Bahasa Dani, Mid Grand Valley", "image": "/img/appdb/alkitabbahasadani.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.dntlai.n2.n"},
+      {"name": "Bahasa Gerai", "image": "/img/appdb/alkitabbahasagerai.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.sdmsgv.n2.n"},
+      {"name": "Bahasa Korupun-Sela (Kimyal)", "image": "/img/appdb/alkitabbahasakorupun.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.kpqbsi.n2.n"},
+      {"name": "Bahasa Damal", "image": "/img/appdb/alkitabbahasadamal.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.uhnlai.n2.n"},
+      {"name": "Bahasa Lauje", "image": "/img/appdb/alkitabbahasalauje.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.lawntm.n2.n"},
+      {"name": "Bahasa Manado (Melayu)", "image": "/img/appdb/alkitabbahasamanadomelayu.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.xmmlai.n2.n"},
+      {"name": "Bahasa Malay (Alkitab Versi Borneo)", "image": "/img/appdb/alkitabbahasamalayavb.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.zlmavb.n2.on"},
+      {"name": "Bahasa Batak Angkola", "image": "/img/appdb/alkitabbahasabatakangkola.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.akblai.n2.n"},
+      {"name": "Bahasa Batak Simalungun", "image": "/img/appdb/alkitabbahasabataksimalungun.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.btslai.n2.n"},
+      {"name": "Bahasa Lun Bawang", "image": "/img/appdb/alkitabbahasalunbawang.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.lndbsm.n2.lunbawangbible"},
+      {"name": "Bahasa Hatam", "image": "/img/appdb/alkitabbahasa-hatam-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.hadlai.n.n"},
+      {"name": "Bahasa Behoa", "image": "/img/appdb/alkitabbahasa-behoa.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.beplai.n2.n"},
+      {"name": "Bahasa Luang", "image": "/img/appdb/alkitabbahasa-luang.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.lexwbt.n2.n"},
+      {"name": "Bahasa Makassar", "image": "/img/appdb/alkitabbahasa-makassar-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.maklai.n2.n.makassarbible"},
+      {"name": "Bahasa Moronene", "image": "/img/appdb/alkitabbahasa-moronene-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mqnlai.n2.n.moronenebible"},
+      {"name": "Bahasa Yali, Selatan", "image": "/img/appdb/alkitabbahasa-yaliselatan.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.nlklai.n2.n"},
+      {"name": "Bahasa Lani", "image": "/img/appdb/alkitabbahasa-lani.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.dnwlai.n2.n"},
+      {"name": "Bahasa Abolo", "image": "/img/appdb/alkitabbahasa-abolo.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.abolo"},
+      {"name": "Bahasa Uab Meto (Amanuban)", "image": "/img/appdb/alkitabbahasa-amanuban.webp", "link": "https://play.google.com/store/apps/details?id=org.wycliffe.goldernverses.amanuban.playstore"},
+      {"name": "Bahasa Amarasi", "image": "/img/appdb/alkitabbahasa-amarasi.webp", "link": "https://play.google.com/store/apps/details?id=au.org.ausil.bible.amarasi"},
+      {"name": "Bahasa Uab Meto (Amfoan)", "image": "/img/appdb/alkitabbahasa-amfoan.webp", "link": "https://play.google.com/store/apps/details?id=org.wycliffe.goldernverses.amfoan.playstore"},
+      {"name": "Bahasa Bidayuh Bau (Jagoi)", "image": "/img/appdb/alkitabbahasa-bidayuh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.snecak.n2.n"},
+      {"name": "Bahasa Bima (Mbojo)", "image": "/img/appdb/alkitabbahasa-bima.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.bhp.mbojo.bible"},
+      {"name": "Bahasa Bugis", "image": "/img/appdb/alkitabbahasa-bugis.webp", "link": "https://play.google.com/store/apps/details?id=kitab.injil.bugis"},
+      {"name": "Bahasa Buru", "image": "/img/appdb/alkitabbahasa-buru.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.buru"},
+      {"name": "Bahasa Rote", "image": "/img/appdb/alkitabbahasa-rote.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.delaoenale.playstore"},
+      {"name": "Bahasa Dhao", "image": "/img/appdb/alkitabbahasa-dhao.webp", "link": "https://play.google.com/store/apps/details?id=au.org.ausil.bible.dhao"},
+      {"name": "Bahasa Gorontalo", "image": "/img/appdb/alkitabbahasa-gorontalo.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.gorlai.n2.n.gorontalobible"},
+      {"name": "Bahasa Hawu", "image": "/img/appdb/alkitabbahasa-sabu.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.hawu.playstore"},
+      {"name": "Bahasa Helong", "image": "/img/appdb/alkitabbahasa-helong.webp", "link": "https://play.google.com/store/apps/details?id=au.org.ausil.bible.helong"},
+      {"name": "Bahasa Kaili, Da'a", "image": "/img/appdb/alkitabbahasa-daa.webp", "link": "https://play.google.com/store/apps/details?id=com.sulawesi.daa.alkitab"},
+      {"name": "Bahasa Klon", "image": "/img/appdb/alkitabbahasa-klon.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.klon.playstore"},
+      {"name": "Bahasa Kupang", "image": "/img/appdb/alkitabbahasa-kupang.webp", "link": "https://play.google.com/store/apps/details?id=au.org.ausil.bible.kupang"},
+      {"name": "Bahasa Lole", "image": "/img/appdb/alkitabbahasa-lole.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.lole.playstore"},
+      {"name": "Bahasa Rikou (Oepao)", "image": "/img/appdb/alkitabbahasa-rikou.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.rikou.playstore"},
+      {"name": "Bahasa Sasak", "image": "/img/appdb/alkitabbahasa-sasak-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.saslai.n2.n.sasakbible"},
+      {"name": "Bahasa Sawai", "image": "/img/appdb/alkitabbahasa-sawai.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.id.szw.alkitab"},
+      {"name": "Bahasa Seira", "image": "/img/appdb/alkitabbahasa-seira.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.seira"},
+      {"name": "Bahasa Tajio", "image": "/img/appdb/alkitabbahasa-taijo.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.tdj.tajio.alkitab.bible.audio"},
+      {"name": "Bahasa Teiwa", "image": "/img/appdb/alkitabbahasa-teiwa.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.teiwa.playstore"},
+      {"name": "Bahasa Tetun Belu", "image": "/img/appdb/alkitabbahasa-tetun.webp", "link": "https://play.google.com/store/apps/details?id=au.org.bibletetun"},
+      {"name": "Bahasa Tugutil", "image": "/img/appdb/alkitabbahasa-tugutil.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.tugutil"},
+      {"name": "Bahasa Wersing", "image": "/img/appdb/alkitabbahasa-wersing.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.wersing.playstore"},
+      {"name": "Bahasa Bali (2)", "image": "/img/appdb/alkitabbahasa-balimadya.webp", "link": "https://play.google.com/store/apps/details?id=bible.global.bali"},
+      {"name": "Bahasa Tabaru (2)", "image": "/img/appdb/alkitabbahasa-tabaru2.webp", "link": "https://play.google.com/store/apps/details?id=com.tabaru.maluku.alkitab"},
+      {"name": "Bahasa Tengger", "image": "/img/appdb/alkitabbahasa-tengger.webp", "link": "https://play.google.com/store/apps/details?id=org.ceritane.kabar.apik.basa.tengger"},
+      {"name": "Bahasa Walak", "image": "/img/appdb/alkitabbahasa-walak.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.walak"},
+      {"name": "Bahasa Irarutu", "image": "/img/appdb/alkitabbahasa-irarutu.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.irarutu"},
+      {"name": "Bahasa Mentawai", "image": "/img/appdb/alkitabbahasa-mentawai.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mwvlai.n2.n"},
+      {"name": "Bahasa Nalca", "image": "/img/appdb/alkitabbahasa-nalca.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.nlclai.n2.n"},
+      {"name": "Bahasa Pakpak Dairi", "image": "/img/appdb/alkitabbahasa-pakpakdairi.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.btdlai.n2.n"},
+      {"name": "Bahasa Rote (2)", "image": "/img/appdb/alkitabbahasa-rote2.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.twulai.n2.n"},
+      {"name": "Bahasa Sangir", "image": "/img/appdb/alkitabbahasa-sangir.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.sxnlai.n2.n"},
+      {"name": "Bahasa Sedoa", "image": "/img/appdb/alkitabbahasa-sedoa.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.tvwlai.n2.n"},
+      {"name": "Bahasa Toraja", "image": "/img/appdb/alkitabbahasa-toraja.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.sdalai.n2.n"},
+      {"name": "Bahasa Taa", "image": "/img/appdb/alkitabbahasa-taa.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.pmfntm.n2.n"},
+      {"name": "Bahasa Orya", "image": "/img/appdb/alkitabbahasa-orya.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.uryaov.n2.n"},
+      {"name": "Bahasa Semandang", "image": "/img/appdb/alkitabbahasa-semandang.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.sdmgfa.n2.n"},
+      {"name": "Bahasa Yali Angguruk", "image": "/img/appdb/alkitabbahasa-yali-angguruk.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.ylilai.n2.n"},
+      {"name": "Bahasa Yawa", "image": "/img/appdb/alkitabbahasa-yawa.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.yvatbl.n2.n"},
+      {"name": "Bahasa Una", "image": "/img/appdb/alkitabbahasa-una.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mtglai.n2.n"},
+      {"name": "Bahasa Batak Karo", "image": "/img/appdb/alkitabbahasa-karo.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.btxlai.n2.n"},
+      {"name": "Bahasa Batak Toba", "image": "/img/appdb/alkitabbahasa-toba.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.bbclai.n2.n"},
+      {"name": "Bahasa Ambai", "image": "/img/appdb/alkitabbahasa-ambai.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.amkwbt.n2.n"},
+      {"name": "Bahasa Nias", "image": "/img/appdb/alkitabbahasa-nias-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.niaibs.n2"},
+      {"name": "Bahasa Agabag (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-agabag-lukas.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.sbr.agabag.cerita.alkitab"},
+      {"name": "Bahasa Kenyah Lepo' Ke (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-kenyah-lukas.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.whk.kenyah.alkitab"},
+      {"name": "Bahasa Punan (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-punan.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.puj.punan.alkitab"},
+      {"name": "Bahasa Lundayeh (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-lundayeh-lukas.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.lnd.lundayeh.alkitab"},
+      {"name": "Bahasa Dagu Bulusu (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-bulusu.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.bqr.bulusu.alkitab"},
+      {"name": "Bahasa Padoe (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-padoe.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.pdo.padoe.kareba.moiko.audio"},
+      {"name": "Bahasa Taa (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-taa-lukas.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.lew.taa.alkitab"},
+      {"name": "Bahasa Luwu Tae` (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-luwutae.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.rob.alkitab.tae"},
+      {"name": "Bahasa Tambee (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-tambee-lukas.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.mzq.wunta.mempori.tambee"},
+      {"name": "Bahasa Madya (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-banmadya.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.ban.bible.madya"},
+      {"name": "Bahasa Karunsi`e (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-karunsie.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.xmz.karunsie.alkitab"},
+      {"name": "Bahasa Ija (Injil Lukas)", "image": "/img/appdb/alkitabbahasa-ija-lukas.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.ija.alkitab.kaili.lew.ija"},
+      {"name": "Bahasa Tagulandang", "image": "/img/appdb/alkitabbahasa-tagulandang.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.sxnttv.n2.n"},
+      {"name": "Bahasa Dani, Upper Grand Valley", "image": "/img/appdb/alkitabbahasa-dani-upper-grand.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.dnalai.n2.n"},
+      {"name": "Bahasa Delang", "image": "/img/appdb/alkitabbahasa-delang.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.xdyycj.p1.p"},
+      {"name": "Bahasa Mai Brat", "image": "/img/appdb/alkitabbahasa-maibrat.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.ayzyss.p2.p"},
+      {"name": "Bahasa Timugon Murut", "image": "/img/appdb/alkitabbahasa-murut.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.tihbsm.n2.timugonmurutbible"},
+      {"name": "Bahasa Nduga", "image": "/img/appdb/alkitabbahasa-nduga.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.ndxlai.n2.n"},
+      {"name": "Bahasa Nuaulu, Selatan", "image": "/img/appdb/alkitabbahasa-nuaulu.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.nxlwyi.p1.p"},
+      {"name": "Bahasa Kenyah", "image": "/img/appdb/alkitabbahasa-kenyah.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.xklbsm.n2.n"},
+      {"name": "Bahasa Begak", "image": "/img/appdb/alkitabbahasa-begak.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.dbjwbt.np2.np"},
+      {"name": "Bahasa Dusun", "image": "/img/appdb/alkitabbahasa-dusun.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.dtpbsm.n2.dusunbible.tdr"},
+      {"name": "Bahasa Baibol Kadazan", "image": "/img/appdb/alkitabbahasa-baibol.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.kzjakk.n2.kadazancoastalbible"},
+      {"name": "Bahasa Kayan, Baram", "image": "/img/appdb/alkitabbahasa-kayan.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.kysbsm.n2.n"},
+      {"name": "Bahasa Kimaragang", "image": "/img/appdb/alkitabbahasa-kimaragang.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.kqrwyi.n2.n"},
+      {"name": "Bahasa Penan Timur", "image": "/img/appdb/alkitabbahasa-penan.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.pezbsm.n2.n"},
+      {"name": "Bahasa Siang", "image": "/img/appdb/alkitabbahasa-siang.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.syalai.n2.n"},
+      {"name": "Bahasa Tajio", "image": "/img/appdb/alkitabbahasa-tajio.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.tdjysi.p1.p"},
+      {"name": "Bahasa Tombulu", "image": "/img/appdb/alkitabbahasa-tombulu.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.tomlai.n2.n"},
+      {"name": "Bahasa Tondano", "image": "/img/appdb/alkitabbahasa-tondano.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.tdnppa.p1.p"},
+      {"name": "Bahasa Tonsea", "image": "/img/appdb/alkitabbahasa-tonsea.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.txsppa.p1.p"},
+      {"name": "Bahasa Kola", "image": "/img/appdb/alkitabbahasa-kola.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.kola"},
+      {"name": "Bahasa Lampung", "image": "/img/appdb/alkitabbahasa-lampung.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.ljplai.n2.lampungbible.tlv"},
+      {"name": "Bahasa Sahu", "image": "/img/appdb/alkitabbahasa-sahu1.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.saj.sahu.bible.audio"},
+      {"name": "Bahasa Ketengban", "image": "/img/appdb/alkitabbahasa-ketengban1.webp", "link": "https://play.google.com/store/apps/details?id=org.wycliffe.ketengban.bible"},
+      {"name": "Bahasa Konjo", "image": "/img/appdb/alkitabbahasa-konjopesisir.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.kjc.coastalkonjo.kitab.audio"},
+      {"name": "Alkitab TSI (Terjemahan Sederhana Indonesia)", "image": "/img/appdb/alkitabbahasa-tsi.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.inztsi.n2.n"},
+      {"name": "Bahasa Indonesian Bible", "image": "/img/appdb/alkitabbahasa-bahasaindonesia.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.shlala.n2.n"},
+      {"name": "Alkitab Terjemahan Baru Indonesia", "image": "/img/appdb/alkitabbahasa-tb.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.indasv.o2.o.n2.n"},
+      {"name": "Bahasa Sunda Formal", "image": "/img/appdb/alkitabbahasa-sunda.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.sunibs.n2.n"},
+      {"name": "Bahasa Sunda", "image": "/img/appdb/alkitabbahasa-sundanese.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.suntsv.n2.n"},
+      {"name": "Bahasa Sama (Bajau)", "image": "/img/appdb/alkitabbahasa-sama.webp", "link": "https://play.google.com/store/apps/details?id=com.palmantuhan.kitab.sama"},
+      {"name": "Bahasa Maluku Utara", "image": "/img/appdb/alkitabbahasa-maluku-utara.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.maluku.utara"},
+      {"name": "Bahasa Konjo Pesisir Audio", "image": "/img/appdb/alkitabbahasa-konjopesisir-audio.png", "link": "https://app.scriptoria.io/downloads/apk/org.ipsapps.indonesia.kjc.coastalkonjo.kitab.audio/published"},
+      {"name": "Bahasa Palembang (1)", "image": "/img/appdb/alkitabbahasa-plembang.webp", "link": "https://play.google.com/store/apps/details?id=yunus.test"},
+      {"name": "Bahasa Palembang (2)", "image": "/img/appdb/alkitabbahasa-palembang.webp", "link": "https://play.google.com/store/apps/details?id=tpb.bp"},
+      {"name": "Bahasa Amarasi Roi'is", "image": "/img/appdb/alkitabbahasa-amarasi-rois.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.roiis"},
+      {"name": "Bahasa Makatian", "image": "/img/appdb/alkitabbahasa-mekatain.webp", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.makatian"},
+      {"name": "Bahasa Buli", "image": "/img/appdb/alkitabbahasa-buli.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.id.bzq.alkitab"},
+      {"name": "Bahasa Bugis (Taurat)", "image": "/img/appdb/alkitabbahasa-bugis-taurat.webp", "link": "https://play.google.com/store/apps/details?id=kitab.taurat.bugis"},
+      {"name": "Bahasa Konjo (Zabur)", "image": "/img/appdb/alkitabbahasa-konjo-zabur.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.id.kjc.zvr.audio"},
+      {"name": "Bahasa Makasar (Injil Wahyu - Audio)", "image": "/img/appdb/alkitabbahasa-makasar-wahyu.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.mak.makasar.kitab.audio"},
+      {"name": "Bahasa Raos Urip (Bali)", "image": "/img/appdb/alkitabbahasa-raos-urip.webp", "link": "https://play.google.com/store/apps/details?id=org.wbt.ban.raosurip"},
+      {"name": "Bahasa Semai", "image": "/img/appdb/alkitabbahasa-semai.webp", "link": "https://play.google.com/store/apps/details?id=gereja.semai"},
+      {"name": "Bahasa Semai (2)", "image": "/img/appdb/alkitabbahasa-semai-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.seawyi.p2.opnp"},
+      {"name": "Bahasa Semelai ", "image": "/img/appdb/alkitabbahasa-semelai.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.szabsm.p2.p"},
+      {"name": "Bahasa Tobelo (2)", "image": "/img/appdb/alkitabbahasa-tobelo.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.tlblai.n2.n"},
+      {"name": "Bahasa Tombonuo", "image": "/img/appdb/alkitabbahasa-tombonuo.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.txatbl.n2.tombonubible"},
+      {"name": "Bahasa Yamdena (2)", "image": "/img/appdb/alkitabbahasa-yamdena.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.jmdypm.p2.p"},
+      {"name": "Bahasa Banyumasan", "image": "/img/appdb/alkitabbahasa-banyumas.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.jav.kitab.banyumas"},
+      {"name": "Bahasa Eipa", "image": "/img/appdb/alkitabbahasa-eipa.webp", "link": "https://play.google.com/store/apps/details?id=org.scripturearth.eip.lik"},
+      {"name": "Bahasa Klamu", "image": "/img/appdb/alkitabbahasa-klamu.webp", "link": "https://play.google.com/store/apps/details?id=or.id.goldenverses.klamu"},
+      {"name": "Bahasa Muna", "image": "/img/appdb/alkitabbahasa-muna-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mnbtbl.n2.n"},
+      {"name": "Bahasa Bidayuh Bau (PB)", "image": "/img/appdb/alkitabbahasa-bidayuh-injil.webp", "link": "https://play.google.com/store/apps/details?id=org.kitabidayuhbau.bible"},
+      {"name": "Bahasa Waris", "image": "/img/appdb/alkitabbahasa-waris.webp", "link": "https://play.google.com/store/apps/details?id=org.scriptureearth.wrs.pb.apk"},
+      {"name": "Bahasa Sinama (Sama)", "image": "/img/appdb/alkitabbahasa-sinama.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.smltbl.n2.n"},
+      {"name": "Bahasa Tetun Dili", "image": "/img/appdb/alkitabbahasa-tetun-dili.webp", "link": "https://play.google.com/store/apps/details?id=org.kaditimor.tdt.bibliakadi"},
+      {"name": "Bahasa Amanab", "image": "/img/appdb/alkitabbahasa-amanab.webp", "link": "https://play.google.com/store/apps/details?id=org.scriptureearth.amn.nt.apk"},
+      {"name": "Bahasa Lewo Eleng", "image": "/img/appdb/alkitabbahasa-lewo-eleng.webp", "link": "https://play.google.com/store/apps/details?id=org.wycliffe.lww.lewo.bible"},
+      {"name": "Bahasa Maiwa", "image": "/img/appdb/alkitabbahasa-maiwa.webp", "link": "https://play.google.com/store/apps/details?id=org.wycliffe.mti.maiwa.nt"},
+      {"name": "Cerita Alkitab Bahasa Indonesia", "image": "/img/appdb/cerita-alkitab-indonesia.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.bible.forchildren.indonesian"},
+      {"name": "Cerita Alkitab Bahasa Batak Angkola", "image": "/img/appdb/cerita-alkitab-indonesia.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.akb.bible.forchildren.batakangkola"},
+      {"name": "Cerita Alkitab Bahasa Jawa", "image": "/img/appdb/cerita-alkitab-indonesia.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.bible.forchildren.javanese"},
+      {"name": "Cerita Alkitab Bahasa Sunda", "image": "/img/appdb/cerita-alkitab-indonesia.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.sun.bible.forchildren.sundanese"},
+      {"name": "Cerita Alkitab Bahasa Banjar 1", "image": "/img/appdb/cerita-alkitab-banjar1.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.bjn.story.banjar.kisahnabinabibahasabanjar01"},
+      {"name": "Cerita Alkitab Bahasa Banjar 2", "image": "/img/appdb/cerita-alkitab-banjar2.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.bjn.story.banjar.kisahnabinabibahasabanjar02"},
+      {"name": "Bahasa Maluku Utara Melayu", "image": "/img/appdb/alkitabbahasa-north-maluku-malay.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.maxlai.n2.n"},
+      {"name": "Bahasa Kambera", "image": "/img/appdb/alkitabbahasa-kambera.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.xbrlai.n2.n"},
+      {"name": "Bahasa Ekari", "image": "/img/appdb/alkitabbahasa-ekari.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.ekglai.n2.n"},
+      {"name": "Bahasa Karunsi'e", "image": "/img/appdb/alkitabbahasa-karunsie-1.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.xmzktd.p2.p"},
+      {"name": "Bahasa Seko Padang", "image": "/img/appdb/alkitabbahasa-seko-padang.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.skxlai.n2.n"},
+      {"name": "Bahasa Jah Hut", "image": "/img/appdb/alkitabbahasa-jah-hut.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.jahbsm.s2.s"},
+      {"name": "Cerita Alkitab Bahasa Melayu", "image": "/img/appdb/cerita-alkitab-melayu.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.zlm.bible.forchildren.malay"},
+      {"name": "Cerita Alkitab Bahasa Toraja", "image": "/img/appdb/cerita-alkitab-toraja.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.sda.bible.toraja.sadan"},
+      {"name": "Bahasa Tontemboan", "image": "/img/appdb/alkitabbahasa-totemboan-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.tntlai.n2.n"},
+      {"name": "Bahasa Mamasa", "image": "/img/appdb/alkitabbahasa-mamasa-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mqjlai.n2.n"},
+      {"name": "Bahasa Padoe", "image": "/img/appdb/alkitabbahasa-padoe-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.pdoktd.p2.p"},
+      {"name": "Bahasa Moni", "image": "/img/appdb/alkitabbahasa-moni-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mnzlai.n2.n"},
+      {"name": "Bahasa Temiar", "image": "/img/appdb/alkitabbahasa-temiar.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.malaysia.tea.bible.temiar.audio"},
+      {"name": "Bahasa Abawiri", "image": "/img/appdb/alkitabbahasa-abawiri.webp", "link": "https://play.google.com/store/apps/details?id=com.oralbibleapp.client.abawiri"},
+      {"name": "Bahasa Yetfa", "image": "/img/appdb/alkitabbahasa-yetfa.webp", "link": "https://play.google.com/store/apps/details?id=com.oralbibleapp.yetfa"},
+      {"name": "Bahasa Malay Papua", "image": "/img/appdb/alkitabbahasa-malaypapua.webp", "link": "https://play.google.com/store/apps/details?id=com.oralbibleapp.client.papuan_malay"},
+      {"name": "Bahasa Meyah", "image": "/img/appdb/alkitabbahasa-meyah.webp", "link": "https://play.google.com/store/apps/details?id=com.oralbibleapp.client.meyah"},
+      {"name": "Bahasa Tetun", "image": "/img/appdb/alkitabbahasa-tetun2.webp", "link": "https://play.google.com/store/apps/details?id=org.bibliaeh.testamentufoun.tetun"},
+      {"name": "Bahasa Napu", "image": "/img/appdb/alkitabbahasa-napu-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.npylai.n2.n"},
+      {"name": "Bahasa Mori", "image": "/img/appdb/alkitabbahasa-mori-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mzqlai.n2.n"},
+      {"name": "Bahasa Bonggi", "image": "/img/appdb/alkitabbahasa-bonggi-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.bdgwyi.p2.p"},
+      {"name": "Bahasa Sahu", "image": "/img/appdb/alkitabbahasa-sahu-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.sajlai.n1.n.sahu"},
+      {"name": "Bahasa Galela", "image": "/img/appdb/alkitabbahasa-galela-fcbh.png", "link": "https://play.google.com/store/apps/details?id=org.fcbh.gbilai.n2.n"},
+      {"name": "Bahasa Moma", "image": "/img/appdb/alkitabbahasa-moma-fcbh.png", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mylkdv.n2.n"},
+      {"name": "Bahasa Kosarek", "image": "/img/appdb/alkitabbahasa-kosarek-fcbh.png", "link": "https://play.google.com/store/apps/details?id=org.fcbh.kklypm.n2.n"},
+      {"name": "Bahasa Abawiri", "image": "/img/appdb/alkitabbahasa-abawiri-fcbh.png", "link": "https://play.google.com/store/apps/details?id=org.fcbh.flhgid.obt"},
+      {"name": "Bahasa Tengger", "image": "/img/appdb/alkitabbahasa-tengger-fcbh.png", "link": "https://play.google.com/store/apps/details?id=org.fcbh.tesybs.n2.pn"},
+      {"name": "Bahasa Tambee", "image": "/img/appdb/alkitabbahasa-tambee-fcbh.png", "link": "https://play.google.com/store/apps/details?id=org.fcbh.mzqktd.p2.p"},
+      {"name": "Bahasa Kei", "image": "/img/appdb/alkitabbahasa-kei.png", "link": "https://play.google.com/store/apps/details?id=com.alkitab.maluku.kei"},
+      {"name": "Bahasa Laboya", "image": "/img/appdb/alkitabbahasa-laboya.png", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.lmy.bible.laboya"},
+      {"name": "Bahasa Wanukaka", "image": "/img/appdb/alkitabbahasa-wanukaka.png", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.wnk.bible.wanukaka"},
+      {"name": "Bahasa Amanatun", "image": "/img/appdb/alkitabbahasa-amanatun.png", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.amanatun"},
+      {"name": "Bahasa Kaili Ledo Taa", "image": "/img/appdb/alkitabbahasa-kaili-ledo-taa-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.lewkdv.p2.p"},
+      {"name": "Bahasa Kaili Ledo Ija", "image": "/img/appdb/alkitabbahasa-kaili-ledo-ija-fcbh.webp", "link": "https://play.google.com/store/apps/details?id=org.fcbh.lewktd.p2.p"},
+      {"name": "Bahasa Lembur", "image": "/img/appdb/alkitabbahasa-lembur.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.lembur"},
+      {"name": "Bahasa Tetun Dili", "image": "/img/appdb/alkitabbahasa-tetun-dili-wycliffe.webp", "link": "https://play.google.com/store/apps/details?id=org.kulit.wycliffe.bibliatetundili.tdt"},
+      {"name": "Kitab Suci Alkitab (Indonesia)", "image": "/img/appdb/alkitab-kitab-suci.webp", "link": "https://play.google.com/store/apps/details?id=com.kitabsucialkitab.indonesia&hl=id"},
+      {"name": "Bahasa Moni", "image": "/img/appdb/alkitabbahasa-moni.webp", "link": "https://play.google.com/store/apps/details?id=alkitab.or.id.moni"},
+      {"name": "Bahasa Mee", "image": "/img/appdb/alkitabbahasa-mee.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.mee"},
+      {"name": "Bahasa Sougb", "image": "/img/appdb/alkitabbahasa-sougb.webp", "link": "https://play.google.com/store/apps/details?id=or.id.alkitab.sougb"},
+      {"name": "Bahasa Nduga LAI", "image": "/img/appdb/alkitabbahasa-nduga-lai.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.nduga"},
+      {"name": "Bahasa Damal", "image": "/img/appdb/alkitabbahasa-damal.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.damal"},
+      {"name": "Bahasa Seko Padang LAI", "image": "/img/appdb/alkitabbahasa-seko-padang-lai.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.sekopadang"},
+      {"name": "Bahasa Hatam LAI", "image": "/img/appdb/alkitabbahasa-hatam-lai.webp", "link": "https://play.google.com/store/apps/details?id=id.or.alkitab.hatam"},
+      {"name": "Bahasa Aadang", "image": "/img/appdb/alkitabbahasa-aadang.webp", "link": "https://play.google.com/store/apps/details?id=or.id.ubb.goldenverses.aadang"},
+      {"name": "Bahasa Hakka", "image": "/img/appdb/alkitabbahasa-hakka.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.alkitab.hak.hakka.audio"},
+      {"name": "Bahasa Tugutil 2", "image": "/img/appdb/alkitabbahasa-tugutil-2.webp", "link": "https://play.google.com/store/apps/details?id=org.ipsapps.maluku.alkitab.tuj.tugutil"},
+      {"name": "Alkitab Indonesia", "image": "/img/appdb/alkitabbahasa-indonesia-yuku.webp", "link": "https://play.google.com/store/apps/details?id=yuku.alkitab"},
+      {"name": "Alkitab TB Indonesia Lite", "image": "/img/appdb/alkitabbahasa-indonesia-tb-lai.webp", "link": "https://play.google.com/store/apps/details?id=alkitab.or.id.alkitab.tb.lai"},
+      {"name": "Alkitab Indonesia Untuk Anak", "image": "/img/appdb/alkitab-indonesia-untuk-anak.webp", "link": "https://play.google.com/store/apps/details?id=com.bible.kids"},
+      {"name": "Superbook Alkitab Indonesia", "image": "/img/appdb/alkitab-indonesia-superbook.webp", "link": "https://play.google.com/store/apps/details?id=air.cbn.superbook.bible.app.android"}
+    ],
+    "privacyWeb": {
+      "blocks": [
+        [
+          "p",
+          "Perlindungan privasi Anda sangat penting bagi kami. Di bawah ini kami informasikan secara terperinci tentang penanganan data Anda."
+        ],
+        [
+          "p",
+          "Kebijakan Privasi ini menjelaskan sifat, cakupan, dan tujuan pemrosesan data pribadi dalam penawaran daring kami dan situs web, fitur, dan konten terkait."
+        ],
+        [
+          "h",
+          "Tokomedia.org mengatur bagaimana informasi pribadi Anda ditangani."
+        ],
+        [
+          "p",
+          "‘Informasi pribadi’ berarti informasi atau pendapat tentang individu yang teridentifikasi, atau individu yang dapat diidentifikasi secara wajar. Kebijakan Privasi Tokomedia.org berlaku untuk informasi pribadi yang dikumpulkan dan/atau disimpan oleh Tokomedia.org."
+        ],
+        [
+          "p",
+          "Kami akan meninjau kebijakan ini secara berkala, dan kami dapat memperbaruinya dari waktu ke waktu."
+        ],
+        [
+          "h",
+          "Jenis informasi pribadi yang kami kumpulkan dan simpan"
+        ],
+        [
+          "p",
+          "Kami mengumpulkan informasi pribadi tentang pengguna kami untuk menyediakan layanan pelanggan kepada pengguna kami. Layanan, dan dukungan pelanggan kami disediakan melalui banyak platform, termasuk, antara lain, situs web, aplikasi telepon, dan email. Platform dan produk, layanan, atau dukungan tertentu yang Anda gunakan dapat mempengaruhi data pribadi yang kami kumpulkan."
+        ],
+        [
+          "p",
+          "Tidak semua informasi yang diminta, dikumpulkan, dan diproses oleh kami adalah \"Informasi Pribadi\" karena tidak mengidentifikasi Anda sebagai individu tertentu. \"Informasi nonpribadi\" ini tidak tercakup dalam kebijakan privasi ini. Namun, karena informasi nonpribadi dapat digunakan secara global atau mungkin terkait dengan informasi pribadi yang ada; ketika dalam bentuk ini akan diperlakukan sebagai informasi pribadi. Dengan demikian, kebijakan privasi ini akan mencantumkan kedua jenis informasi demi transparansi."
+        ],
+        [
+          "p",
+          "Dalam beberapa kasus, pengguna dapat memberi kami informasi pribadi tanpa kami memintanya, atau dengan cara yang tidak dimaksudkan untuk pengumpulan jenis informasi tertentu. Meskipun kami dapat mengambil langkah-langkah yang wajar untuk melindungi data tersebut, pengguna akan melewati sistem, proses, dan kontrol kami dan, oleh karena itu, informasi yang diberikan tidak akan diatur oleh kebijakan privasi ini."
+        ],
+        [
+          "p",
+          "Dalam situasi tertentu, pengguna dapat memberi kami informasi pribadi di platform di luar kendali kami; misalnya melalui jejaring sosial atau forum. Meskipun informasi yang kami kumpulkan diatur oleh kebijakan privasi ini, platform yang digunakan untuk mengomunikasikannya akan diatur oleh kebijakan privasinya sendiri."
+        ],
+        [
+          "h",
+          "Bagaimana kami mengumpulkan informasi pribadi"
+        ],
+        [
+          "p",
+          "Saat Anda menggunakan layanan kami, Anda mungkin diminta untuk memberikan jenis informasi pribadi tertentu. Ini dapat terjadi melalui situs web kami, aplikasi kami, sistem obrolan daring kami, atau aplikasi chat."
+        ],
+        [
+          "p",
+          "Kami dapat meminta, mengumpulkan, atau memproses informasi berikut:"
+        ],
+        [
+          "li",
+          "Detail Kontak – alamat email, nomor telepon"
+        ],
+        [
+          "li",
+          "Detail Identitas – nama lengkap"
+        ],
+        [
+          "li",
+          "Data Konten – input teks, foto, video"
+        ],
+        [
+          "li",
+          "Buku-buku yang dibaca."
+        ],
+        [
+          "p",
+          "Kami menyimpan catatan interaksi yang kami lakukan dengan pengguna kami, termasuk layanan, dan dukungan pelanggan yang telah kami berikan. Ini termasuk interaksi yang dilakukan pengguna dengan platform kami, seperti saat pengguna melihat halaman atau mengeklik tombol."
+        ],
+        [
+          "p",
+          "Saat Anda menghubungi kami, kami dapat mengumpulkan informasi pribadi yang penting bagi komunikasi tersebut. Misalnya, jika Anda menghubungi kami melalui email, kami akan mengumpulkan alamat email yang digunakan."
+        ],
+        [
+          "h",
+          "Kami dapat mengumpulkan atau memproses informasi berikut:"
+        ],
+        [
+          "li",
+          "Metadata – alamat IP, informasi komputer dan koneksi, halaman web rujukan, informasi log web standar, pengaturan bahasa, zona waktu, dll."
+        ],
+        [
+          "li",
+          "Informasi Perangkat – pengenal perangkat, jenis perangkat, plugin perangkat, kemampuan perangkat keras, dll."
+        ],
+        [
+          "li",
+          "Tindakan – halaman yang dilihat, tombol yang diklik, waktu yang dihabiskan untuk melihat, kata kunci pencarian, dll."
+        ],
+        [
+          "li",
+          "Data Penggunaan – situs web yang dikunjungi, minat terhadap konten, waktu akses"
+        ],
+        [
+          "h",
+          "Cookie"
+        ],
+        [
+          "p",
+          "Kami, dan pihak ketiga yang menjadi mitra kami, dapat menggunakan cookie, suar web, tag, skrip, objek bersama lokal seperti HTML5 dan Flash (terkadang disebut \"cookie flash\"), pengenal iklan (termasuk pengenal seluler seperti IDFA Apple atau ID Iklan Google) dan teknologi serupa (\"Cookie\") sehubungan dengan penggunaan situs web kami, situs web pihak ketiga, dan aplikasi seluler. Cookie mungkin memiliki pengenal unik dan berada, antara lain, di komputer atau perangkat seluler Anda, di email yang kami kirim kepada Anda, dan di halaman web kami. Cookie dapat mengirimkan informasi tentang Anda dan penggunaan situs web kami, seperti jenis browser, preferensi pencarian, alamat IP, data yang berkaitan dengan iklan yang telah ditampilkan kepada Anda atau yang telah Anda klik, serta tanggal dan waktu penggunaan Anda. Cookie dapat bersifat persisten atau disimpan hanya selama sesi tertentu."
+        ],
+        [
+          "h",
+          "Tujuan penggunaan cookie di situs web kami meliputi:"
+        ],
+        [
+          "li",
+          "Tujuan: Penjelasan"
+        ],
+        [
+          "li",
+          "Proses: Ditujukan untuk membuat situs web dan layanan kami berfungsi sesuai harapan Anda."
+        ],
+        [
+          "li",
+          "Autentikasi, Keamanan, dan Kepatuhan: Ditujukan untuk mencegah penipuan, melindungi data Anda dari semua pihak yang tidak berwenang, dan mematuhi persyaratan."
+        ],
+        [
+          "li",
+          "Preferensi: Ditujukan untuk membantu mengingat informasi tentang bagaimana Anda lebih suka situs web berperilaku dan terlihat."
+        ],
+        [
+          "li",
+          "Pemberitahuan: Ditujukan untuk mengizinkan atau mencegah pemberitahuan informasi atau opsi yang menurut kami dapat meningkatkan penggunaan situs web kami. Misalnya, kami mungkin menggunakan Cookie yang menghentikan kami menampilkan pemberitahuan pendaftaran email jika Anda telah melihatnya."
+        ],
+        [
+          "li",
+          "Analisis: Ditujukan untuk membantu kami memahami bagaimana pengunjung menggunakan situs web kami. Misalnya, kami mungkin menggunakan Cookie yang memberi tahu kami bagaimana saran pencarian kami berkorelasi dengan interaksi Anda dengan halaman pencarian."
+        ],
+        [
+          "p",
+          "Anda dapat mengatur beberapa preferensi Cookie melalui pengaturan perangkat atau browser Anda, tetapi hal itu dapat memengaruhi fungsionalitas situs web kami. Metode untuk menonaktifkan Cookie dapat bervariasi menurut perangkat dan browser, tetapi biasanya dapat ditemukan di preferensi perangkat atau browser atau pengaturan keamanan Anda. Misalnya, perangkat iOS dan Android masing-masing memiliki pengaturan yang dirancang untuk membatasi bentuk pelacakan iklan. Harap perhatikan bahwa mengubah pengaturan ini tidak mencegah penayangan iklan tertentu kepada Anda."
+        ],
+        [
+          "h",
+          "Tautan ke situs lain"
+        ],
+        [
+          "p",
+          "Di situs web kami, Anda akan menemukan tautan ke situs web pihak ketiga. Tautan ini mungkin berasal dari kami, atau mungkin muncul sebagai konten yang dibuat oleh pengguna lain. Situs yang ditautkan ini tidak berada di bawah kendali kami dan dengan demikian kami tidak bertanggung jawab atas tindakan mereka. Sebelum memberikan informasi pribadi Anda melalui situs web lain, kami menyarankan Anda untuk memeriksa syarat dan ketentuan penggunaan situs web tersebut dan kebijakan privasinya."
+        ],
+        [
+          "h",
+          "Penyedia layanan pihak ketiga kami"
+        ],
+        [
+          "p",
+          "Informasi pribadi pengguna dapat disimpan atau diproses atas nama kami di luar Indonesia, termasuk 'di cloud', oleh penyedia layanan pihak ketiga kami. Penyedia layanan pihak ketiga kami terikat kontrak untuk hanya menggunakan informasi pribadi Anda atas nama kami, sesuai instruksi kami."
+        ],
+        [
+          "p",
+          "Penyedia layanan pihak ketiga kami meliputi:"
+        ],
+        [
+          "li",
+          "Penyedia kolokasi"
+        ],
+        [
+          "li",
+          "Penyedia pesan email"
+        ],
+        [
+          "li",
+          "Penyedia pemasaran dan analitik"
+        ],
+        [
+          "li",
+          "Penyedia keamanan"
+        ],
+        [
+          "li",
+          "Aplikasi pihak ketiga"
+        ],
+        [
+          "h",
+          "Keamanan"
+        ],
+        [
+          "p",
+          "Kami menggunakan berbagai perlindungan untuk melindungi informasi pribadi yang dikirimkan kepada kami, baik selama transmisi maupun setelah kami menerimanya. Namun, tidak ada metode transmisi melalui Internet atau melalui perangkat seluler, atau metode penyimpanan elektronik, yang 100% aman. Oleh karena itu, meskipun kami berupaya menggunakan cara yang dapat diterima secara komersial untuk melindungi informasi pribadi Anda, kami tidak dapat menjamin keamanannya secara mutlak."
+        ],
+        [
+          "h",
+          "Modifikasi Kebijakan Privasi Ini"
+        ],
+        [
+          "p",
+          "Kami dapat merevisi Kebijakan Privasi ini dari waktu ke waktu. Versi Kebijakan Privasi terkini akan mengatur pengumpulan, penggunaan, dan pengungkapan informasi tentang Anda dan akan ditempatkan di sini. Jika kami membuat perubahan materiil pada Kebijakan Privasi ini, kami akan mengeposkan pemberitahuan di sini yang menunjukkan tanggal efektif perubahan tersebut. Dengan terus mengakses atau menggunakan situs web kami setelah perubahan tersebut berlaku, Anda mengakui Kebijakan Privasi yang telah direvisi. Kebijakan ini terakhir diperbarui pada tanggal 28 Februari, 2025."
+        ],
+        [
+          "h",
+          "Untuk menghubungi Petugas Privasi kami"
+        ],
+        [
+          "p",
+          "Jika Anda memiliki pertanyaan atau keluhan tentang cara kami menangani informasi pribadi Anda, atau untuk berupaya menggunakan hak privasi Anda sehubungan dengan informasi pribadi yang kami simpan tentang Anda, Anda dapat menghubungi Petugas Privasi kami sebagai berikut:"
+        ],
+        [
+          "p",
+          "Melalui Email:"
+        ],
+        [
+          "p",
+          "info@tokomedia.org"
+        ]
+      ]
+    },
+    "privacyApp": {
+      "blocks": [
+        [
+          "p",
+          "Perlindungan privasi Anda sangat penting bagi kami. Di bawah ini kami informasikan secara terperinci tentang penanganan data Anda."
+        ],
+        [
+          "p",
+          "Kebijakan Privasi ini menjelaskan sifat, cakupan, dan tujuan pemrosesan data pribadi dalam penawaran daring kami dan aplikasi, fitur, dan konten terkait."
+        ],
+        [
+          "h",
+          "Tokomedia App mengatur bagaimana informasi pribadi Anda ditangani."
+        ],
+        [
+          "p",
+          "‘Informasi pribadi’ berarti informasi atau pendapat tentang individu yang teridentifikasi, atau individu yang dapat diidentifikasi secara wajar. Kebijakan Privasi Tokomedia App berlaku untuk informasi pribadi yang dikumpulkan dan/atau disimpan oleh Tokomedia App."
+        ],
+        [
+          "p",
+          "Kami akan meninjau kebijakan ini secara berkala, dan kami dapat memperbaruinya dari waktu ke waktu."
+        ],
+        [
+          "h",
+          "Jenis informasi pribadi yang kami kumpulkan dan simpan"
+        ],
+        [
+          "p",
+          "Kami mengumpulkan informasi pribadi tentang pengguna kami untuk menyediakan layanan pelanggan kepada pengguna kami. Layanan, dan dukungan pelanggan kami disediakan melalui banyak platform, termasuk, antara lain, situs web, aplikasi telepon, dan email. Platform dan produk, layanan, atau dukungan tertentu yang Anda gunakan dapat mempengaruhi data pribadi yang kami kumpulkan."
+        ],
+        [
+          "p",
+          "Tidak semua informasi yang diminta, dikumpulkan, dan diproses oleh kami adalah \"Informasi Pribadi\" karena tidak mengidentifikasi Anda sebagai individu tertentu. \"Informasi nonpribadi\" ini tidak tercakup dalam kebijakan privasi ini. Namun, karena informasi nonpribadi dapat digunakan secara global atau mungkin terkait dengan informasi pribadi yang ada; ketika dalam bentuk ini akan diperlakukan sebagai informasi pribadi. Dengan demikian, kebijakan privasi ini akan mencantumkan kedua jenis informasi demi transparansi."
+        ],
+        [
+          "p",
+          "Dalam beberapa kasus, pengguna dapat memberi kami informasi pribadi tanpa kami memintanya, atau dengan cara yang tidak dimaksudkan untuk pengumpulan jenis informasi tertentu. Meskipun kami dapat mengambil langkah-langkah yang wajar untuk melindungi data tersebut, pengguna akan melewati sistem, proses, dan kontrol kami dan, oleh karena itu, informasi yang diberikan tidak akan diatur oleh kebijakan privasi ini."
+        ],
+        [
+          "p",
+          "Dalam situasi tertentu, pengguna dapat memberi kami informasi pribadi di platform di luar kendali kami; misalnya melalui jejaring sosial atau forum. Meskipun informasi yang kami kumpulkan diatur oleh kebijakan privasi ini, platform yang digunakan untuk mengomunikasikannya akan diatur oleh kebijakan privasinya sendiri."
+        ],
+        [
+          "h",
+          "Bagaimana kami mengumpulkan informasi pribadi"
+        ],
+        [
+          "p",
+          "Saat Anda menggunakan layanan kami, Anda mungkin diminta untuk memberikan jenis informasi pribadi tertentu. Ini dapat terjadi melalui aplikasi kami, sistem obrolan daring kami, atau aplikasi chat."
+        ],
+        [
+          "p",
+          "Kami dapat meminta, mengumpulkan, atau memproses informasi berikut:"
+        ],
+        [
+          "li",
+          "Detail Kontak – alamat email, nomor telepon"
+        ],
+        [
+          "li",
+          "Detail Identitas – nama lengkap"
+        ],
+        [
+          "li",
+          "Data Konten – input teks, foto, video"
+        ],
+        [
+          "li",
+          "Buku-buku yang dibaca."
+        ],
+        [
+          "p",
+          "Kami menyimpan catatan interaksi yang kami lakukan dengan pengguna kami, termasuk layanan, dan dukungan pelanggan yang telah kami berikan. Ini termasuk interaksi yang dilakukan pengguna dengan platform kami, seperti saat pengguna melihat halaman atau mengeklik tombol."
+        ],
+        [
+          "p",
+          "Saat Anda menghubungi kami, kami dapat mengumpulkan informasi pribadi yang penting bagi komunikasi tersebut. Misalnya, jika Anda menghubungi kami melalui email, kami akan mengumpulkan alamat email yang digunakan."
+        ],
+        [
+          "h",
+          "Kami dapat mengumpulkan atau memproses informasi berikut:"
+        ],
+        [
+          "li",
+          "Metadata – alamat IP, informasi komputer dan koneksi, halaman web rujukan, informasi log web standar, pengaturan bahasa, zona waktu, dll."
+        ],
+        [
+          "li",
+          "Informasi Perangkat – pengenal perangkat, jenis perangkat, plugin perangkat, kemampuan perangkat keras, dll."
+        ],
+        [
+          "li",
+          "Tindakan – halaman yang dilihat, tombol yang diklik, waktu yang dihabiskan untuk melihat, kata kunci pencarian, dll."
+        ],
+        [
+          "li",
+          "Data Penggunaan – halaman app yang dikunjungi, minat terhadap konten, waktu akses"
+        ],
+        [
+          "h",
+          "Tautan ke situs lain"
+        ],
+        [
+          "p",
+          "Di aplikasi kami, Anda akan menemukan tautan ke situs web pihak ketiga. Tautan ini mungkin berasal dari kami, atau mungkin muncul sebagai konten yang dibuat oleh pengguna lain. Situs yang ditautkan ini tidak berada di bawah kendali kami dan dengan demikian kami tidak bertanggung jawab atas tindakan mereka. Sebelum memberikan informasi pribadi Anda melalui situs web lain, kami menyarankan Anda untuk memeriksa syarat dan ketentuan penggunaan situs web tersebut dan kebijakan privasinya."
+        ],
+        [
+          "h",
+          "Penyedia layanan pihak ketiga kami"
+        ],
+        [
+          "p",
+          "Informasi pribadi pengguna dapat disimpan atau diproses atas nama kami di luar Indonesia, termasuk 'di cloud', oleh penyedia layanan pihak ketiga kami. Penyedia layanan pihak ketiga kami terikat kontrak untuk hanya menggunakan informasi pribadi Anda atas nama kami, sesuai instruksi kami."
+        ],
+        [
+          "p",
+          "Penyedia layanan pihak ketiga kami meliputi:"
+        ],
+        [
+          "li",
+          "Penyedia kolokasi"
+        ],
+        [
+          "li",
+          "Penyedia pesan email"
+        ],
+        [
+          "li",
+          "Penyedia pemasaran dan analitik"
+        ],
+        [
+          "li",
+          "Penyedia keamanan"
+        ],
+        [
+          "li",
+          "Aplikasi pihak ketiga"
+        ],
+        [
+          "h",
+          "Keamanan"
+        ],
+        [
+          "p",
+          "Kami menggunakan berbagai perlindungan untuk melindungi informasi pribadi yang dikirimkan kepada kami, baik selama transmisi maupun setelah kami menerimanya. Namun, tidak ada metode transmisi melalui Internet atau melalui perangkat seluler, atau metode penyimpanan elektronik, yang 100% aman. Oleh karena itu, meskipun kami berupaya menggunakan cara yang dapat diterima secara komersial untuk melindungi informasi pribadi Anda, kami tidak dapat menjamin keamanannya secara mutlak."
+        ],
+        [
+          "h",
+          "Modifikasi Kebijakan Privasi Ini"
+        ],
+        [
+          "p",
+          "Kami dapat merevisi Kebijakan Privasi ini dari waktu ke waktu. Versi Kebijakan Privasi terkini akan mengatur pengumpulan, penggunaan, dan pengungkapan informasi tentang Anda dan akan ditempatkan di sini. Jika kami membuat perubahan materiil pada Kebijakan Privasi ini, kami akan mengeposkan pemberitahuan di sini yang menunjukkan tanggal efektif perubahan tersebut. Dengan terus mengakses atau menggunakan aplikasi kami setelah perubahan tersebut berlaku, Anda mengakui Kebijakan Privasi yang telah direvisi. Kebijakan ini terakhir diperbarui pada tanggal 28 Februari, 2025."
+        ],
+        [
+          "h",
+          "Untuk menghubungi Petugas Privasi kami"
+        ],
+        [
+          "p",
+          "Jika Anda memiliki pertanyaan atau keluhan tentang cara kami menangani informasi pribadi Anda, atau untuk berupaya menggunakan hak privasi Anda sehubungan dengan informasi pribadi yang kami simpan tentang Anda, Anda dapat menghubungi Petugas Privasi kami sebagai berikut:"
+        ],
+        [
+          "p",
+          "Melalui Email:"
+        ],
+        [
+          "p",
+          "info@tokomedia.org"
+        ]
+      ]
+    },
+    "latestVideos": [
+      {
+        "title": "Ikatan Ilahi 12 - Pembaharuan Ikatan - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-12-pembaharuan-ikatan",
+        "image": "/img/watch/cache/Ikatan Ilahi 12-390x218.jpg",
+        "duration": "10.11",
+        "views": 10222,
+        "likes": 693,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      },
+      {
+        "title": "Ikatan Ilahi 11 - Kemah Suci dan Kanaan - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-11-kemah-suci-dan-kanaan",
+        "image": "/img/watch/cache/Ikatan Ilahi 11-390x218.jpg",
+        "duration": "08.31",
+        "views": 5048,
+        "likes": 211,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      },
+      {
+        "title": "Ikatan Ilahi 10 - Sepuluh Perintah Allah - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-10-sepuluh-perintah-allah",
+        "image": "/img/watch/cache/Ikatan Ilahi 10-390x218.jpg",
+        "duration": "09.22",
+        "views": 4685,
+        "likes": 221,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      },
+      {
+        "title": "Ikatan Ilahi 09 - Menyeberangi Lautan dan Pemeliharaan Tuhan - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-09-menyeberangi-lautan-dan-pemeliharaan-tuhan",
+        "image": "/img/watch/cache/Ikatan Ilahi 09-390x218.jpg",
+        "duration": "09.40",
+        "views": 4071,
+        "likes": 166,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      },
+      {
+        "title": "Ikatan Ilahi 08 - Tuhan Menjanjikan Pembebasan - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-08-Tuhan-menjanjikan-pembebasan",
+        "image": "/img/watch/cache/Ikatan Ilahi 08-390x218.jpg",
+        "duration": "06.55",
+        "views": 2970,
+        "likes": 107,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      },
+      {
+        "title": "Ikatan Ilahi 07 - Musa dan Penindasan Bangsa Israil - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-07-musa-dan-penindasan-bangsa-israil",
+        "image": "/img/watch/cache/Ikatan Ilahi 07-390x218.jpg",
+        "duration": "09.51",
+        "views": 3288,
+        "likes": 112,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      },
+      {
+        "title": "Ikatan Ilahi 06 - Yusuf Menjadi Penguasa Mesir - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-06-yusuf-menjadi-penguasa-mesir",
+        "image": "/img/watch/cache/Ikatan Ilahi 06-390x218.jpg",
+        "duration": "10.08",
+        "views": 3430,
+        "likes": 150,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      },
+      {
+        "title": "Ikatan Ilahi 05 - Yusuf Dijual sebagai Budak - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-05-yusuf-dijual-sebagai-budak",
+        "image": "/img/watch/cache/Ikatan Ilahi 05-390x218.jpg",
+        "duration": "07.49",
+        "views": 3444,
+        "likes": 101,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      },
+      {
+        "title": "Ikatan Ilahi 04 - Ibrahim Diuji - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-04-ibrahim-diuji",
+        "image": "/img/watch/cache/Ikatan Ilahi 04-390x218.jpg",
+        "duration": "07.13",
+        "views": 3450,
+        "likes": 110,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      },
+      {
+        "title": "Ikatan Ilahi 03 - Kelahiran Ishak - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-03-kelahiran-ishak",
+        "image": "/img/watch/cache/Ikatan Ilahi 03-390x218.jpg",
+        "duration": "05.30",
+        "views": 4440,
+        "likes": 155,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      },
+      {
+        "title": "Ikatan Ilahi 02 - Nuh dan Ibrahim - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-02-nuh-dan-ibrahim",
+        "image": "/img/watch/cache/Ikatan Ilahi 02-390x218.jpg",
+        "duration": "07.02",
+        "views": 5552,
+        "likes": 248,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      },
+      {
+        "title": "Ikatan Ilahi 01 - Pada Mulanya - Indonesia",
+        "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-01-pada-mulanya",
+        "image": "/img/watch/cache/Ikatan Ilahi 01-390x218.jpg",
+        "duration": "08.38",
+        "views": 12463,
+        "likes": 425,
+        "dateLabel": "01 Aug 24",
+        "date": "2024-08-01"
+      }
+    ]
+  },
+  "drawer": [
+    {
+      "title": "Kitab Suci Alkitab",
+      "target": {
+        "url": "https://www.tokomedia.org/app/p/kitab%20suci%20alkitab"
+      }
+    },
+    {
+      "title": "Film Isa Al-Masih",
+      "target": {
+        "screen": "languages",
+        "params": {
+          "category": "film-riwayat-isa-al-masih"
+        }
+      }
+    },
+    {
+      "title": "Film Ikatan Ilahi",
+      "target": {
+        "screen": "languages",
+        "params": {
+          "category": "film-ikatan-ilahi"
+        }
+      }
+    },
+    {
+      "title": "Video Kitab Suci",
+      "target": {
+        "screen": "languages",
+        "params": {
+          "category": "video"
+        }
+      }
+    },
+    {
+      "title": "Clip Kitab Suci",
+      "target": {
+        "screen": "languages",
+        "params": {
+          "category": "clip"
+        }
+      }
+    },
+    {
+      "title": "Aplikasi Kitab Suci",
+      "target": {
+        "screen": "languages",
+        "params": {
+          "category": "app"
+        }
+      }
+    },
+    {
+      "title": "Kontak Kami",
+      "target": {
+        "screen": "contact"
+      }
+    },
+    {
+      "title": "FB Messenger",
+      "target": {
+        "url": "https://m.me/tokomedia.org"
+      }
+    }
+  ],
+  "screens": {
+    "home": {
+      "route": "home",
+      "components": [
+        {
+          "type": "categoryGrid",
+          "scope": "film",
+          "items": [
+            {
+              "title": "Film Isa Al-Masih",
+              "action": "Daftar Bahasa",
+              "colors": [
+                "#1E5AA8",
+                "#D62B2B"
+              ],
+              "textColor": "#FFFFFF",
+              "target": {
+                "screen": "languages",
+                "params": {
+                  "category": "film-riwayat-isa-al-masih"
+                }
+              }
+            },
+            {
+              "title": "Video Kitab Suci",
+              "action": "Daftar Bahasa",
+              "colors": [
+                "#E8263B",
+                "#F3703C"
+              ],
+              "textColor": "#FFFFFF",
+              "target": {
+                "screen": "languages",
+                "params": {
+                  "category": "video"
+                }
+              }
+            },
+            {
+              "title": "Clip Kitab Suci",
+              "action": "Daftar Bahasa",
+              "colors": [
+                "#0E9AB2",
+                "#2CC9EA"
+              ],
+              "textColor": "#FFFFFF",
+              "target": {
+                "screen": "languages",
+                "params": {
+                  "category": "clip"
+                }
+              }
+            },
+            {
+              "title": "Aplikasi Kitab Suci",
+              "action": "Daftar Bahasa",
+              "colors": [
+                "#F5C518",
+                "#FFE600"
+              ],
+              "textColor": "#222222",
+              "target": {
+                "screen": "languages",
+                "params": {
+                  "category": "app"
+                }
+              }
+            },
+            {
+              "title": "Film Ikatan Ilahi",
+              "action": "Daftar Bahasa",
+              "colors": [
+                "#1E5AA8",
+                "#E31E24"
+              ],
+              "textColor": "#FFFFFF",
+              "target": {
+                "screen": "languages",
+                "params": {
+                  "category": "film-ikatan-ilahi"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "scope": "bahasa",
+          "text": "Kategori Bahasa & Format"
+        },
+        {
+          "type": "letterGrid",
+          "scope": "bahasa",
+          "source": "homeLanguages",
+          "target": {
+            "screen": "videos",
+            "params": {
+              "language": "{slug}"
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "scope": "terbaru",
+          "text": "Tayangan Terbaru"
+        },
+        {
+          "type": "sortChips",
+          "scope": "terbaru",
+          "options": [
+            {
+              "id": "trending",
+              "label": "Tren"
+            },
+            {
+              "id": "popular",
+              "label": "Populer"
+            },
+            {
+              "id": "unviral",
+              "label": "Unseen"
+            },
+            {
+              "id": "newest",
+              "label": "New"
+            },
+            {
+              "id": "oldest",
+              "label": "Old"
+            }
+          ]
+        },
+        {
+          "type": "latestVideos",
+          "scope": "terbaru",
+          "source": "latestVideos"
+        }
+      ]
+    },
+    "languages": {
+      "route": "languages/{category}",
+      "forEach": "categories",
+      "skip": ["app"],
+      "components": [
+        {
+          "type": "regionList",
+          "target": {
+            "screen": "videos",
+            "params": {
+              "language": "{slug}"
+            }
+          }
+        }
+      ]
+    },
+    "videos": {
+      "route": "videos/{language}",
+      "forEach": "languages",
+      "components": [
+        {
+          "type": "heading",
+          "text": "Koleksi Media {languageName}"
+        },
+        {
+          "type": "sortChips",
+          "options": [
+            {
+              "id": "trending",
+              "label": "Tren"
+            },
+            {
+              "id": "popular",
+              "label": "Populer"
+            },
+            {
+              "id": "unviral",
+              "label": "Unseen"
+            },
+            {
+              "id": "newest",
+              "label": "New"
+            },
+            {
+              "id": "oldest",
+              "label": "Old"
+            }
+          ]
+        },
+        {
+          "type": "videoList",
+          "source": "videos"
+        }
+      ]
+    },
+    "search": {
+      "route": "search",
+      "components": [
+        {
+          "type": "searchResults"
+        }
+      ]
+    },
+    "privacyWeb": {
+      "route": "privacy-web",
+      "components": [
+        {
+          "type": "legalPage",
+          "source": "privacyWeb",
+          "title": "Kebijakan Privasi Situs"
+        }
+      ]
+    },
+    "privacyApp": {
+      "route": "privacy-app",
+      "components": [
+        {
+          "type": "legalPage",
+          "source": "privacyApp",
+          "title": "Kebijakan Privasi Aplikasi"
+        }
+      ]
+    },
+    "contact": {
+      "route": "contact",
+      "components": [
+        {
+          "type": "contactForm",
+          "title": "Kontak Kami",
+          "intro": "Silahkan isi ulasan/komentar/tanggapan Anda mengenai konten yang tersedia pada situs ini melalui form isian dibawah ini.",
+          "fields": [
+            { "name": "name", "label": "Nama Lengkap Anda", "icon": "user", "type": "text", "placeholder": "Ketik nama lengkap Anda", "autocomplete": "name", "required": true },
+            { "name": "email", "label": "Email", "icon": "email", "type": "email", "placeholder": "Isi alamat email Anda", "autocomplete": "email", "required": true },
+            { "name": "phone", "label": "Nmr.Telp", "icon": "phone", "type": "tel", "placeholder": "+628xxxxxxxxx", "autocomplete": "tel" },
+            { "name": "message", "label": "Pesan Anda", "icon": null, "type": "textarea", "placeholder": "Isi ulasan/komentar/tanggapan Anda", "required": true }
+          ],
+          "captchaLabel": "Lengkapi Kode Validasi dibawah ini:",
+          "submit": "KIRIM"
+        }
+      ]
+    },
+    "apps": {
+      "route": "languages/app",
+      "components": [
+        {
+          "type": "appList",
+          "source": "apps",
+          "pageSize": 10
+        }
+      ]
+    },
+    "watch": {
+      "route": "watch",
+      "components": [
+        {
+          "type": "videoDetail",
+          "scope": "detail",
+          "example": {
+            "title": "Ikatan Ilahi 12 - Pembaharuan Ikatan - Indonesia",
+            "href": "/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-12-pembaharuan-ikatan",
+            "image": "/img/watch/cache/Ikatan Ilahi 12-390x218.jpg",
+            "views": 10222,
+            "dateLabel": "01 Aug 24",
+            "category": "Indonesia",
+            "description": "Taurat Suci\nUl 1:3 Nabi Musa Meriwayatkan Pengalaman di Gunung Horeb\nUl 6:4-5 Kasih kepada Allah perintah Utama\nUl 8:2, 6-7, 15 Bersyukur kepada Allah karena Kebaikan-Nya\nUl 29:12-13 Perjanjian dengan Allah Diperbarui\nUl 30:16-18 Kehidupan atau Kematian\nUl 31:2, 7-8 Nabi Yusak sebagai Pengganti Nabi Musa\nUl 34:1, 4-6, 10-12 Nabi Musa Wafat\nUl 30:11, 14, 19 Kehidupan atau Kematian\nYer 31:31, 33 Perjanjian Baru\nMat 1:17 Silsilah Isa Al-Masih",
+            "tags": ["ikatanilah", "DubIndonesia"]
+          }
+        }
+      ]
+    }
+  },
+  "drawerFooter": {
+    "copyright": "© Hak Cipta 2020 - 2026",
+    "brand": "TokoMedia.org",
+    "links": [
+      {
+        "title": "Kebijakan Privasi Situs",
+        "target": {
+          "screen": "privacyWeb"
+        }
+      },
+      {
+        "title": "Kebijakan Privasi Aplikasi",
+        "target": {
+          "screen": "privacyApp"
+        }
+      }
+    ]
+  },
+  "designs": [
+    {
+      "id": 1,
+      "name": "Desain 1 (Asli)",
+      "scope": "film",
+      "vars": {
+        "page": "#F8F9FA",
+        "card": "#FFFFFF",
+        "text": "#222222",
+        "primary": "#2E9E4F",
+        "link": "#1F6FB2",
+        "header": "#1B1B1B",
+        "headerText": "#FFFFFF",
+        "sidebar": "#343A40",
+        "muted": "#8A8A8A",
+        "line": "#E2E2E2",
+        "outside": "#E5E7EB",
+        "radius": "6px",
+        "shadow": "0 2px 6px rgba(0,0,0,.08)",
+        "catH": "80px",
+        "catCols": "1",
+        "langCols": "2",
+        "avatarRadius": "50%",
+        "avatarBg": "rgba(46,158,79,.15)",
+        "chipOnBg": "#E8DCFF",
+        "chipOnBorder": "#7C5CC4",
+        "chipOnText": "#222222",
+        "msgFilter": "none"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Desain 2 (Gelap)",
+      "scope": "bahasa",
+      "vars": {
+        "page": "#121417",
+        "card": "#1E2328",
+        "text": "#EEF1F4",
+        "primary": "#3DD68C",
+        "link": "#7CC4FF",
+        "header": "#0B0D0F",
+        "headerText": "#FFFFFF",
+        "sidebar": "#161A1E",
+        "muted": "#9AA3AD",
+        "line": "#2C333A",
+        "outside": "#050607",
+        "radius": "14px",
+        "shadow": "0 2px 10px rgba(0,0,0,.5)",
+        "catH": "110px",
+        "catCols": "2",
+        "langCols": "2",
+        "avatarRadius": "50%",
+        "avatarBg": "rgba(61,214,140,.15)",
+        "chipOnBg": "#24443A",
+        "chipOnBorder": "#3DD68C",
+        "chipOnText": "#FFFFFF",
+        "msgFilter": "none"
+      }
+    },
+    {
+      "id": 3,
+      "name": "Desain 3 (Membulat)",
+      "scope": "terbaru",
+      "vars": {
+        "page": "#FFF6F9",
+        "card": "#FFFFFF",
+        "text": "#3B2A36",
+        "primary": "#D6336C",
+        "link": "#7A2E8F",
+        "header": "#3B1F4A",
+        "headerText": "#FFFFFF",
+        "sidebar": "#4A2C5E",
+        "muted": "#9B8593",
+        "line": "#F0D6E2",
+        "outside": "#F3DCE6",
+        "radius": "22px",
+        "shadow": "0 6px 16px rgba(214,51,108,.15)",
+        "catH": "120px",
+        "catCols": "2",
+        "langCols": "2",
+        "avatarRadius": "22px",
+        "avatarBg": "rgba(214,51,108,.12)",
+        "chipOnBg": "#FCE0EA",
+        "chipOnBorder": "#D6336C",
+        "chipOnText": "#3B2A36",
+        "msgFilter": "none"
+      }
+    },
+    {
+      "id": 4,
+      "name": "Desain 4 (Minimal)",
+      "scope": "film",
+      "vars": {
+        "page": "#FFFFFF",
+        "card": "#F5F5F5",
+        "text": "#111111",
+        "primary": "#111111",
+        "link": "#111111",
+        "header": "#FFFFFF",
+        "headerText": "#111111",
+        "sidebar": "#111111",
+        "muted": "#777777",
+        "line": "#E6E6E6",
+        "outside": "#DDDDDD",
+        "radius": "12px",
+        "shadow": "0 4px 12px rgba(0,0,0,.12)",
+        "catH": "130px",
+        "catCols": "2",
+        "langCols": "1",
+        "avatarRadius": "4px",
+        "avatarBg": "#EFEFEF",
+        "chipOnBg": "#111111",
+        "chipOnBorder": "#111111",
+        "chipOnText": "#FFFFFF",
+        "msgFilter": "invert(1)"
+      }
+    },
+    {
+      "id": 5,
+      "name": "Desain 5 (Hitam Putih)",
+      "scope": "all",
+      "vars": {}
+    }
+  ]
+}

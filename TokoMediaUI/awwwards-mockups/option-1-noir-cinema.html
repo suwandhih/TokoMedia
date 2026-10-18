@@ -1,0 +1,2537 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="noir">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opsi 1: Noir Cinema Atmos — TokoMedia Awwwards Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; color: inherit; }
+img { max-width: 100%; display: block; }
+
+/* Ambient Background */
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(95px);
+  opacity: var(--orb-opacity, 0.25);
+  transition: all 0.8s ease;
+}
+.orb-1 {
+  width: 520px; height: 520px;
+  top: -160px; left: -120px;
+  background: var(--orb-1, var(--primary));
+}
+.orb-2 {
+  width: 480px; height: 480px;
+  bottom: -140px; right: -100px;
+  background: var(--orb-2, var(--accent));
+}
+
+/* Concept Switcher Bar (Top Reviewer Bar) */
+.concept-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 16px;
+  background: #090A0D;
+  color: #F3F4F6;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+}
+.concept-bar__left, .concept-bar__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.concept-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.concept-back:hover { background: rgba(255,255,255,0.2); }
+.concept-badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+  font-weight: 800;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.concept-name { font-weight: 600; color: #D1D5DB; }
+.viewport-pill {
+  display: inline-flex;
+  background: rgba(255,255,255,0.08);
+  padding: 2px;
+  border-radius: 999px;
+}
+.vp-btn {
+  border: 0;
+  background: transparent;
+  color: #9CA3AF;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.vp-btn.active { background: #fff; color: #090A0D; }
+.concept-links { display: inline-flex; gap: 4px; }
+.concept-links a {
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.07);
+  color: #9CA3AF;
+  font-weight: 700;
+  font-size: 11px;
+}
+.concept-links a.on, .concept-links a:hover {
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+}
+
+/* Viewport Stage (Supports both Full Responsive & 430px Mobile Phone Simulation) */
+.viewport-stage {
+  position: relative;
+  z-index: 1;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.viewport-stage.is-mobile-frame {
+  max-width: 440px;
+  margin: 24px auto 48px;
+  border-radius: 38px;
+  border: 8px solid #1F242D;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+  overflow: hidden;
+  background: var(--bg);
+}
+.viewport-stage.is-mobile-frame .desktop-nav,
+.viewport-stage.is-mobile-frame .crumb-bar__meta,
+.viewport-stage.is-mobile-frame .search-trigger__text,
+.viewport-stage.is-mobile-frame .search-trigger__kbd {
+  display: none !important;
+}
+.viewport-stage.is-mobile-frame .topbar__inner {
+  padding: 10px 14px;
+  gap: 8px;
+}
+.viewport-stage.is-mobile-frame .topbar__left {
+  gap: 8px;
+  min-width: 0;
+}
+.viewport-stage.is-mobile-frame .icon-btn,
+.viewport-stage.is-mobile-frame .search-trigger {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  justify-content: center;
+  flex: none;
+}
+.viewport-stage.is-mobile-frame .brand-logo {
+  gap: 8px;
+  min-width: 0;
+}
+.viewport-stage.is-mobile-frame .brand-logo__img {
+  width: 26px;
+  height: 30px;
+  flex: none;
+}
+.viewport-stage.is-mobile-frame .brand-logo__toko {
+  font-size: 16px;
+  white-space: nowrap;
+}
+.viewport-stage.is-mobile-frame .brand-logo__sub {
+  font-size: 8.5px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-shell {
+  max-width: var(--max-w, 1280px);
+  margin: 0 auto;
+  min-height: calc(100vh - 43px);
+  padding-bottom: 90px;
+}
+
+/* Header & Navigation */
+.topbar {
+  position: sticky;
+  top: 43px;
+  z-index: 40;
+  background: var(--header-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.viewport-stage.is-mobile-frame .topbar { top: 0; }
+.topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+}
+.topbar__left { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.icon-btn {
+  width: 40px; height: 40px;
+  flex: none;
+  border-radius: var(--btn-radius, 12px);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.icon-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary);
+}
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.brand-logo__img { width: 30px; height: 34px; flex: none; object-fit: contain; }
+.brand-logo__text { display: flex; flex-direction: column; line-height: 1.05; }
+.brand-logo__toko {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+.brand-play {
+  display: inline-grid;
+  place-items: center;
+  width: 18px; height: 18px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+  font-size: 9px;
+}
+.brand-logo__sub {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.desktop-nav {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+@media (min-width: 1080px) {
+  .desktop-nav { display: inline-flex; }
+}
+.dnav-link {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.dnav-link:hover, .dnav-link.active {
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+}
+
+.search-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: var(--btn-radius, 12px);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  flex: none;
+  transition: all 0.2s;
+}
+.search-trigger svg { flex: none; }
+.search-trigger:hover { border-color: var(--primary); color: var(--text); }
+.search-trigger__text { font-size: 13px; display: none; white-space: nowrap; }
+@media (min-width: 640px) and (max-width: 1079px), (min-width: 1180px) { .search-trigger__text { display: inline; } }
+.search-trigger__kbd {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: none;
+}
+@media (min-width: 640px) { .search-trigger__kbd { display: inline-block; } }
+
+/* Breadcrumb Bar */
+.crumb-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--crumb-bg, var(--surface));
+  font-size: 12px;
+}
+.crumb-bar__inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.crumb-link { color: var(--muted); font-weight: 500; }
+.crumb-link:hover { color: var(--primary); }
+.crumb-sep { color: var(--muted); opacity: 0.5; }
+.crumb-current { color: var(--text); font-weight: 700; }
+.crumb-bar__meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  display: none;
+}
+@media (min-width: 768px) { .crumb-bar__meta { display: block; } }
+
+/* Drawer */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+.scrim.open { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed;
+  top: 43px; bottom: 0; left: 0;
+  z-index: 70;
+  width: min(86vw, 360px);
+  background: var(--surface-elevated, var(--surface));
+  border-right: 1px solid var(--border);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: translateX(-105%);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+}
+.drawer.open { transform: translateX(0); }
+.drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.drawer__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--primary);
+}
+.drawer__title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+}
+.drawer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 20px 0;
+}
+.drawer-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm, 10px);
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.drawer-link:hover {
+  background: var(--bg);
+  border-color: var(--border);
+  transform: translateX(4px);
+}
+.dl-idx {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--primary);
+}
+.dl-arr { margin-left: auto; opacity: 0.5; }
+.drawer__foot {
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+.drawer__legal {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.drawer__legal a { color: var(--text); font-weight: 600; }
+
+/* Search Modal */
+.search-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: start center;
+  padding: 90px 16px 24px;
+}
+.search-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+}
+.search-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 680px);
+  background: var(--surface-elevated, var(--surface));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.45);
+}
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.search-form input {
+  flex: 1;
+  height: 46px;
+  padding: 0 14px;
+  border-radius: var(--btn-radius, 12px);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+}
+.search-form input:focus { border-color: var(--primary); }
+.search-quick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.sq-label { font-size: 12px; color: var(--muted); }
+.sq-chip {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sq-chip:hover { border-color: var(--primary); color: var(--primary); }
+
+/* Main Content */
+.main-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* Hero Showcase */
+.hero-showcase__Card {
+  position: relative;
+  border-radius: var(--radius-lg, 24px);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  min-height: 420px;
+  display: flex;
+  align-items: flex-end;
+  box-shadow: var(--shadow);
+}
+.hero-showcase__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero-showcase__bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: var(--hero-img-opacity, 0.45);
+  filter: var(--hero-img-filter, saturate(1.15) contrast(1.05));
+  transform: scale(1.02);
+}
+.hero-showcase__gradient {
+  position: absolute;
+  inset: 0;
+  background: var(--hero-overlay);
+}
+.hero-showcase__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: clamp(22px, 4vw, 44px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--badge-bg, rgba(255,255,255,0.1));
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.pulse-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
+}
+.hero-headline {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4.5vw, 54px);
+  font-weight: var(--display-weight, 800);
+  line-height: 1.06;
+  letter-spacing: var(--display-tracking, -0.03em);
+  max-width: 18ch;
+}
+.hero-sub {
+  font-size: clamp(14px, 1.6vw, 17px);
+  color: var(--hero-sub-color, var(--muted));
+  max-width: 58ch;
+  line-height: 1.6;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+.btn-hero-primary, .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 24px;
+  border-radius: var(--btn-radius, 12px);
+  border: 1px solid transparent;
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-hero-primary:hover, .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+}
+.btn-hero-secondary, .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 22px;
+  border-radius: var(--btn-radius, 12px);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-hero-secondary:hover, .btn-secondary:hover:not(:disabled) {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+.btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 640px) {
+  .hero-metrics { grid-template-columns: repeat(4, 1fr); }
+}
+.h-metric { display: flex; flex-direction: column; }
+.h-metric strong {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 800;
+  color: var(--text);
+}
+.h-metric span { font-size: 12px; color: var(--muted); }
+
+/* Section Blocks */
+.sec-block {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.sec-block--surface {
+  padding: clamp(18px, 3vw, 32px);
+  border-radius: var(--radius-lg, 24px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.sec-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sec-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+.sec-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: var(--display-weight, 800);
+  letter-spacing: var(--display-tracking, -0.02em);
+  line-height: 1.15;
+}
+.sec-caption { font-size: 13px; color: var(--muted); }
+.sec-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Bento Category Grid */
+.bento-categories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.cat-bento--1 {
+  grid-column: 1 / -1;
+}
+.cat-bento--2,
+.cat-bento--3,
+.cat-bento--4,
+.cat-bento--5 {
+  grid-column: span 1;
+}
+
+.cat-bento {
+  position: relative;
+  padding: 20px;
+  border-radius: var(--radius);
+  background: var(--cat-card-bg, var(--surface));
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 168px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s;
+}
+.cat-bento::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--cat-grad);
+  opacity: var(--cat-grad-opacity, 0.16);
+  transition: opacity 0.25s;
+}
+.cat-bento:hover {
+  transform: translateY(-4px);
+  border-color: var(--cat-accent);
+}
+.cat-bento:hover::before {
+  opacity: var(--cat-grad-hover-opacity, 0.28);
+}
+.cat-bento__top, .cat-bento__mid, .cat-bento__foot {
+  position: relative;
+  z-index: 1;
+}
+.cat-bento__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.cat-bento__badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.cat-bento__icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: grid; place-items: center;
+  background: var(--bg);
+  color: var(--cat-accent);
+  border: 1px solid var(--border);
+}
+.cat-bento__mid { margin: 16px 0; }
+.cat-bento__title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.cat-bento__sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.cat-bento__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 700;
+}
+.cat-bento__count { color: var(--muted); font-family: var(--font-mono); }
+.cat-bento__cta { color: var(--primary); display: inline-flex; align-items: center; gap: 4px; }
+
+/* Language Stories Carousel */
+.lang-stories-bar {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 6px 2px 14px;
+  scrollbar-width: thin;
+}
+.lang-story {
+  flex: 0 0 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+.lang-story:hover { transform: translateY(-3px); }
+.lang-story__ring {
+  padding: 3px;
+  border-radius: var(--avatar-radius, 50%);
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+}
+.lang-story__avatar {
+  position: relative;
+  width: 64px; height: 64px;
+  border-radius: var(--avatar-radius, 50%);
+  background: var(--bg);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 16px;
+  overflow: hidden;
+  border: 2px solid var(--surface);
+}
+.lang-story__avatar img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.lang-story__name {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Alphabet Explorer */
+.alpha-explorer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.alpha-explorer__head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.alpha-hero-badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.alpha-hero-char {
+  width: 56px; height: 56px;
+  border-radius: var(--radius-sm, 14px);
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow);
+}
+.alpha-hero-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+.alpha-hero-count {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+}
+.alpha-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.alpha-btn {
+  min-width: 36px; height: 36px;
+  padding: 0 8px;
+  border-radius: var(--btn-radius, 10px);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.alpha-btn:hover {
+  border-color: var(--primary);
+  color: var(--text);
+  transform: translateY(-2px);
+}
+.alpha-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-contrast, #fff);
+}
+
+.lang-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px;
+}
+.viewport-stage.is-mobile-frame .lang-tiles-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.lang-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm, 12px);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.lang-tile:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.lang-tile__mono {
+  flex: none;
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: hsl(var(--tile-hue, 160) 65% 45% / 0.18);
+  color: hsl(var(--tile-hue, 160) 75% 45%);
+  border: 1px solid hsl(var(--tile-hue, 160) 65% 45% / 0.35);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+}
+.lang-tile__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.lang-tile__name {
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.lang-tile__region {
+  font-size: 11px;
+  color: var(--muted);
+}
+.lang-tile__arrow {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Filter Chips */
+.filter-chips-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.filter-chip {
+  flex: none;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-chip:hover { color: var(--text); border-color: var(--primary); }
+.filter-chip.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-contrast, #fff);
+}
+
+/* Video Showcase Grid */
+.video-showcase-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media (min-width: 640px) {
+  .video-showcase-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 980px) {
+  .video-showcase-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .vcard--featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}
+.viewport-stage.is-mobile-frame .video-showcase-grid {
+  grid-template-columns: 1fr;
+}
+.viewport-stage.is-mobile-frame .vcard--featured {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.vcard {
+  group: vcard;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s;
+}
+.vcard:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+}
+.vcard__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(135deg, #181B22, #2A303C);
+  overflow: hidden;
+}
+.vcard__media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.vcard:hover .vcard__media img {
+  transform: scale(1.05);
+}
+.vcard__Scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%);
+}
+.vcard__badge {
+  position: absolute;
+  top: 12px; left: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+.vcard__index {
+  position: absolute;
+  top: 12px; left: 12px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+}
+.vcard__play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+.vcard:hover .vcard__play {
+  opacity: 1;
+  transform: scale(1);
+}
+.vcard__duration {
+  position: absolute;
+  right: 12px; bottom: 12px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+.vcard__body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+.vcard__topmeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.vcard__channel {
+  font-weight: 700;
+  color: var(--primary);
+}
+.verified-dot {
+  display: inline-block;
+  font-size: 10px;
+  margin-left: 2px;
+}
+.vcard__date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+.vcard__title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.32;
+}
+.vcard--featured .vcard__title {
+  font-size: clamp(18px, 2.2vw, 24px);
+}
+.vcard__stats {
+  margin-top: auto;
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.stat-pill--like { color: var(--accent, var(--primary)); font-weight: 700; }
+
+/* Page Hero & Secondary Screens */
+.page-hero {
+  padding: clamp(22px, 3.5vw, 38px);
+  border-radius: var(--radius-lg, 24px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.page-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.8vw, 42px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-top: 4px;
+}
+.page-hero__sub {
+  font-size: 14px;
+  color: var(--muted);
+  max-width: 62ch;
+  margin-top: 8px;
+}
+.inline-filter-bar { margin-top: 18px; }
+.inline-filter-bar input {
+  width: min(100%, 480px);
+  height: 44px;
+  padding: 0 16px;
+  border-radius: var(--btn-radius, 12px);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+}
+.inline-filter-bar input:focus { border-color: var(--primary); }
+
+/* Region Accordion */
+.region-list-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.region-accordion {
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.region-accordion__summary {
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+}
+.region-accordion__summary::-webkit-details-marker { display: none; }
+.region-summary__left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.region-idx {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--primary);
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.region-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+}
+.region-sub { font-size: 12px; color: var(--muted); }
+.region-badge {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.region-accordion__body {
+  padding: 0 22px 22px;
+  border-top: 1px solid var(--border);
+  padding-top: 18px;
+}
+
+/* Apps Grid Modern */
+.apps-grid-modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.app-card-modern {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, border-color 0.2s;
+}
+.app-card-modern:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+}
+.app-card-modern__icon {
+  position: relative;
+  width: 52px; height: 52px;
+  flex: none;
+  border-radius: 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  overflow: hidden;
+}
+.app-card-modern__icon img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.app-card-modern__info { flex: 1; min-width: 0; }
+.app-card-modern__tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.app-card-modern__title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.app-card-modern__btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--btn-radius, 10px);
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+  font-size: 12px;
+  font-weight: 700;
+}
+.modern-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+.modern-pager__btns { display: flex; gap: 8px; }
+
+/* Watch Theater Layout */
+.watch-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 980px) {
+  .watch-layout {
+    grid-template-columns: minmax(0, 2.1fr) minmax(300px, 1fr);
+  }
+}
+.viewport-stage.is-mobile-frame .watch-layout {
+  grid-template-columns: 1fr;
+}
+.watch-layout__primary {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.cinema-player {
+  border-radius: var(--radius-lg, 20px);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #000;
+  box-shadow: var(--shadow);
+}
+.cinema-player__stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+}
+.cinema-player__stage img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+}
+.cinema-player__overlay {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.cinema-play-big {
+  width: 74px; height: 74px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  transition: transform 0.25s;
+}
+.cinema-play-big:hover { transform: scale(1.08); }
+.cinema-player__hint {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-size: 12px;
+}
+.watch-header, .watch-description-box, .watch-comment-card, .contact-card-wrap, .legal-card {
+  padding: 22px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.watch-header__badges { display: flex; gap: 8px; margin-bottom: 10px; }
+.badge-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+.badge-pill--outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.watch-title-main {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.6vw, 28px);
+  font-weight: 800;
+  line-height: 1.2;
+}
+.watch-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.publisher-pill { display: flex; align-items: center; gap: 12px; }
+.publisher-pill__avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: var(--bg);
+  padding: 4px;
+  border: 1px solid var(--border);
+}
+.publisher-pill__name { font-weight: 700; font-size: 14px; }
+.publisher-pill__sub { font-size: 12px; color: var(--muted); }
+.watch-actions { display: flex; gap: 8px; }
+.action-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.action-pill.liked {
+  background: #E11D48;
+  border-color: #E11D48;
+  color: #fff;
+}
+.watch-description-box h3, .watch-comment-card h3, .sidebar-heading {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.watch-description-box p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted);
+  white-space: pre-line;
+}
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.tag-item {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+.related-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Forms */
+.modern-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+}
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 640px) {
+  .form-grid-2 { grid-template-columns: 1fr 1fr; }
+}
+.f-field { display: flex; flex-direction: column; gap: 6px; }
+.f-field span { font-size: 12px; font-weight: 700; color: var(--muted); }
+.f-field input, .f-field textarea {
+  padding: 12px 14px;
+  border-radius: var(--btn-radius, 10px);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+}
+.f-field input:focus, .f-field textarea:focus { border-color: var(--primary); }
+.form-submit-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.form-status-msg { font-size: 13px; color: var(--primary); font-weight: 600; }
+
+/* Legal */
+.legal-h { font-family: var(--font-display); font-size: 18px; margin: 18px 0 8px; }
+.legal-p, .legal-li { font-size: 14px; color: var(--muted); line-height: 1.75; margin-bottom: 10px; }
+
+/* Bottom Mobile Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  width: min(92vw, 420px);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 6px;
+  border-radius: 999px;
+  background: var(--header-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+}
+.bnav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 7px 4px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+.bnav-item.active {
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+}
+
+      :root {
+        --bg: #07090C;
+        --surface: #10141B;
+        --surface-elevated: #151A24;
+        --header-bg: rgba(10, 13, 18, 0.82);
+        --crumb-bg: rgba(16, 20, 27, 0.75);
+        --text: #F3F5F8;
+        --muted: #8E98A8;
+        --primary: #10B981;
+        --primary-contrast: #04130D;
+        --accent: #F59E0B;
+        --border: rgba(255, 255, 255, 0.09);
+        --radius: 18px;
+        --radius-lg: 26px;
+        --radius-sm: 12px;
+        --btn-radius: 999px;
+        --avatar-radius: 50%;
+        --shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+        --font-display: 'Syne', sans-serif;
+        --font-body: 'Plus Jakarta Sans', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+        --hero-overlay: linear-gradient(110deg, rgba(7,9,12,0.96) 15%, rgba(7,9,12,0.72) 60%, rgba(16,185,129,0.18) 100%);
+        --orb-1: #10B981;
+        --orb-2: #D97706;
+        --orb-opacity: 0.18;
+      }
+      .hero-headline {
+        background: linear-gradient(135deg, #FFFFFF 30%, #A7F3D0 75%, #FCD34D 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    
+</style>
+</head>
+<body>
+<div class="ambient-bg" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="noise-overlay"></div>
+</div>
+
+<!-- Concept Switcher Floating Bar (For Reviewer) -->
+<div class="concept-bar" role="region" aria-label="Awwwards Concept Switcher">
+  <div class="concept-bar__left">
+    <a href="index.html" class="concept-back" title="Kembali ke Galeri Perbandingan">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>Semua Opsi</span>
+    </a>
+    <span class="concept-badge">SOTD FILM & TV WINNER STYLE</span>
+    <span class="concept-name">01 · Noir Cinema Atmos</span>
+  </div>
+  <div class="concept-bar__right">
+    <div class="viewport-pill">
+      <button type="button" class="vp-btn active" data-vp="full" title="Tampilan Penuh / Responsif">Resp</button>
+      <button type="button" class="vp-btn" data-vp="mobile" title="Simulasi Layar HP (430px)">Mobile 430px</button>
+    </div>
+    <div class="concept-links">
+      <a href="option-1-noir-cinema.html" class="on">01</a>
+      <a href="option-2-nusantara-editorial.html" class="">02</a>
+      <a href="option-3-spatial-bento.html" class="">03</a>
+      <a href="option-4-kinetic-brutalist.html" class="">04</a>
+    </div>
+  </div>
+</div>
+
+<div class="viewport-stage" id="viewportStage">
+  <div class="app-shell">
+    <!-- Top Navigation -->
+    <header class="topbar">
+      <div class="topbar__inner">
+        <div class="topbar__left">
+          <button type="button" class="icon-btn" id="menuBtn" aria-label="Buka Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h12M4 17h16"/></svg>
+          </button>
+          <button type="button" class="icon-btn" id="backBtn" aria-label="Kembali" hidden>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <a href="#home" class="brand-logo" aria-label="TOKO MEDIA">
+            <img src="data:image/png;base64,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" alt="" class="brand-logo__img">
+            <div class="brand-logo__text">
+              <span class="brand-logo__toko">TOKO<span class="brand-play">▶</span>MEDIA</span>
+              <span class="brand-logo__sub">ARCHIPELAGO CINEMA STREAM</span>
+            </div>
+          </a>
+        </div>
+
+        <nav class="desktop-nav" aria-label="Navigasi Utama">
+          <a href="#home" data-nav="home" class="dnav-link active">Beranda</a>
+          <a href="#languages/film-riwayat-isa-al-masih" data-nav="film" class="dnav-link">Film &amp; Video</a>
+          <a href="#languages/app" data-nav="apps" class="dnav-link">269 Aplikasi</a>
+          <a href="#contact" data-nav="contact" class="dnav-link">Kontak</a>
+        </nav>
+
+        <div class="topbar__right">
+          <button type="button" class="search-trigger" id="searchTrigger" aria-label="Cari video atau bahasa">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4.2-4.2"/></svg>
+            <span class="search-trigger__text">Cari bahasa, film, kitab...</span>
+            <kbd class="search-trigger__kbd">/</kbd>
+          </button>
+        </div>
+      </div>
+
+      <!-- Breadcrumb Bar -->
+      <div class="crumb-bar" id="crumbBar">
+        <div class="crumb-bar__inner" id="crumbs"></div>
+        <div class="crumb-bar__meta">DOLBY ATMOS READY • 177 BAHASA NUSANTARA • 16.586 TAYANGAN</div>
+      </div>
+    </header>
+
+    <!-- Slide-out Drawer -->
+    <div class="scrim" id="scrim"></div>
+    <aside class="drawer" id="drawer" aria-label="Menu Samping">
+      <div class="drawer__head">
+        <div>
+          <div class="drawer__eyebrow">DIREKTORI NUSANTARA</div>
+          <div class="drawer__title">TOKO MEDIA</div>
+        </div>
+        <button type="button" class="icon-btn" id="closeDrawerBtn" aria-label="Tutup Menu">&times;</button>
+      </div>
+      <div class="drawer__links">
+        <a href="#home" class="drawer-link"><span class="dl-idx">01</span><span>Beranda Utama</span><span class="dl-arr">&rarr;</span></a>
+        <a href="#languages/film-riwayat-isa-al-masih" class="drawer-link"><span class="dl-idx">02</span><span>Film Isa Al-Masih</span><span class="dl-arr">&rarr;</span></a>
+        <a href="#languages/film-ikatan-ilahi" class="drawer-link"><span class="dl-idx">03</span><span>Film Ikatan Ilahi</span><span class="dl-arr">&rarr;</span></a>
+        <a href="#languages/video" class="drawer-link"><span class="dl-idx">04</span><span>Video Kitab Suci</span><span class="dl-arr">&rarr;</span></a>
+        <a href="#languages/clip" class="drawer-link"><span class="dl-idx">05</span><span>Clip Kitab Suci</span><span class="dl-arr">&rarr;</span></a>
+        <a href="#languages/app" class="drawer-link"><span class="dl-idx">06</span><span>Aplikasi Kitab Suci (269)</span><span class="dl-arr">&rarr;</span></a>
+        <a href="https://www.tokomedia.org/app/p/kitab%20suci%20alkitab" target="_blank" rel="noopener" class="drawer-link"><span class="dl-idx">07</span><span>Kitab Suci Alkitab</span><span class="dl-arr">&#8599;</span></a>
+        <a href="#contact" class="drawer-link"><span class="dl-idx">08</span><span>Kontak Kami</span><span class="dl-arr">&rarr;</span></a>
+        <a href="https://m.me/tokomedia.org" target="_blank" rel="noopener" class="drawer-link"><span class="dl-idx">09</span><span>FB Messenger</span><span class="dl-arr">&#8599;</span></a>
+      </div>
+      <div class="drawer__foot">
+        <p>&copy; Hak Cipta 2020 - 2026 <strong>TokoMedia.org</strong></p>
+        <div class="drawer__legal">
+          <a href="#privacy-web">Kebijakan Privasi Situs</a>
+          <span>&bull;</span>
+          <a href="#privacy-app">Kebijakan Privasi Aplikasi</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Search Modal / Drawer -->
+    <div class="search-modal" id="searchModal" hidden>
+      <div class="search-modal__backdrop" id="searchBackdrop"></div>
+      <div class="search-modal__panel">
+        <form id="searchForm" class="search-form">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4.2-4.2"/></svg>
+          <input type="search" id="searchInput" placeholder="Ketik bahasa daerah (mis. Toraja, Sunda, Batak) atau judul..." autocomplete="off">
+          <button type="submit" class="btn-primary">Cari</button>
+          <button type="button" class="icon-btn" id="closeSearchBtn" aria-label="Tutup">&times;</button>
+        </form>
+        <div class="search-quick">
+          <span class="sq-label">Pencarian Populer:</span>
+          <button type="button" class="sq-chip" data-quick="Ikatan Ilahi">Ikatan Ilahi</button>
+          <button type="button" class="sq-chip" data-quick="Toraja">Bahasa Toraja</button>
+          <button type="button" class="sq-chip" data-quick="Sunda">Bahasa Sunda</button>
+          <button type="button" class="sq-chip" data-quick="Musa">Kisah Musa</button>
+          <button type="button" class="sq-chip" data-quick="Papua">Maluku - Papua</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main id="mainContent" class="main-content"></main>
+
+    <!-- Bottom Mobile Navigation Bar -->
+    <nav class="bottom-nav" aria-label="Navigasi Bawah">
+      <a href="#home" class="bnav-item active" data-bnav="home">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span>Beranda</span>
+      </a>
+      <a href="#languages/film-riwayat-isa-al-masih" class="bnav-item" data-bnav="languages">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span>177 Bahasa</span>
+      </a>
+      <a href="#watch" class="bnav-item" data-bnav="watch">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>Tonton</span>
+      </a>
+      <a href="#languages/app" class="bnav-item" data-bnav="apps">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        <span>Aplikasi</span>
+      </a>
+    </nav>
+  </div>
+</div>
+
+<script>
+window.TM_DATA = {"siteUrl":"https://www.tokomedia.org","channel":"Tokomedia","logoB64":"data:image/png;base64,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","totalAppsCount":269,"categories":[{"id":"film-riwayat-isa-al-masih","title":"Film Isa Al-Masih","subtitle":"Kisah Kehidupan & Pelayanan","badge":"FEATURE FILM","count":"177 Bahasa","accent":"#10B981","grad":"linear-gradient(135deg, #064E3B 0%, #047857 50%, #10B981 100%)","icon":"film"},{"id":"video","title":"Video Kitab Suci","subtitle":"Visualisasi Bab demi Bab","badge":"SCRIPTURE VIDEO","count":"95 Bahasa","accent":"#3B82F6","grad":"linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 50%, #3B82F6 100%)","icon":"play"},{"id":"clip","title":"Clip Kitab Suci","subtitle":"Cuplikan Pendek Bermakna","badge":"SHORT CLIPS","count":"120+ Bahasa","accent":"#06B6D4","grad":"linear-gradient(135deg, #164E63 0%, #0E7490 50%, #06B6D4 100%)","icon":"scissors"},{"id":"app","title":"Aplikasi Kitab Suci","subtitle":"Unduh Aplikasi Android & Audio","badge":"269 APPS","count":"Nusantara","accent":"#F59E0B","grad":"linear-gradient(135deg, #78350F 0%, #B45309 50%, #F59E0B 100%)","icon":"smartphone"},{"id":"film-ikatan-ilahi","title":"Film Ikatan Ilahi","subtitle":"Perjalanan Sejarah Perjanjian","badge":"SERIES 12 EP","count":"42 Bahasa","accent":"#8B5CF6","grad":"linear-gradient(135deg, #4C1D95 0%, #6D28D9 50%, #8B5CF6 100%)","icon":"sparkles"}],"homeLanguages":[{"name":"Pamona [Wana]","slug":"pamona-wana","image":"/img/category-thumb/RIA.jpg"},{"name":"Tontemboan [Makelai]","slug":"tontemboan-makelai","image":"/img/category-thumb/RIA.jpg"},{"name":"Tonsawang","slug":"tonsawang","image":"/img/category-thumb/RIA.jpg"},{"name":"Lepki","slug":"lepki","image":"/img/category-thumb/RIA.jpg"},{"name":"Madura","slug":"madura","image":"/img/category-thumb/RIA.jpg"},{"name":"Toraja","slug":"toraja","image":"/img/category-thumb/RIA.jpg"},{"name":"Sunda","slug":"sunda","image":"/img/category-thumb/RIA.jpg"},{"name":"Minangkabau","slug":"minangkabau","image":"/img/category-thumb/RIA.jpg"},{"name":"Bugis","slug":"bugis","image":"/img/category-thumb/RIA.jpg"},{"name":"Batak Toba","slug":"batak-toba","image":"/img/category-thumb/RIA.jpg"},{"name":"Batak Simalungun","slug":"batak-simalungun","image":"/img/category-thumb/RIA.jpg"},{"name":"Aceh","slug":"aceh","image":"/img/category-thumb/RIA.jpg"},{"name":"Maluku - Papua","slug":"maluku-papua","image":"/img/category-thumb/RIA.jpg"},{"name":"Sulawesi","slug":"sulawesi","image":"/img/category-thumb/RIA.jpg"},{"name":"Kalimantan","slug":"kalimantan","image":"/img/category-thumb/RIA.jpg"},{"name":"Jawa - Bali - Nusa Tenggara","slug":"jawa-bali-nusa-tenggara","image":"/img/category-thumb/RIA.jpg"},{"name":"Sumatera","slug":"sumatera","image":"/img/category-thumb/RIA.jpg"},{"name":"Indonesia","slug":"indonesia","image":"/img/category-thumb/RIA.jpg"},{"name":"Loloda","slug":"loloda","image":"/img/category-thumb/RIA.jpg"},{"name":"Modole","slug":"modole","image":"/img/category-thumb/RIA.jpg"},{"name":"Pagu (Pagoe)","slug":"pagu","image":"/img/category-thumb/RIA.jpg"},{"name":"Ngad'a","slug":"ngada","image":"/img/category-thumb/RIA.jpg"},{"name":"Ledo [Ta'a]","slug":"ledo-taa","image":"/img/category-thumb/RIA.jpg"},{"name":"Ledo [Ija]","slug":"ledo-ija","image":"/img/category-thumb/RIA.jpg"},{"name":"Ledo [Ta'a]","slug":"ledo-taa","image":"/img/category-thumb/RIA.jpg"},{"name":"Ledo [Ija]","slug":"ledo-ija","image":"/img/category-thumb/RIA.jpg"},{"name":"Mori Bawah [Karunsi'e]","slug":"karunsie","image":"/img/category-thumb/RIA.jpg"},{"name":"Bali (Madya)","slug":"bali-madya","image":"/img/category-thumb/RIA.jpg"},{"name":"Bali (Madya)","slug":"bali-madya","image":"/img/category-thumb/RIA.jpg"},{"name":"Tae'","slug":"tae","image":"/img/category-thumb/RIA.jpg"},{"name":"Mori Atas [Tambee]","slug":"tambee","image":"/img/category-thumb/RIA.jpg"},{"name":"Padoe","slug":"padoe","image":"/img/category-thumb/RIA.jpg"},{"name":"Nduga","slug":"nduga","image":"/img/category-thumb/RIA.jpg"},{"name":"Kambera","slug":"kambera","image":"/img/category-thumb/RIA.jpg"},{"name":"Ekari","slug":"ekari","image":"/img/category-thumb/RIA.jpg"},{"name":"Levuka","slug":"levuka","image":"/img/category-thumb/RIA.jpg"},{"name":"Mori Atas [Tambee]","slug":"tambee","image":"/img/category-thumb/RIA.jpg"},{"name":"Padoe","slug":"padoe","image":"/img/category-thumb/RIA.jpg"},{"name":"Punan Tubu","slug":"punan-tubu","image":"/img/category-thumb/RIA.jpg"},{"name":"Dani Lembah Atas","slug":"dani-lembah-atas","image":"/img/category-thumb/RIA.jpg"},{"name":"Sangir (Sangihe)","slug":"sangir-sangihe","image":"/img/category-thumb/RIA.jpg"},{"name":"Tetun Belu","slug":"tetun-belu","image":"/img/category-thumb/RIA.jpg"},{"name":"Termanu","slug":"termanu","image":"/img/category-thumb/RIA.jpg"},{"name":"Pamona [Taa]","slug":"taa","image":"/img/category-thumb/RIA.jpg"},{"name":"Sangir [Siau]","slug":"siau","image":"/img/category-thumb/RIA.jpg"},{"name":"Meyah","slug":"meyah","image":"/img/category-thumb/RIA.jpg"},{"name":"Ambai","slug":"ambai","image":"/img/category-thumb/RIA.jpg"},{"name":"Ambon (Melayu)","slug":"ambon-melayu","image":"/img/category-thumb/RIA.jpg"},{"name":"Galela","slug":"galela","image":"/img/category-thumb/RIA.jpg"},{"name":"Sula","slug":"sula","image":"/img/category-thumb/RIA.jpg"},{"name":"Lubu","slug":"lubu","image":"/img/category-thumb/RIA.jpg"},{"name":"Hatam","slug":"hatam","image":"/img/category-thumb/RIA.jpg"},{"name":"Bulusu","slug":"bulusu","image":"/img/category-thumb/RIA.jpg"},{"name":"Kaur","slug":"kaur","image":"/img/category-thumb/RIA.jpg"},{"name":"Lundayeh","slug":"lundayeh","image":"/img/category-thumb/RIA.jpg"},{"name":"Agabag","slug":"agabag","image":"/img/category-thumb/RIA.jpg"},{"name":"Meyah","slug":"meyah","image":"/img/category-thumb/RIA.jpg"},{"name":"Yawa","slug":"yawa","image":"/img/category-thumb/RIA.jpg"},{"name":"Kenyah Mainstream","slug":"kenyah-mainstream","image":"/img/category-thumb/RIA.jpg"},{"name":"Sougb","slug":"sougb","image":"/img/category-thumb/RIA.jpg"},{"name":"Lamaholot","slug":"lamaholot","image":"/img/category-thumb/RIA.jpg"},{"name":"Lewo Eleng","slug":"lewo-eleng","image":"/img/category-thumb/RIA.jpg"},{"name":"Lamalera","slug":"lamalera","image":"/img/category-thumb/RIA.jpg"},{"name":"Kedang","slug":"kedang","image":"/img/category-thumb/RIA.jpg"},{"name":"Tomini","slug":"tomini","image":"/img/category-thumb/RIA.jpg"},{"name":"Kaili Da'a","slug":"kaili-daa","image":"/img/category-thumb/RIA.jpg"},{"name":"Enggano","slug":"enggano","image":"/img/category-thumb/RIA.jpg"},{"name":"Buol","slug":"buol","image":"/img/category-thumb/RIA.jpg"},{"name":"Wersing (Kolana)","slug":"wersing-kolana","image":"/img/category-thumb/RIA.jpg"},{"name":"Tehit Imian","slug":"tehit-imian","image":"/img/category-thumb/RIA.jpg"},{"name":"Madura","slug":"madura","image":"/img/category-thumb/RIA.jpg"},{"name":"Sunda","slug":"sunda","image":"/img/category-thumb/RIA.jpg"},{"name":"Bugis [Soppeng]","slug":"bugis-soppeng","image":"/img/category-thumb/RIA.jpg"},{"name":"Adonara","slug":"adonara","image":"/img/category-thumb/RIA.jpg"},{"name":"Andio","slug":"andio","image":"/img/category-thumb/RIA.jpg"},{"name":"Batui","slug":"batui","image":"/img/category-thumb/RIA.jpg"},{"name":"Ile Ape","slug":"ile-ape","image":"/img/category-thumb/RIA.jpg"},{"name":"Bambam","slug":"bambam","image":"/img/category-thumb/RIA.jpg"},{"name":"Yali Ninia (Selatan)","slug":"yali-ninia-selatan","image":"/img/category-thumb/RIA.jpg"},{"name":"Minangkabau","slug":"minangkabau","image":"/img/category-thumb/RIA.jpg"},{"name":"Orya","slug":"orya","image":"/img/category-thumb/RIA.jpg"},{"name":"Aceh","slug":"aceh","image":"/img/category-thumb/RIA.jpg"},{"name":"Wolio","slug":"wolio","image":"/img/category-thumb/RIA.jpg"},{"name":"Pamona","slug":"pamona","image":"/img/category-thumb/RIA.jpg"},{"name":"Tontemboan","slug":"tontemboan","image":"/img/category-thumb/RIA.jpg"},{"name":"Manado (Melayu)","slug":"manado-melayu","image":"/img/category-thumb/RIA.jpg"},{"name":"Tondano","slug":"tondano","image":"/img/category-thumb/RIA.jpg"},{"name":"Teiwa","slug":"teiwa","image":"/img/category-thumb/RIA.jpg"},{"name":"Kupang (Melayu)","slug":"kupang-melayu","image":"/img/category-thumb/RIA.jpg"},{"name":"Sentani","slug":"sentani","image":"/img/category-thumb/RIA.jpg"},{"name":"Hawu (Sabu)","slug":"hawu-sabu","image":"/img/category-thumb/RIA.jpg"},{"name":"Selaru","slug":"selaru","image":"/img/category-thumb/RIA.jpg"},{"name":"Rikou","slug":"rikou","image":"/img/category-thumb/RIA.jpg"},{"name":"Uab Meto [Amfoan]","slug":"amfoan","image":"/img/category-thumb/RIA.jpg"},{"name":"Klon","slug":"klon","image":"/img/category-thumb/RIA.jpg"},{"name":"Dhao","slug":"dhao","image":"/img/category-thumb/RIA.jpg"},{"name":"Batak Angkola","slug":"batak-angkola","image":"/img/category-thumb/RIA.jpg"},{"name":"Uab Meto [Amanuban]","slug":"amanuban","image":"/img/category-thumb/RIA.jpg"},{"name":"Lole","slug":"lole","image":"/img/category-thumb/RIA.jpg"},{"name":"Korupun-Sela (Kimyal)","slug":"korupun-sela-kimyal","image":"/img/category-thumb/RIA.jpg"}],"regions":[{"name":"Sumatera","languages":[{"name":"Aceh","slug":"aceh"},{"name":"Bangka","slug":"bangka"},{"name":"Batak Alas-Kluet","slug":"batak-alas-kluet"},{"name":"Batak Angkola","slug":"batak-angkola"},{"name":"Batak Dairi (Pakpak Dairi)","slug":"batak-dairi-pakpak-dairi"},{"name":"Batak Karo","slug":"batak-karo"},{"name":"Batak Mandailing","slug":"batak-mandailing"},{"name":"Batak Simalungun","slug":"batak-simalungun"},{"name":"Batak Toba","slug":"batak-toba"},{"name":"Col","slug":"col"},{"name":"Enggano","slug":"enggano"},{"name":"Gayo","slug":"gayo"},{"name":"Jambi (Melayu)","slug":"jambi-melayu"},{"name":"Kaur","slug":"kaur"},{"name":"Kerinci","slug":"kerinci"},{"name":"Komering","slug":"komering"},{"name":"Lampung Api","slug":"lampung-api"},{"name":"Lampung Nyo","slug":"lampung-nyo"},{"name":"Lubu","slug":"lubu"},{"name":"Mentawai","slug":"mentawai"},{"name":"Minangkabau","slug":"minangkabau"},{"name":"Musi (Palembang)","slug":"musi-palembang"},{"name":"Nias","slug":"nias"},{"name":"Ogan","slug":"ogan"},{"name":"Pasemah","slug":"pasemah"},{"name":"Rejang","slug":"rejang"},{"name":"Serawai","slug":"serawai"}]},{"name":"Jawa, Bali, Nusa Tenggara","languages":[{"name":"Adonara","slug":"adonara"},{"name":"Badui","slug":"badui"},{"name":"Bali (Madya)","slug":"bali-madya"},{"name":"Bali [Nusa Penida]","slug":"bali-nusa-penida"},{"name":"Betawi","slug":"betawi"},{"name":"Bima (Mbojo)","slug":"bima-mbojo"},{"name":"Ende","slug":"ende"},{"name":"Hawu (Sabu)","slug":"hawu-sabu"},{"name":"Ile Ape","slug":"ile-ape"},{"name":"Jawa","slug":"jawa"},{"name":"Jawa [Banten]","slug":"banten-jawa"},{"name":"Jawa [Banyumasan]","slug":"banyumasan-jawa"},{"name":"Jawa [Cirebon]","slug":"cirebon"},{"name":"Kambera","slug":"kambera"},{"name":"Kedang","slug":"kedang"},{"name":"Lamaholot","slug":"lamaholot"},{"name":"Lamalera","slug":"lamalera"},{"name":"Lamatuka","slug":"lamatuka"},{"name":"Levuka","slug":"levuka"},{"name":"Lewo Eleng","slug":"lewo-eleng"},{"name":"Li'o","slug":"lio"},{"name":"Madura","slug":"madura"},{"name":"Madura [Bawean]","slug":"bawean"},{"name":"Manggarai","slug":"manggarai"},{"name":"Nage","slug":"nage"},{"name":"Ngad'a","slug":"ngada"},{"name":"Osing","slug":"osing"},{"name":"Sasak","slug":"sasak"},{"name":"Sika","slug":"sika"},{"name":"Sumbawa","slug":"sumbawa"},{"name":"Sunda","slug":"sunda"},{"name":"Tengger","slug":"tengger"},{"name":"Tetun Belu","slug":"tetun-belu"},{"name":"Wewewa","slug":"wewewa"}]},{"name":"Kalimantan","languages":[{"name":"Agabag","slug":"agabag"},{"name":"Bakumpai","slug":"bakumpai"},{"name":"Balangin","slug":"balangin"},{"name":"Banjar","slug":"banjar"},{"name":"Benyadu'","slug":"benyadu"},{"name":"Bidayuh Bau (Jagoi)","slug":"bidayuh"},{"name":"Bukit (Melayu)","slug":"bukit-melayu"},{"name":"Bulusu","slug":"bulusu"},{"name":"Hakka Pontianak","slug":"hakka-pontianak"},{"name":"Iban","slug":"iban"},{"name":"Kendayan (Kanayatn)","slug":"kendayan"},{"name":"Kenyah Mainstream","slug":"kenyah-mainstream"},{"name":"Kota Bangun Kutai (Melayu)","slug":"kota-bangun-kutai-melayu"},{"name":"Lawangan","slug":"lawangan"},{"name":"Lundayeh","slug":"lundayeh"},{"name":"Ma'anyan (Dayak)","slug":"maanyan-dayak"},{"name":"Malayik Dayak","slug":"malayik-dayak"},{"name":"Mualang","slug":"mualang"},{"name":"Ngaju (Dayak)","slug":"ngaju-dayak"},{"name":"Ot Danum","slug":"ot-danum"},{"name":"Punan Tubu","slug":"punan-tubu"},{"name":"Sanggau","slug":"sanggau"},{"name":"Siang","slug":"siang"},{"name":"Tausug","slug":"tausug"},{"name":"Tenggarong Kutai (Melayu)","slug":"tenggarong-kutai-melayu"},{"name":"Tidung Selatan","slug":"tidung-selatan"},{"name":"Tunjung","slug":"tunjung"},{"name":"Uud Danum","slug":"uud-danum"}]},{"name":"Sulawesi","languages":[{"name":"Andio","slug":"andio"},{"name":"Aralle","slug":"aralle"},{"name":"Bada","slug":"bada"},{"name":"Bajau","slug":"bajau"},{"name":"Balantak","slug":"balantak"},{"name":"Bambam","slug":"bambam"},{"name":"Banggai","slug":"banggai"},{"name":"Batui","slug":"batui"},{"name":"Behoa","slug":"behoa"},{"name":"Bugis","slug":"bugis"},{"name":"Bugis [Soppeng]","slug":"bugis-soppeng"},{"name":"Buol","slug":"buol"},{"name":"Cia-Cia","slug":"cia-cia"},{"name":"Duri","slug":"duri"},{"name":"Enrekang","slug":"enrekang"},{"name":"Gorontalo","slug":"gorontalo"},{"name":"Kaili Da'a","slug":"kaili-daa"},{"name":"Kaili Ledo","slug":"kaili-ledo"},{"name":"Konjo Pegunungan","slug":"konjo-pegunungan"},{"name":"Ledo [Ija]","slug":"ledo-ija"},{"name":"Ledo [Ta'a]","slug":"ledo-taa"},{"name":"Maiwa","slug":"maiwa"},{"name":"Makassar","slug":"makassar"},{"name":"Mamasa","slug":"mamasa"},{"name":"Mamuju","slug":"mamuju"},{"name":"Manado (Melayu)","slug":"manado-melayu"},{"name":"Mandar","slug":"mandar"},{"name":"Moma","slug":"moma"},{"name":"Mongondow","slug":"mongondow"},{"name":"Mori Atas [Tambee]","slug":"tambee"},{"name":"Muna","slug":"muna"},{"name":"Napu","slug":"napu"},{"name":"Padoe","slug":"padoe"},{"name":"Pamona","slug":"pamona"},{"name":"Pamona [Taa]","slug":"taa"},{"name":"Pamona [Wana]","slug":"pamona-wana"},{"name":"Rampi","slug":"rampi"},{"name":"Saluan","slug":"saluan"},{"name":"Sangir (Sangihe)","slug":"sangir-sangihe"},{"name":"Sedoa","slug":"sedoa"},{"name":"Seko Padang","slug":"seko-padang"},{"name":"Selayar","slug":"selayar"},{"name":"Tado (Lindu)","slug":"tado-lindu"},{"name":"Tae'","slug":"tae"},{"name":"Talaud","slug":"talaud"},{"name":"Tolaki","slug":"tolaki"},{"name":"Tombulu","slug":"tombulu"},{"name":"Tomini","slug":"tomini"},{"name":"Tondano","slug":"tondano"},{"name":"Tonsawang","slug":"tonsawang"},{"name":"Tonsea","slug":"tonsea"},{"name":"Tontemboan","slug":"tontemboan"},{"name":"Tontemboan [Makelai]","slug":"tontemboan-makelai"},{"name":"Toraja-Sa'dan","slug":"toraja-sadan"},{"name":"Wakatobi","slug":"wakatobi"},{"name":"Wolio","slug":"wolio"}]},{"name":"Maluku, Papua","languages":[{"name":"Ambai","slug":"ambai"},{"name":"Ambon (Melayu)","slug":"ambon-melayu"},{"name":"Ansus","slug":"ansus"},{"name":"Biak","slug":"biak"},{"name":"Dani Barat (Lani)","slug":"dani-barat-lani"},{"name":"Fordata","slug":"fordata"},{"name":"Galela","slug":"galela"},{"name":"Hatam","slug":"hatam"},{"name":"Ketengban","slug":"ketengban"},{"name":"Lepki","slug":"lepki"},{"name":"Lik","slug":"lik"},{"name":"Loloda","slug":"loloda"},{"name":"Mai Brat","slug":"mai-brat"},{"name":"Maluku Utara (Melayu)","slug":"maluku-utara-melayu"},{"name":"Meyah","slug":"meyah"},{"name":"Modole","slug":"modole"},{"name":"Nalca","slug":"nalca"},{"name":"Pagu (Pagoe)","slug":"pagu"},{"name":"Papua (Melayu)","slug":"papua-melayu"},{"name":"Sahu","slug":"sahu"},{"name":"Selaru","slug":"selaru"},{"name":"Sougb","slug":"sougb"},{"name":"Sula","slug":"sula"},{"name":"Tabaru","slug":"tabaru"},{"name":"Tehit Imian","slug":"tehit-imian"},{"name":"Ternate","slug":"ternate"},{"name":"Tobelo","slug":"tobelo"},{"name":"Wambon","slug":"wambon"},{"name":"Wandamen","slug":"wandamen"},{"name":"Waropen","slug":"waropen"},{"name":"Yamdena","slug":"yamdena"},{"name":"Yawa","slug":"yawa"}]}],"latestVideos":[{"title":"Ikatan Ilahi 12 - Pembaharuan Ikatan - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-12-pembaharuan-ikatan","image":"/img/watch/cache/Ikatan Ilahi 12-390x218.jpg","duration":"10.11","views":10222,"likes":693,"dateLabel":"01 Aug 24","date":"2024-08-01"},{"title":"Ikatan Ilahi 11 - Kemah Suci dan Kanaan - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-11-kemah-suci-dan-kanaan","image":"/img/watch/cache/Ikatan Ilahi 11-390x218.jpg","duration":"08.31","views":5048,"likes":211,"dateLabel":"01 Aug 24","date":"2024-08-01"},{"title":"Ikatan Ilahi 10 - Sepuluh Perintah Allah - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-10-sepuluh-perintah-allah","image":"/img/watch/cache/Ikatan Ilahi 10-390x218.jpg","duration":"09.22","views":4685,"likes":221,"dateLabel":"01 Aug 24","date":"2024-08-01"},{"title":"Ikatan Ilahi 09 - Menyeberangi Lautan dan Pemeliharaan Tuhan - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-09-menyeberangi-lautan-dan-pemeliharaan-tuhan","image":"/img/watch/cache/Ikatan Ilahi 09-390x218.jpg","duration":"09.40","views":4071,"likes":166,"dateLabel":"01 Aug 24","date":"2024-08-01"},{"title":"Ikatan Ilahi 08 - Tuhan Menjanjikan Pembebasan - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-08-Tuhan-menjanjikan-pembebasan","image":"/img/watch/cache/Ikatan Ilahi 08-390x218.jpg","duration":"06.55","views":2970,"likes":107,"dateLabel":"01 Aug 24","date":"2024-08-01"},{"title":"Ikatan Ilahi 07 - Musa dan Penindasan Bangsa Israil - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-07-musa-dan-penindasan-bangsa-israil","image":"/img/watch/cache/Ikatan Ilahi 07-390x218.jpg","duration":"09.51","views":3288,"likes":112,"dateLabel":"01 Aug 24","date":"2024-08-01"},{"title":"Ikatan Ilahi 06 - Yusuf Menjadi Penguasa Mesir - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-06-yusuf-menjadi-penguasa-mesir","image":"/img/watch/cache/Ikatan Ilahi 06-390x218.jpg","duration":"10.08","views":3430,"likes":150,"dateLabel":"01 Aug 24","date":"2024-08-01"},{"title":"Ikatan Ilahi 05 - Yusuf Dijual sebagai Budak - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-05-yusuf-dijual-sebagai-budak","image":"/img/watch/cache/Ikatan Ilahi 05-390x218.jpg","duration":"07.49","views":3444,"likes":101,"dateLabel":"01 Aug 24","date":"2024-08-01"},{"title":"Ikatan Ilahi 04 - Ibrahim Diuji - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-04-ibrahim-diuji","image":"/img/watch/cache/Ikatan Ilahi 04-390x218.jpg","duration":"07.13","views":3450,"likes":110,"dateLabel":"01 Aug 24","date":"2024-08-01"},{"title":"Ikatan Ilahi 03 - Kelahiran Ishak - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-03-kelahiran-ishak","image":"/img/watch/cache/Ikatan Ilahi 03-390x218.jpg","duration":"05.30","views":4440,"likes":155,"dateLabel":"01 Aug 24","date":"2024-08-01"},{"title":"Ikatan Ilahi 02 - Nuh dan Ibrahim - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-02-nuh-dan-ibrahim","image":"/img/watch/cache/Ikatan Ilahi 02-390x218.jpg","duration":"07.02","views":5552,"likes":248,"dateLabel":"01 Aug 24","date":"2024-08-01"},{"title":"Ikatan Ilahi 01 - Pada Mulanya - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-01-pada-mulanya","image":"/img/watch/cache/Ikatan Ilahi 01-390x218.jpg","duration":"08.38","views":12463,"likes":425,"dateLabel":"01 Aug 24","date":"2024-08-01"}],"sampleVideos":[{"title":"Riwayat Isa Al-Masih - {languageName}","duration":"02:07:54","views":992,"date":"2021-04-10","dateLabel":"10 Apr 21"},{"title":"01 Pada Mulanya Saat Penciptaan - {languageName}","duration":"08:08","views":1097,"date":"2021-04-21","dateLabel":"21 Apr 21"},{"title":"02 Kelahiran Isa Al-Masih - {languageName}","duration":"03:44","views":2206,"date":"2021-04-24","dateLabel":"24 Apr 21"},{"title":"03 Masa Kecil Isa Al-Masih - {languageName}","duration":"02:16","views":974,"date":"2021-04-24","dateLabel":"24 Apr 21"}],"apps":[{"name":"Kitab Taurat Zabur Injil Indonesia","image":"/img/appdb/210308142809.png","link":"https://play.google.com/store/apps/details?id=kitabtzi1912.indonesia"},{"name":"Bahasa Tarangan Barat","image":"/img/appdb/tarbar.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.txn.bible.taranganbarat"},{"name":"Bahasa Muna (2)","image":"/img/appdb/muna.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.mnb.kitabkejadianbahasa.muna"},{"name":"Bahasa Muna Selatan","image":"/img/appdb/munaselatan.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.mnb.alkitabmunaselatan.muna"},{"name":"Bahasa Bidayuh Jagoi","image":"/img/appdb/bidayuhjagoi.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.sne.bible.jagoi"},{"name":"Bahasa Mualang","image":"/img/appdb/mualang.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.mtd.bible.mualang"},{"name":"Bahasa Uud Danum","image":"/img/appdb/uuddanum.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.otd.bible.uuddanum"},{"name":"Bahasa Balangin","image":"/img/appdb/balangin.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.byd.alkitab.balangin"},{"name":"Bahasa Ahe Kanayatn","image":"/img/appdb/ahekanayatn.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.knx.bible.ahe"},{"name":"Bahasa Wolio","image":"/img/appdb/momangkilonawolio.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.wlo.kitab.wolio"},{"name":"Bahasa Makassar (Zabur)","image":"/img/appdb/makasarzabur.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.id.mak.zbr.makasar"},{"name":"Bahasa Banjar","image":"/img/appdb/tzibanjar.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.bjn.bible.banjar.tauratzaburinjilbahasabanjar"},{"name":"Bahasa Makassar Injil Wahyu","image":"/img/appdb/makasarinjilwahyu.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.id.mak.ntp.makasar"},{"name":"Bahasa Behoa (2)","image":"/img/appdb/alkitabbehoa.webp","link":"https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.bep.alkitab.behoa"},{"name":"Bahasa Napu","image":"/img/appdb/alkitabnapu.webp","link":"https://play.google.com/store/apps/details?id=org.ips.npyalkitab.napu"},{"name":"Bahasa Bada","image":"/img/appdb/alkitabbada.webp","link":"https://play.google.com/store/apps/details?id=com.sulawesi.bhz.alkitab"},{"name":"Bahasa Muna (1)","image":"/img/appdb/alkitabmuna.webp","link":"https://play.google.com/store/apps/details?id=com.sulawesi.muna.alkitab"},{"name":"Bahasa Konjo Bulukumba","image":"/img/appdb/kitabkonjobulukumba.webp","link":"https://play.google.com/store/apps/details?id=kjc.kjnv.bat"},{"name":"Bahasa Tengger","image":"/img/appdb/tengger.webp","link":"https://play.google.com/store/apps/details?id=com.tengger.nusantara.alkitab"},{"name":"Bahasa Berik","image":"/img/appdb/alkitabberik.webp","link":"https://play.google.com/store/apps/details?id=com.berik.papua.alkitab"},{"name":"Bahasa Moronene (2)","image":"/img/appdb/alkitabmoronene.webp","link":"https://play.google.com/store/apps/details?id=com.moronene.sulawesi.alkitab"},{"name":"Bahasa Rampi","image":"/img/appdb/alkitabrampi.webp","link":"https://play.google.com/store/apps/details?id=com.rampi.sulawesi.alkitab"},{"name":"Bahasa Hatam (2)","image":"/img/appdb/alkitabhatam.webp","link":"https://play.google.com/store/apps/details?id=com.hatam.papua.alkitab"},{"name":"Bahasa Duri (1)","image":"/img/appdb/alkitabduri.webp","link":"https://play.google.com/store/apps/details?id=com.duri.sulawesi.alkitab"},{"name":"Bahasa Uma","image":"/img/appdb/alkitabuma.webp","link":"https://play.google.com/store/apps/details?id=com.uma.sulawesi.alkitab"},{"name":"Bahasa Balantak","image":"/img/appdb/alkitabbalantak.webp","link":"https://play.google.com/store/apps/details?id=com.balantak.sulawesi.alkitab"},{"name":"Bahasa Mamasa","image":"/img/appdb/alkitabmamasa.webp","link":"https://play.google.com/store/apps/details?id=com.sulawesi.mamasa.alkitab"},{"name":"Bahasa Moma","image":"/img/appdb/alkitabmoma.webp","link":"https://play.google.com/store/apps/details?id=com.sulawesi.moma.alkitab"},{"name":"Bahasa Kaili Ledo","image":"/img/appdb/alkitabkaililedo.webp","link":"https://play.google.com/store/apps/details?id=com.sulawesi.kaililedo.alkitab"},{"name":"Bahasa Da'a","image":"/img/appdb/alkitabdaa.webp","link":"https://play.google.com/store/apps/details?id=com.sulawesi.daa.alkitab"},{"name":"Bahasa Tado","image":"/img/appdb/alkitabtado.webp","link":"https://play.google.com/store/apps/details?id=com.sulawesi.tado.alkitab"},{"name":"Bahasa Bambam","image":"/img/appdb/alkitabbambam.webp","link":"https://play.google.com/store/apps/details?id=com.sulawesi.bambam.alkitab"},{"name":"Bahasa Madura","image":"/img/appdb/alkitabbahasa-madura-fcbh.webp","link":"https://play.google.com/store/apps/details?id=org.fcbh.madibs.n2.n"},{"name":"Bahasa Minangkabau","image":"/img/appdb/alkitabbahasa-minangkabau-fcbh.webp","link":"https://play.google.com/store/apps/details?id=org.fcbh.minlai.n2.n.minangkabaubible"},{"name":"Bahasa Dayak Ma'anyan","image":"/img/appdb/alkitabbahasadayakmaanyan.webp","link":"https://play.google.com/store/apps/details?id=org.fcbh.mhylai.n2.n"},{"name":"Bahasa Bali","image":"/img/appdb/alkitabbahasabali.webp","link":"https://play.google.com/store/apps/details?id=org.fcbh.banibs.n2"},{"name":"Bahasa Duri","image":"/img/appdb/alkitabbahasaduri.webp","link":"https://play.google.com/store/apps/details?id=org.fcbh.mvplai.n2.n"},{"name":"Bahasa Tabaru","image":"/img/appdb/alkitabbahasatabaru.webp","link":"https://play.google.com/store/apps/details?id=org.fcbh.tbylai.n2.n"},{"name":"Bahasa Aceh","image":"/img/appdb/alkitabbahasa-aceh-fcbh.webp","link":"https://play.google.com/store/apps/details?id=org.fcbh.aceibs.n2.on.acehbible"},{"name":"Kitab Suci Indonesia","image":"/img/appdb/kitabsuciaudio.webp","link":"https://play.google.com/store/apps/details?id=kitab.suci.sab"},{"name":"Bahasa Dayak Ngaju","image":"/img/appdb/alkitabdayakngaju.webp","link":"https://play.google.com/store/apps/details?id=org.fcbh.nijlai.n2.n"},{"name":"Bahasa Nuaulu","image":"/img/appdb/alkitabbahasanuaulu.webp","link":"https://play.google.com/store/apps/details?id=com.nuaulu.maluku.alkitab"},{"name":"Bahasa Selaru","image":"/img/appdb/alkitabbahasaselaru.webp","link":"https://play.google.com/store/apps/details?id=com.alkitab.maluku.selaru"},{"name":"Bahasa Fordata","image":"/img/appdb/alkitabbahasafordata.webp","link":"https://play.google.com/store/apps/details?id=com.alkitab.maluku.fordata"},{"name":"Bahasa Melayu Ambon","image":"/img/appdb/alkitabbahasamelayuambon.webp","link":"https://play.google.com/store/apps/details?id=com.alkitab.maluku.ambon"},{"name":"Bahasa Dobel","image":"/img/appdb/alkitabbahasadobel.webp","link":"https://play.google.com/store/apps/details?id=com.alkitab.maluku.dobel"},{"name":"Bahasa Malayu Aru","image":"/img/appdb/alkitabbahasamalayuaru.webp","link":"https://play.google.com/store/apps/details?id=com.alkitab.malayu.aru"},{"name":"Bahasa Yamdena","image":"/img/appdb/alkitabbahasayamdena.webp","link":"https://play.google.com/store/apps/details?id=com.alkitab.maluku.yamdena"}],"watchExample":{"title":"Ikatan Ilahi 12 - Pembaharuan Ikatan - Indonesia","href":"/film-ikatan-ilahi/indonesia/w/ikatan-ilahi-12-pembaharuan-ikatan","image":"/img/watch/cache/Ikatan Ilahi 12-390x218.jpg","views":10222,"dateLabel":"01 Aug 24","category":"Indonesia","description":"Taurat Suci\nUl 1:3 Nabi Musa Meriwayatkan Pengalaman di Gunung Horeb\nUl 6:4-5 Kasih kepada Allah perintah Utama\nUl 8:2, 6-7, 15 Bersyukur kepada Allah karena Kebaikan-Nya\nUl 29:12-13 Perjanjian dengan Allah Diperbarui\nUl 30:16-18 Kehidupan atau Kematian\nUl 31:2, 7-8 Nabi Yusak sebagai Pengganti Nabi Musa\nUl 34:1, 4-6, 10-12 Nabi Musa Wafat\nUl 30:11, 14, 19 Kehidupan atau Kematian\nYer 31:31, 33 Perjanjian Baru\nMat 1:17 Silsilah Isa Al-Masih","tags":["ikatanilah","DubIndonesia"]},"privacyWeb":{"blocks":[["p","Perlindungan privasi Anda sangat penting bagi kami. Di bawah ini kami informasikan secara terperinci tentang penanganan data Anda."],["p","Kebijakan Privasi ini menjelaskan sifat, cakupan, dan tujuan pemrosesan data pribadi dalam penawaran daring kami dan situs web, fitur, dan konten terkait."],["h","Tokomedia.org mengatur bagaimana informasi pribadi Anda ditangani."],["p","‘Informasi pribadi’ berarti informasi atau pendapat tentang individu yang teridentifikasi, atau individu yang dapat diidentifikasi secara wajar. Kebijakan Privasi Tokomedia.org berlaku untuk informasi pribadi yang dikumpulkan dan/atau disimpan oleh Tokomedia.org."],["p","Kami akan meninjau kebijakan ini secara berkala, dan kami dapat memperbaruinya dari waktu ke waktu."],["h","Jenis informasi pribadi yang kami kumpulkan dan simpan"],["p","Kami mengumpulkan informasi pribadi tentang pengguna kami untuk menyediakan layanan pelanggan kepada pengguna kami. Layanan, dan dukungan pelanggan kami disediakan melalui banyak platform, termasuk, antara lain, situs web, aplikasi telepon, dan email. Platform dan produk, layanan, atau dukungan tertentu yang Anda gunakan dapat mempengaruhi data pribadi yang kami kumpulkan."],["p","Tidak semua informasi yang diminta, dikumpulkan, dan diproses oleh kami adalah \"Informasi Pribadi\" karena tidak mengidentifikasi Anda sebagai individu tertentu. \"Informasi nonpribadi\" ini tidak tercakup dalam kebijakan privasi ini. Namun, karena informasi nonpribadi dapat digunakan secara global atau mungkin terkait dengan informasi pribadi yang ada; ketika dalam bentuk ini akan diperlakukan sebagai informasi pribadi. Dengan demikian, kebijakan privasi ini akan mencantumkan kedua jenis informasi demi transparansi."],["p","Dalam beberapa kasus, pengguna dapat memberi kami informasi pribadi tanpa kami memintanya, atau dengan cara yang tidak dimaksudkan untuk pengumpulan jenis informasi tertentu. Meskipun kami dapat mengambil langkah-langkah yang wajar untuk melindungi data tersebut, pengguna akan melewati sistem, proses, dan kontrol kami dan, oleh karena itu, informasi yang diberikan tidak akan diatur oleh kebijakan privasi ini."],["p","Dalam situasi tertentu, pengguna dapat memberi kami informasi pribadi di platform di luar kendali kami; misalnya melalui jejaring sosial atau forum. Meskipun informasi yang kami kumpulkan diatur oleh kebijakan privasi ini, platform yang digunakan untuk mengomunikasikannya akan diatur oleh kebijakan privasinya sendiri."],["h","Bagaimana kami mengumpulkan informasi pribadi"],["p","Saat Anda menggunakan layanan kami, Anda mungkin diminta untuk memberikan jenis informasi pribadi tertentu. Ini dapat terjadi melalui situs web kami, aplikasi kami, sistem obrolan daring kami, atau aplikasi chat."],["p","Kami dapat meminta, mengumpulkan, atau memproses informasi berikut:"],["li","Detail Kontak – alamat email, nomor telepon"],["li","Detail Identitas – nama lengkap"],["li","Data Konten – input teks, foto, video"],["li","Buku-buku yang dibaca."],["p","Kami menyimpan catatan interaksi yang kami lakukan dengan pengguna kami, termasuk layanan, dan dukungan pelanggan yang telah kami berikan. Ini termasuk interaksi yang dilakukan pengguna dengan platform kami, seperti saat pengguna melihat halaman atau mengeklik tombol."],["p","Saat Anda menghubungi kami, kami dapat mengumpulkan informasi pribadi yang penting bagi komunikasi tersebut. Misalnya, jika Anda menghubungi kami melalui email, kami akan mengumpulkan alamat email yang digunakan."],["h","Kami dapat mengumpulkan atau memproses informasi berikut:"],["li","Metadata – alamat IP, informasi komputer dan koneksi, halaman web rujukan, informasi log web standar, pengaturan bahasa, zona waktu, dll."],["li","Informasi Perangkat – pengenal perangkat, jenis perangkat, plugin perangkat, kemampuan perangkat keras, dll."],["li","Tindakan – halaman yang dilihat, tombol yang diklik, waktu yang dihabiskan untuk melihat, kata kunci pencarian, dll."],["li","Data Penggunaan – situs web yang dikunjungi, minat terhadap konten, waktu akses"],["h","Cookie"],["p","Kami, dan pihak ketiga yang menjadi mitra kami, dapat menggunakan cookie, suar web, tag, skrip, objek bersama lokal seperti HTML5 dan Flash (terkadang disebut \"cookie flash\"), pengenal iklan (termasuk pengenal seluler seperti IDFA Apple atau ID Iklan Google) dan teknologi serupa (\"Cookie\") sehubungan dengan penggunaan situs web kami, situs web pihak ketiga, dan aplikasi seluler. Cookie mungkin memiliki pengenal unik dan berada, antara lain, di komputer atau perangkat seluler Anda, di email yang kami kirim kepada Anda, dan di halaman web kami. Cookie dapat mengirimkan informasi tentang Anda dan penggunaan situs web kami, seperti jenis browser, preferensi pencarian, alamat IP, data yang berkaitan dengan iklan yang telah ditampilkan kepada Anda atau yang telah Anda klik, serta tanggal dan waktu penggunaan Anda. Cookie dapat bersifat persisten atau disimpan hanya selama sesi tertentu."],["h","Tujuan penggunaan cookie di situs web kami meliputi:"],["li","Tujuan: Penjelasan"],["li","Proses: Ditujukan untuk membuat situs web dan layanan kami berfungsi sesuai harapan Anda."],["li","Autentikasi, Keamanan, dan Kepatuhan: Ditujukan untuk mencegah penipuan, melindungi data Anda dari semua pihak yang tidak berwenang, dan mematuhi persyaratan."],["li","Preferensi: Ditujukan untuk membantu mengingat informasi tentang bagaimana Anda lebih suka situs web berperilaku dan terlihat."],["li","Pemberitahuan: Ditujukan untuk mengizinkan atau mencegah pemberitahuan informasi atau opsi yang menurut kami dapat meningkatkan penggunaan situs web kami. Misalnya, kami mungkin menggunakan Cookie yang menghentikan kami menampilkan pemberitahuan pendaftaran email jika Anda telah melihatnya."],["li","Analisis: Ditujukan untuk membantu kami memahami bagaimana pengunjung menggunakan situs web kami. Misalnya, kami mungkin menggunakan Cookie yang memberi tahu kami bagaimana saran pencarian kami berkorelasi dengan interaksi Anda dengan halaman pencarian."],["p","Anda dapat mengatur beberapa preferensi Cookie melalui pengaturan perangkat atau browser Anda, tetapi hal itu dapat memengaruhi fungsionalitas situs web kami. Metode untuk menonaktifkan Cookie dapat bervariasi menurut perangkat dan browser, tetapi biasanya dapat ditemukan di preferensi perangkat atau browser atau pengaturan keamanan Anda. Misalnya, perangkat iOS dan Android masing-masing memiliki pengaturan yang dirancang untuk membatasi bentuk pelacakan iklan. Harap perhatikan bahwa mengubah pengaturan ini tidak mencegah penayangan iklan tertentu kepada Anda."],["h","Tautan ke situs lain"],["p","Di situs web kami, Anda akan menemukan tautan ke situs web pihak ketiga. Tautan ini mungkin berasal dari kami, atau mungkin muncul sebagai konten yang dibuat oleh pengguna lain. Situs yang ditautkan ini tidak berada di bawah kendali kami dan dengan demikian kami tidak bertanggung jawab atas tindakan mereka. Sebelum memberikan informasi pribadi Anda melalui situs web lain, kami menyarankan Anda untuk memeriksa syarat dan ketentuan penggunaan situs web tersebut dan kebijakan privasinya."],["h","Penyedia layanan pihak ketiga kami"],["p","Informasi pribadi pengguna dapat disimpan atau diproses atas nama kami di luar Indonesia, termasuk 'di cloud', oleh penyedia layanan pihak ketiga kami. Penyedia layanan pihak ketiga kami terikat kontrak untuk hanya menggunakan informasi pribadi Anda atas nama kami, sesuai instruksi kami."],["p","Penyedia layanan pihak ketiga kami meliputi:"],["li","Penyedia kolokasi"],["li","Penyedia pesan email"],["li","Penyedia pemasaran dan analitik"],["li","Penyedia keamanan"],["li","Aplikasi pihak ketiga"],["h","Keamanan"],["p","Kami menggunakan berbagai perlindungan untuk melindungi informasi pribadi yang dikirimkan kepada kami, baik selama transmisi maupun setelah kami menerimanya. Namun, tidak ada metode transmisi melalui Internet atau melalui perangkat seluler, atau metode penyimpanan elektronik, yang 100% aman. Oleh karena itu, meskipun kami berupaya menggunakan cara yang dapat diterima secara komersial untuk melindungi informasi pribadi Anda, kami tidak dapat menjamin keamanannya secara mutlak."],["h","Modifikasi Kebijakan Privasi Ini"],["p","Kami dapat merevisi Kebijakan Privasi ini dari waktu ke waktu. Versi Kebijakan Privasi terkini akan mengatur pengumpulan, penggunaan, dan pengungkapan informasi tentang Anda dan akan ditempatkan di sini. Jika kami membuat perubahan materiil pada Kebijakan Privasi ini, kami akan mengeposkan pemberitahuan di sini yang menunjukkan tanggal efektif perubahan tersebut. Dengan terus mengakses atau menggunakan situs web kami setelah perubahan tersebut berlaku, Anda mengakui Kebijakan Privasi yang telah direvisi. Kebijakan ini terakhir diperbarui pada tanggal 28 Februari, 2025."],["h","Untuk menghubungi Petugas Privasi kami"],["p","Jika Anda memiliki pertanyaan atau keluhan tentang cara kami menangani informasi pribadi Anda, atau untuk berupaya menggunakan hak privasi Anda sehubungan dengan informasi pribadi yang kami simpan tentang Anda, Anda dapat menghubungi Petugas Privasi kami sebagai berikut:"],["p","Melalui Email:"],["p","info@tokomedia.org"]]},"privacyApp":{"blocks":[["p","Perlindungan privasi Anda sangat penting bagi kami. Di bawah ini kami informasikan secara terperinci tentang penanganan data Anda."],["p","Kebijakan Privasi ini menjelaskan sifat, cakupan, dan tujuan pemrosesan data pribadi dalam penawaran daring kami dan aplikasi, fitur, dan konten terkait."],["h","Tokomedia App mengatur bagaimana informasi pribadi Anda ditangani."],["p","‘Informasi pribadi’ berarti informasi atau pendapat tentang individu yang teridentifikasi, atau individu yang dapat diidentifikasi secara wajar. Kebijakan Privasi Tokomedia App berlaku untuk informasi pribadi yang dikumpulkan dan/atau disimpan oleh Tokomedia App."],["p","Kami akan meninjau kebijakan ini secara berkala, dan kami dapat memperbaruinya dari waktu ke waktu."],["h","Jenis informasi pribadi yang kami kumpulkan dan simpan"],["p","Kami mengumpulkan informasi pribadi tentang pengguna kami untuk menyediakan layanan pelanggan kepada pengguna kami. Layanan, dan dukungan pelanggan kami disediakan melalui banyak platform, termasuk, antara lain, situs web, aplikasi telepon, dan email. Platform dan produk, layanan, atau dukungan tertentu yang Anda gunakan dapat mempengaruhi data pribadi yang kami kumpulkan."],["p","Tidak semua informasi yang diminta, dikumpulkan, dan diproses oleh kami adalah \"Informasi Pribadi\" karena tidak mengidentifikasi Anda sebagai individu tertentu. \"Informasi nonpribadi\" ini tidak tercakup dalam kebijakan privasi ini. Namun, karena informasi nonpribadi dapat digunakan secara global atau mungkin terkait dengan informasi pribadi yang ada; ketika dalam bentuk ini akan diperlakukan sebagai informasi pribadi. Dengan demikian, kebijakan privasi ini akan mencantumkan kedua jenis informasi demi transparansi."],["p","Dalam beberapa kasus, pengguna dapat memberi kami informasi pribadi tanpa kami memintanya, atau dengan cara yang tidak dimaksudkan untuk pengumpulan jenis informasi tertentu. Meskipun kami dapat mengambil langkah-langkah yang wajar untuk melindungi data tersebut, pengguna akan melewati sistem, proses, dan kontrol kami dan, oleh karena itu, informasi yang diberikan tidak akan diatur oleh kebijakan privasi ini."],["p","Dalam situasi tertentu, pengguna dapat memberi kami informasi pribadi di platform di luar kendali kami; misalnya melalui jejaring sosial atau forum. Meskipun informasi yang kami kumpulkan diatur oleh kebijakan privasi ini, platform yang digunakan untuk mengomunikasikannya akan diatur oleh kebijakan privasinya sendiri."],["h","Bagaimana kami mengumpulkan informasi pribadi"],["p","Saat Anda menggunakan layanan kami, Anda mungkin diminta untuk memberikan jenis informasi pribadi tertentu. Ini dapat terjadi melalui aplikasi kami, sistem obrolan daring kami, atau aplikasi chat."],["p","Kami dapat meminta, mengumpulkan, atau memproses informasi berikut:"],["li","Detail Kontak – alamat email, nomor telepon"],["li","Detail Identitas – nama lengkap"],["li","Data Konten – input teks, foto, video"],["li","Buku-buku yang dibaca."],["p","Kami menyimpan catatan interaksi yang kami lakukan dengan pengguna kami, termasuk layanan, dan dukungan pelanggan yang telah kami berikan. Ini termasuk interaksi yang dilakukan pengguna dengan platform kami, seperti saat pengguna melihat halaman atau mengeklik tombol."],["p","Saat Anda menghubungi kami, kami dapat mengumpulkan informasi pribadi yang penting bagi komunikasi tersebut. Misalnya, jika Anda menghubungi kami melalui email, kami akan mengumpulkan alamat email yang digunakan."],["h","Kami dapat mengumpulkan atau memproses informasi berikut:"],["li","Metadata – alamat IP, informasi komputer dan koneksi, halaman web rujukan, informasi log web standar, pengaturan bahasa, zona waktu, dll."],["li","Informasi Perangkat – pengenal perangkat, jenis perangkat, plugin perangkat, kemampuan perangkat keras, dll."],["li","Tindakan – halaman yang dilihat, tombol yang diklik, waktu yang dihabiskan untuk melihat, kata kunci pencarian, dll."],["li","Data Penggunaan – halaman app yang dikunjungi, minat terhadap konten, waktu akses"],["h","Tautan ke situs lain"],["p","Di aplikasi kami, Anda akan menemukan tautan ke situs web pihak ketiga. Tautan ini mungkin berasal dari kami, atau mungkin muncul sebagai konten yang dibuat oleh pengguna lain. Situs yang ditautkan ini tidak berada di bawah kendali kami dan dengan demikian kami tidak bertanggung jawab atas tindakan mereka. Sebelum memberikan informasi pribadi Anda melalui situs web lain, kami menyarankan Anda untuk memeriksa syarat dan ketentuan penggunaan situs web tersebut dan kebijakan privasinya."],["h","Penyedia layanan pihak ketiga kami"],["p","Informasi pribadi pengguna dapat disimpan atau diproses atas nama kami di luar Indonesia, termasuk 'di cloud', oleh penyedia layanan pihak ketiga kami. Penyedia layanan pihak ketiga kami terikat kontrak untuk hanya menggunakan informasi pribadi Anda atas nama kami, sesuai instruksi kami."],["p","Penyedia layanan pihak ketiga kami meliputi:"],["li","Penyedia kolokasi"],["li","Penyedia pesan email"],["li","Penyedia pemasaran dan analitik"],["li","Penyedia keamanan"],["li","Aplikasi pihak ketiga"],["h","Keamanan"],["p","Kami menggunakan berbagai perlindungan untuk melindungi informasi pribadi yang dikirimkan kepada kami, baik selama transmisi maupun setelah kami menerimanya. Namun, tidak ada metode transmisi melalui Internet atau melalui perangkat seluler, atau metode penyimpanan elektronik, yang 100% aman. Oleh karena itu, meskipun kami berupaya menggunakan cara yang dapat diterima secara komersial untuk melindungi informasi pribadi Anda, kami tidak dapat menjamin keamanannya secara mutlak."],["h","Modifikasi Kebijakan Privasi Ini"],["p","Kami dapat merevisi Kebijakan Privasi ini dari waktu ke waktu. Versi Kebijakan Privasi terkini akan mengatur pengumpulan, penggunaan, dan pengungkapan informasi tentang Anda dan akan ditempatkan di sini. Jika kami membuat perubahan materiil pada Kebijakan Privasi ini, kami akan mengeposkan pemberitahuan di sini yang menunjukkan tanggal efektif perubahan tersebut. Dengan terus mengakses atau menggunakan aplikasi kami setelah perubahan tersebut berlaku, Anda mengakui Kebijakan Privasi yang telah direvisi. Kebijakan ini terakhir diperbarui pada tanggal 28 Februari, 2025."],["h","Untuk menghubungi Petugas Privasi kami"],["p","Jika Anda memiliki pertanyaan atau keluhan tentang cara kami menangani informasi pribadi Anda, atau untuk berupaya menggunakan hak privasi Anda sehubungan dengan informasi pribadi yang kami simpan tentang Anda, Anda dapat menghubungi Petugas Privasi kami sebagai berikut:"],["p","Melalui Email:"],["p","info@tokomedia.org"]]}};
+window.TM_CONFIG = {"id":"noir","heroLabel":"CINEMATIC STREAMING EXPERIENCE","heroHeadline":"Sinema Rohani & Kitab Suci Dalam 177 Bahasa Nusantara.","heroSub":"Pengalaman menonton imersif bergaya ruang teater gelap dengan pencahayaan zamrud & emas hangat, terinspirasi pemenang Awwwards kategori Film & TV."};
+</script>
+<script>
+
+(function() {
+  const DATA = window.TM_DATA;
+  const CFG = window.TM_CONFIG;
+  const mainEl = document.getElementById('mainContent');
+  const crumbsEl = document.getElementById('crumbs');
+  const backBtn = document.getElementById('backBtn');
+  const drawer = document.getElementById('drawer');
+  const scrim = document.getElementById('scrim');
+  const searchModal = document.getElementById('searchModal');
+  const searchInput = document.getElementById('searchInput');
+  const viewportStage = document.getElementById('viewportStage');
+
+  let currentWatch = DATA.watchExample;
+  let lastCategory = 'film-riwayat-isa-al-masih';
+  let activeSort = 'trending';
+  let activeLetter = 'A';
+  let appPage = 1;
+  let appFilterQuery = '';
+
+  const allLanguagesMap = new Map();
+  DATA.regions.forEach(r => r.languages.forEach(l => {
+    allLanguagesMap.set(l.slug, { ...l, region: r.name });
+  }));
+  DATA.homeLanguages.forEach(l => {
+    if (!allLanguagesMap.has(l.slug)) {
+      allLanguagesMap.set(l.slug, { ...l, region: 'Nusantara' });
+    } else {
+      allLanguagesMap.get(l.slug).image = l.image;
+    }
+  });
+  const allLanguages = Array.from(allLanguagesMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
+  }
+
+  function svgIcon(name) {
+    const icons = {
+      film: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>',
+      sparkles: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/></svg>',
+      play: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>',
+      scissors: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 9 5 3-5 3V9z"/></svg>',
+      smartphone: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>',
+      eye: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+      heart: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+      download: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>'
+    };
+    return icons[name] || icons.play;
+  }
+
+  function renderVideoCard(v, idx, isFeatured) {
+    const imgUrl = v.image ? encodeURI(DATA.siteUrl + v.image) : '';
+    const viewsFormatted = Number(v.views || 0).toLocaleString('id-ID');
+    const likesFormatted = v.likes ? Number(v.likes).toLocaleString('id-ID') : '128';
+    return `
+      <a href="#watch" class="vcard ${isFeatured ? 'vcard--featured' : ''}"
+         data-watch-idx="${idx}"
+         data-title="${esc(v.title)}"
+         data-views="${esc(v.views)}"
+         data-date="${esc(v.date)}"
+         data-date-label="${esc(v.dateLabel)}"
+         data-duration="${esc(v.duration)}"
+         data-image="${esc(imgUrl)}"
+         data-href="${esc(v.href ? encodeURI(DATA.siteUrl + v.href) : '')}">
+        <div class="vcard__media">
+          ${imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.remove()">` : ''}
+          <div class="vcard__Scrim"></div>
+          ${isFeatured ? '<span class="vcard__badge">PREMIERE PILIHAN</span>' : `<span class="vcard__index">#${String(idx + 1).padStart(2, '0')}</span>`}
+          <span class="vcard__play" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+          </span>
+          <span class="vcard__duration">${esc(v.duration)}</span>
+        </div>
+        <div class="vcard__body">
+          <div class="vcard__topmeta">
+            <span class="vcard__channel">${esc(DATA.channel)} <span class="verified-dot" title="Terverifikasi">&#10004;</span></span>
+            <span class="vcard__date">${esc(v.dateLabel)}</span>
+          </div>
+          <h3 class="vcard__title">${esc(v.title)}</h3>
+          <div class="vcard__stats">
+            <span class="stat-pill">${svgIcon('eye')} ${viewsFormatted} tayangan</span>
+            <span class="stat-pill stat-pill--like">${svgIcon('heart')} ${likesFormatted}</span>
+          </div>
+        </div>
+      </a>
+    `;
+  }
+
+  function getSortedVideos(list) {
+    const copy = list.slice();
+    if (activeSort === 'popular') return copy.sort((a, b) => b.views - a.views);
+    if (activeSort === 'unviral') return copy.sort((a, b) => a.views - b.views);
+    if (activeSort === 'newest') return copy.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    if (activeSort === 'oldest') return copy.sort((a, b) => String(a.date).localeCompare(String(b.date)));
+    return copy;
+  }
+
+  function renderHome() {
+    const heroVideo = DATA.latestVideos[0];
+    const heroImg = heroVideo.image ? encodeURI(DATA.siteUrl + heroVideo.image) : '';
+    const sortedLatest = getSortedVideos(DATA.latestVideos);
+
+    const catCards = DATA.categories.map((c, i) => `
+      <a href="#languages/${esc(c.id)}" class="cat-bento cat-bento--${i + 1}" style="--cat-accent:${c.accent};--cat-grad:${c.grad}">
+        <div class="cat-bento__top">
+          <span class="cat-bento__badge">${esc(c.badge)}</span>
+          <span class="cat-bento__icon">${svgIcon(c.icon)}</span>
+        </div>
+        <div class="cat-bento__mid">
+          <h3 class="cat-bento__title">${esc(c.title)}</h3>
+          <p class="cat-bento__sub">${esc(c.subtitle)}</p>
+        </div>
+        <div class="cat-bento__foot">
+          <span class="cat-bento__count">${esc(c.count)}</span>
+          <span class="cat-bento__cta">Jelajahi <span>&rarr;</span></span>
+        </div>
+      </a>
+    `).join('');
+
+    const letters = [...new Set(allLanguages.map(l => l.name.charAt(0).toUpperCase()))];
+    if (!letters.includes(activeLetter)) activeLetter = letters[0] || 'A';
+    const filteredLangs = allLanguages.filter(l => l.name.charAt(0).toUpperCase() === activeLetter);
+
+    const spotlightBubbles = DATA.homeLanguages.slice(0, 12).map((l, i) => {
+      const imgUrl = l.image ? encodeURI(DATA.siteUrl + l.image) : '';
+      const initials = l.name.slice(0, 2).toUpperCase();
+      return `
+        <a href="#videos/${esc(l.slug)}" class="lang-story">
+          <div class="lang-story__ring">
+            <div class="lang-story__avatar">
+              <span>${esc(initials)}</span>
+              ${imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.remove()">` : ''}
+            </div>
+          </div>
+          <span class="lang-story__name">${esc(l.name)}</span>
+        </a>
+      `;
+    }).join('');
+
+    const letterBtns = letters.map(l => `
+      <button type="button" class="alpha-btn ${l === activeLetter ? 'active' : ''}" data-alpha="${esc(l)}">${esc(l)}</button>
+    `).join('');
+
+    const langCells = filteredLangs.map((l, idx) => {
+      const hue = (l.name.charCodeAt(0) * 37 + idx * 19) % 360;
+      return `
+        <a href="#videos/${esc(l.slug)}" class="lang-tile" style="--tile-hue:${hue}">
+          <span class="lang-tile__mono">${esc(l.name.slice(0, 2).toUpperCase())}</span>
+          <div class="lang-tile__info">
+            <span class="lang-tile__name">${esc(l.name)}</span>
+            <span class="lang-tile__region">${esc(l.region || 'Nusantara')}</span>
+          </div>
+          <span class="lang-tile__arrow">&rarr;</span>
+        </a>
+      `;
+    }).join('');
+
+    const sortOptions = [
+      { id: 'trending', label: 'Tren Saat Ini' },
+      { id: 'popular', label: 'Terpopuler' },
+      { id: 'newest', label: 'Terbaru' },
+      { id: 'unviral', label: 'Hidden Gems' },
+      { id: 'oldest', label: 'Klasik' }
+    ];
+
+    const sortHtml = sortOptions.map(o => `
+      <button type="button" class="filter-chip ${activeSort === o.id ? 'active' : ''}" data-sort="${o.id}">${esc(o.label)}</button>
+    `).join('');
+
+    mainEl.innerHTML = `
+      <!-- HERO SHOWCASE -->
+      <section class="hero-showcase">
+        <div class="hero-showcase__Card">
+          <div class="hero-showcase__bg">
+            ${heroImg ? `<img src="${heroImg}" alt="" onerror="this.remove()">` : ''}
+            <div class="hero-showcase__gradient"></div>
+          </div>
+          <div class="hero-showcase__content">
+            <div class="hero-eyebrow">
+              <span class="pulse-dot"></span>
+              <span>${esc(CFG.heroLabel)}</span>
+            </div>
+            <h1 class="hero-headline">${esc(CFG.heroHeadline)}</h1>
+            <p class="hero-sub">${esc(CFG.heroSub)}</p>
+            <div class="hero-actions">
+              <a href="#watch" class="btn-hero-primary"
+                 data-watch-idx="0"
+                 data-title="${esc(heroVideo.title)}"
+                 data-views="${esc(heroVideo.views)}"
+                 data-date-label="${esc(heroVideo.dateLabel)}"
+                 data-image="${esc(heroImg)}"
+                 data-href="${esc(encodeURI(DATA.siteUrl + heroVideo.href))}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span>Putar Tayangan Utama</span>
+              </a>
+              <a href="#languages/film-riwayat-isa-al-masih" class="btn-hero-secondary">
+                <span>Eksplorasi 177 Bahasa</span>
+                <span>&rarr;</span>
+              </a>
+            </div>
+            <div class="hero-metrics">
+              <div class="h-metric"><strong>16.586+</strong><span>Video &amp; Klip</span></div>
+              <div class="h-metric"><strong>177</strong><span>Bahasa Daerah</span></div>
+              <div class="h-metric"><strong>269</strong><span>Aplikasi Android</span></div>
+              <div class="h-metric"><strong>5</strong><span>Kepulauan Besar</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 1: KATEGORI UTAMA (BENTO GRID) -->
+      <section class="sec-block" id="secCategories">
+        <div class="sec-header">
+          <div>
+            <span class="sec-eyebrow">01 / KOLEKSI MEDIA</span>
+            <h2 class="sec-title">Format &amp; Kategori Utama</h2>
+          </div>
+          <span class="sec-caption">Pilih jenis media untuk memilih bahasa</span>
+        </div>
+        <div class="bento-categories">
+          ${catCards}
+        </div>
+      </section>
+
+      <!-- SECTION 2: EKSPLORASI BAHASA NUSANTARA -->
+      <section class="sec-block sec-block--surface" id="secLanguages">
+        <div class="sec-header">
+          <div>
+            <span class="sec-eyebrow">02 / KHASANAH BAHASA DAERAH</span>
+            <h2 class="sec-title">Kategori Bahasa &amp; Suku</h2>
+          </div>
+          <a href="#languages/film-riwayat-isa-al-masih" class="sec-link">Lihat Menurut Kepulauan &rarr;</a>
+        </div>
+
+        <div class="lang-stories-bar" aria-label="Sorotan Bahasa">
+          ${spotlightBubbles}
+        </div>
+
+        <div class="alpha-explorer">
+          <div class="alpha-explorer__head">
+            <div class="alpha-hero-badge">
+              <span class="alpha-hero-char">${esc(activeLetter)}</span>
+              <div>
+                <div class="alpha-hero-label">INDEKS ALFABET</div>
+                <div class="alpha-hero-count">${filteredLangs.length} Bahasa Berawalan "${esc(activeLetter)}"</div>
+              </div>
+            </div>
+            <div class="alpha-rail" role="tablist" aria-label="Filter Huruf">
+              ${letterBtns}
+            </div>
+          </div>
+          <div class="lang-tiles-grid">
+            ${langCells}
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: TAYANGAN TERBARU -->
+      <section class="sec-block" id="secLatest">
+        <div class="sec-header">
+          <div>
+            <span class="sec-eyebrow">03 / KURASI STREAMING</span>
+            <h2 class="sec-title">Tayangan Terbaru &amp; Terpopuler</h2>
+          </div>
+          <div class="filter-chips-bar" role="group" aria-label="Urutkan video">
+            ${sortHtml}
+          </div>
+        </div>
+        <div class="video-showcase-grid">
+          ${sortedLatest.map((v, i) => renderVideoCard(v, i, i === 0)).join('')}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderRegions(categorySlug) {
+    lastCategory = categorySlug || 'film-riwayat-isa-al-masih';
+    const catObj = DATA.categories.find(c => c.id === lastCategory) || DATA.categories[0];
+
+    const regionHtml = DATA.regions.map((r, idx) => `
+      <details class="region-accordion" ${idx < 2 ? 'open' : ''}>
+        <summary class="region-accordion__summary">
+          <div class="region-summary__left">
+            <span class="region-idx">0${idx + 1}</span>
+            <div>
+              <h3 class="region-name">${esc(r.name)}</h3>
+              <span class="region-sub">${r.languages.length} bahasa daerah tersedia</span>
+            </div>
+          </div>
+          <span class="region-badge">${r.languages.length} Bahasa</span>
+        </summary>
+        <div class="region-accordion__body">
+          <div class="lang-tiles-grid">
+            ${r.languages.map((l, i) => {
+              const hue = (l.name.charCodeAt(0) * 31 + i * 17) % 360;
+              return `
+                <a href="#videos/${esc(l.slug)}" class="lang-tile" style="--tile-hue:${hue}">
+                  <span class="lang-tile__mono">${esc(l.name.slice(0, 2).toUpperCase())}</span>
+                  <div class="lang-tile__info">
+                    <span class="lang-tile__name">${esc(l.name)}</span>
+                    <span class="lang-tile__region">${esc(r.name)}</span>
+                  </div>
+                  <span class="lang-tile__arrow">&rarr;</span>
+                </a>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      </details>
+    `).join('');
+
+    mainEl.innerHTML = `
+      <section class="page-hero" style="--cat-grad:${catObj.grad}">
+        <span class="sec-eyebrow">${esc(catObj.badge)} &bull; DIREKTORI WILAYAH</span>
+        <h1 class="page-hero__title">${esc(catObj.title)}</h1>
+        <p class="page-hero__sub">Pilih bahasa ibu atau wilayah kepulauan di bawah ini untuk menonton koleksi media dalam bahasa pilihan Anda.</p>
+      </section>
+      <section class="sec-block">
+        <div class="region-list-wrap">
+          ${regionHtml}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderLanguageVideos(langSlug) {
+    const langObj = allLanguagesMap.get(langSlug) || { name: langSlug, region: 'Nusantara' };
+    const builtVideos = DATA.sampleVideos.map((v, i) => ({
+      title: v.title.replace('{languageName}', langObj.name),
+      duration: v.duration,
+      views: v.views,
+      date: v.date,
+      dateLabel: v.dateLabel,
+      likes: 85 + i * 43,
+      image: DATA.latestVideos[i % DATA.latestVideos.length]?.image || '',
+      href: DATA.latestVideos[i % DATA.latestVideos.length]?.href || ''
+    }));
+    const sorted = getSortedVideos(builtVideos);
+
+    const sortOptions = [
+      { id: 'trending', label: 'Tren' },
+      { id: 'popular', label: 'Populer' },
+      { id: 'newest', label: 'Terbaru' },
+      { id: 'oldest', label: 'Terlama' }
+    ];
+
+    mainEl.innerHTML = `
+      <section class="page-hero">
+        <span class="sec-eyebrow">BAHASA DAERAH &bull; ${esc(langObj.region)}</span>
+        <h1 class="page-hero__title">Koleksi Media ${esc(langObj.name)}</h1>
+        <p class="page-hero__sub">Menampilkan tayangan film dan kitab suci yang telah dialihbahasakan ke dalam Bahasa ${esc(langObj.name)}.</p>
+      </section>
+      <section class="sec-block">
+        <div class="sec-header">
+          <span class="sec-caption">Menampilkan ${sorted.length} episode utama</span>
+          <div class="filter-chips-bar">
+            ${sortOptions.map(o => `<button type="button" class="filter-chip ${activeSort === o.id ? 'active' : ''}" data-sort="${o.id}">${esc(o.label)}</button>`).join('')}
+          </div>
+        </div>
+        <div class="video-showcase-grid">
+          ${sorted.map((v, i) => renderVideoCard(v, i, i === 0)).join('')}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderApps() {
+    const pageSize = 12;
+    const filtered = DATA.apps.filter(a => !appFilterQuery || a.name.toLowerCase().includes(appFilterQuery.toLowerCase()));
+    const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+    if (appPage > totalPages) appPage = 1;
+    const slice = filtered.slice((appPage - 1) * pageSize, appPage * pageSize);
+
+    const cards = slice.map((app, i) => {
+      const imgUrl = app.image ? encodeURI(DATA.siteUrl + app.image) : '';
+      return `
+        <article class="app-card-modern">
+          <div class="app-card-modern__icon">
+            <span>${esc(app.name.replace('Bahasa ', '').slice(0, 2).toUpperCase())}</span>
+            ${imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.remove()">` : ''}
+          </div>
+          <div class="app-card-modern__info">
+            <span class="app-card-modern__tag">ANDROID PLAY STORE</span>
+            <h3 class="app-card-modern__title">${esc(app.name)} <span class="verified-dot">&#10004;</span></h3>
+          </div>
+          <a href="${esc(app.link)}" target="_blank" rel="noopener" class="app-card-modern__btn">
+            ${svgIcon('download')}
+            <span>Unduh</span>
+          </a>
+        </article>
+      `;
+    }).join('');
+
+    mainEl.innerHTML = `
+      <section class="page-hero">
+        <span class="sec-eyebrow">EKOSISTEM DIGITAL &bull; ${DATA.totalAppsCount} APLIKASI</span>
+        <h1 class="page-hero__title">Aplikasi Kitab Suci Nusantara</h1>
+        <p class="page-hero__sub">Unduh aplikasi Alkitab &amp; Kitab Suci audio interaktif di Google Play Store untuk ratusan bahasa daerah di Indonesia.</p>
+        <div class="inline-filter-bar">
+          <input type="search" id="appSearchInput" value="${esc(appFilterQuery)}" placeholder="Filter nama bahasa aplikasi (mis. Muna, Banjar, Toraja)...">
+        </div>
+      </section>
+      <section class="sec-block">
+        <div class="apps-grid-modern">
+          ${cards || '<p class="empty-state">Tidak ada aplikasi yang cocok dengan filter.</p>'}
+        </div>
+        <div class="modern-pager">
+          <span>Menampilkan halaman <strong>${appPage}</strong> dari <strong>${totalPages}</strong> (Total katalog: ${DATA.totalAppsCount} aplikasi)</span>
+          <div class="modern-pager__btns">
+            <button type="button" class="btn-secondary" id="prevAppPage" ${appPage <= 1 ? 'disabled' : ''}>&larr; Sebelumnya</button>
+            <button type="button" class="btn-secondary" id="nextAppPage" ${appPage >= totalPages ? 'disabled' : ''}>Berikutnya &rarr;</button>
+          </div>
+        </div>
+      </section>
+    `;
+
+    const inp = document.getElementById('appSearchInput');
+    if (inp) {
+      inp.addEventListener('input', (e) => {
+        appFilterQuery = e.target.value;
+        appPage = 1;
+        renderApps();
+        const newInp = document.getElementById('appSearchInput');
+        if (newInp) { newInp.focus(); newInp.setSelectionRange(newInp.value.length, newInp.value.length); }
+      });
+    }
+  }
+
+  function renderWatch() {
+    const v = currentWatch || DATA.watchExample;
+    const imgUrl = v.image ? (v.image.startsWith('http') ? v.image : encodeURI(DATA.siteUrl + v.image)) : '';
+    const webHref = v.href ? (v.href.startsWith('http') ? v.href : encodeURI(DATA.siteUrl + v.href)) : DATA.siteUrl;
+    const tags = v.tags || DATA.watchExample.tags || ['Kitab Suci', 'Nusantara', 'Film Rohani'];
+    const related = DATA.latestVideos.slice(0, 4);
+
+    mainEl.innerHTML = `
+      <div class="watch-layout">
+        <div class="watch-layout__primary">
+          <div class="cinema-player">
+            <div class="cinema-player__stage">
+              ${imgUrl ? `<img src="${imgUrl}" alt="" onerror="this.remove()">` : ''}
+              <div class="cinema-player__overlay">
+                <a href="${esc(webHref)}" target="_blank" rel="noopener" class="cinema-play-big" aria-label="Tonton Video di TokoMedia.org">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+                </a>
+                <span class="cinema-player__hint">Klik untuk memutar streaming HLS / Web Player</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="watch-header">
+            <div class="watch-header__badges">
+              <span class="badge-pill">${esc(v.category || 'Film Ikatan Ilahi')}</span>
+              <span class="badge-pill badge-pill--outline">HD STREAMING</span>
+            </div>
+            <h1 class="watch-title-main">${esc(v.title)}</h1>
+            <div class="watch-bar">
+              <div class="publisher-pill">
+                <img src="${DATA.logoB64}" alt="" class="publisher-pill__avatar">
+                <div>
+                  <div class="publisher-pill__name">${esc(DATA.channel)} <span class="verified-dot">&#10004;</span></div>
+                  <div class="publisher-pill__sub">Publikasi ${esc(v.dateLabel || '01 Aug 24')} &bull; ${Number(v.views || 10222).toLocaleString('id-ID')} tayangan</div>
+                </div>
+              </div>
+              <div class="watch-actions">
+                <button type="button" class="action-pill" id="likeToggleBtn" aria-pressed="false">
+                  ${svgIcon('heart')} <span>Suka</span>
+                </button>
+                <a href="${esc(webHref)}" target="_blank" rel="noopener" class="action-pill">
+                  <span>Buka di Situs</span> &#8599;
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="watch-description-box">
+            <h3>Sinopsis &amp; Deskripsi</h3>
+            <p>${esc(v.description || DATA.watchExample.description)}</p>
+            <div class="tag-cloud">
+              ${tags.map(t => `<span class="tag-item">#${esc(t)}</span>`).join('')}
+            </div>
+          </div>
+
+          <div class="watch-comment-card">
+            <h3>Tanggapan &amp; Diskusi Anda</h3>
+            <p class="form-sub">Bagikan kesan atau pertanyaan Anda setelah menonton tayangan ini.</p>
+            <form class="modern-form" id="watchCommentForm">
+              <div class="form-grid-2">
+                <label class="f-field"><span>Nama Lengkap</span><input type="text" required placeholder="Nama Anda"></label>
+                <label class="f-field"><span>Alamat Email</span><input type="email" required placeholder="email@contoh.com"></label>
+              </div>
+              <label class="f-field"><span>Nomor WhatsApp / HP (Opsional)</span><input type="tel" placeholder="+62 812 xxxx xxxx"></label>
+              <label class="f-field"><span>Tanggapan Anda</span><textarea rows="4" required placeholder="Tuliskan tanggapan atau ulasan Anda..."></textarea></label>
+              <div class="form-submit-row">
+                <span class="form-status-msg" id="formStatusMsg"></span>
+                <button type="submit" class="btn-primary">Kirim Tanggapan &rarr;</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <aside class="watch-layout__sidebar">
+          <h3 class="sidebar-heading">Tayangan Terkait</h3>
+          <div class="related-stack">
+            ${related.map((rv, idx) => renderVideoCard(rv, idx, false)).join('')}
+          </div>
+        </aside>
+      </div>
+    `;
+  }
+
+  function renderContact() {
+    mainEl.innerHTML = `
+      <section class="page-hero">
+        <span class="sec-eyebrow">HUBUNGI KAMI &bull; LAYANAN PENDENGAR</span>
+        <h1 class="page-hero__title">Kontak &amp; Kolaborasi</h1>
+        <p class="page-hero__sub">Silakan isi ulasan, komentar, atau pertanyaan Anda mengenai konten bahasa daerah yang tersedia di TokoMedia.</p>
+      </section>
+      <section class="sec-block">
+        <div class="contact-card-wrap">
+          <form class="modern-form" id="contactForm">
+            <div class="form-grid-2">
+              <label class="f-field"><span>Nama Lengkap Anda</span><input type="text" required placeholder="Ketik nama lengkap Anda"></label>
+              <label class="f-field"><span>Email Aktif</span><input type="email" required placeholder="nama@email.com"></label>
+            </div>
+            <label class="f-field"><span>Nomor Telepon / WhatsApp</span><input type="tel" placeholder="+628xxxxxxxxx"></label>
+            <label class="f-field"><span>Pesan / Tanggapan Anda</span><textarea rows="5" required placeholder="Isi ulasan/komentar/tanggapan Anda..."></textarea></label>
+            <div class="form-submit-row">
+              <span class="form-status-msg" id="formStatusMsg"></span>
+              <button type="submit" class="btn-primary">Kirim Pesan Sekarang &rarr;</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderLegal(sourceKey, title) {
+    const blocks = (DATA[sourceKey] && DATA[sourceKey].blocks) || [];
+    const html = blocks.map(([kind, text]) => {
+      if (kind === 'h') return `<h3 class="legal-h">${esc(text)}</h3>`;
+      if (kind === 'li') return `<li class="legal-li">${esc(text)}</li>`;
+      return `<p class="legal-p">${esc(text)}</p>`;
+    }).join('');
+    mainEl.innerHTML = `
+      <section class="page-hero">
+        <span class="sec-eyebrow">DOKUMEN RESMI &bull; TOKOMEDIA.ORG</span>
+        <h1 class="page-hero__title">${esc(title)}</h1>
+      </section>
+      <section class="sec-block">
+        <div class="legal-card">${html}</div>
+      </section>
+    `;
+  }
+
+  function renderSearch(query) {
+    const q = (query || '').trim().toLowerCase();
+    const matchedVideos = DATA.latestVideos.filter(v => !q || v.title.toLowerCase().includes(q));
+    const matchedLangs = allLanguages.filter(l => !q || l.name.toLowerCase().includes(q)).slice(0, 12);
+
+    mainEl.innerHTML = `
+      <section class="page-hero">
+        <span class="sec-eyebrow">PENCARIAN INSTAN</span>
+        <h1 class="page-hero__title">${q ? 'Hasil untuk "' + esc(query) + '"' : 'Jelajahi Katalog'}</h1>
+        <p class="page-hero__sub">Menampilkan kecocokan dari 177 bahasa daerah dan katalog video TokoMedia.</p>
+      </section>
+      ${matchedLangs.length ? `
+        <section class="sec-block">
+          <div class="sec-header"><h2 class="sec-title">Bahasa Daerah (${matchedLangs.length})</h2></div>
+          <div class="lang-tiles-grid">
+            ${matchedLangs.map((l, i) => `
+              <a href="#videos/${esc(l.slug)}" class="lang-tile" style="--tile-hue:${(i*45)%360}">
+                <span class="lang-tile__mono">${esc(l.name.slice(0,2).toUpperCase())}</span>
+                <div class="lang-tile__info">
+                  <span class="lang-tile__name">${esc(l.name)}</span>
+                  <span class="lang-tile__region">${esc(l.region || 'Nusantara')}</span>
+                </div>
+                <span class="lang-tile__arrow">&rarr;</span>
+              </a>
+            `).join('')}
+          </div>
+        </section>
+      ` : ''}
+      <section class="sec-block">
+        <div class="sec-header"><h2 class="sec-title">Video &amp; Episode (${matchedVideos.length})</h2></div>
+        <div class="video-showcase-grid">
+          ${matchedVideos.length ? matchedVideos.map((v, i) => renderVideoCard(v, i, false)).join('') : '<p class="empty-state">Tidak ada video lokal yang cocok. Coba kata kunci seperti "Ikatan", "Musa", atau "Yusuf".</p>'}
+        </div>
+      </section>
+    `;
+  }
+
+  function updateCrumbs(routeStr) {
+    let parts = [['Beranda', '#home']];
+    if (routeStr.startsWith('languages/')) {
+      const catId = routeStr.slice('languages/'.length);
+      const cat = DATA.categories.find(c => c.id === catId);
+      parts.push([cat ? cat.title : catId, null]);
+    } else if (routeStr.startsWith('videos/')) {
+      const slug = routeStr.slice('videos/'.length);
+      const lang = allLanguagesMap.get(slug);
+      parts.push(['Daftar Bahasa', '#languages/' + lastCategory]);
+      parts.push([lang ? lang.name : slug, null]);
+    } else if (routeStr === 'watch') {
+      parts.push(['Ruang Putar', null]);
+    } else if (routeStr === 'contact') {
+      parts.push(['Kontak Kami', null]);
+    } else if (routeStr.startsWith('search')) {
+      parts.push(['Pencarian', null]);
+    } else if (routeStr === 'privacy-web') {
+      parts.push(['Kebijakan Privasi Situs', null]);
+    } else if (routeStr === 'privacy-app') {
+      parts.push(['Kebijakan Privasi Aplikasi', null]);
+    }
+
+    crumbsEl.innerHTML = parts.map((p, i) => {
+      const sep = i > 0 ? '<span class="crumb-sep">/</span>' : '';
+      const item = p[1] ? `<a href="${p[1]}" class="crumb-link">${esc(p[0])}</a>` : `<span class="crumb-current">${esc(p[0])}</span>`;
+      return sep + item;
+    }).join('');
+  }
+
+  function handleRoute() {
+    const raw = decodeURIComponent(location.hash.replace(/^#/, '')) || 'home';
+    drawer.classList.remove('open');
+    scrim.classList.remove('open');
+    searchModal.hidden = true;
+    backBtn.hidden = (raw === 'home');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateCrumbs(raw);
+
+    document.querySelectorAll('.bnav-item').forEach(el => {
+      const key = el.dataset.bnav;
+      const active = (key === 'home' && raw === 'home') ||
+                     (key === 'languages' && (raw.startsWith('languages/') && raw !== 'languages/app' || raw.startsWith('videos/'))) ||
+                     (key === 'watch' && raw === 'watch') ||
+                     (key === 'apps' && raw === 'languages/app');
+      el.classList.toggle('active', active);
+    });
+
+    if (raw === 'home') renderHome();
+    else if (raw === 'languages/app') renderApps();
+    else if (raw.startsWith('languages/')) renderRegions(raw.slice('languages/'.length));
+    else if (raw.startsWith('videos/')) renderLanguageVideos(raw.slice('videos/'.length));
+    else if (raw === 'watch') renderWatch();
+    else if (raw === 'contact') renderContact();
+    else if (raw === 'privacy-web') renderLegal('privacyWeb', 'Kebijakan Privasi Situs');
+    else if (raw === 'privacy-app') renderLegal('privacyApp', 'Kebijakan Privasi Aplikasi');
+    else if (raw.startsWith('search')) renderSearch(raw.slice('search/'.length));
+    else renderHome();
+  }
+
+  document.addEventListener('click', (e) => {
+    const alphaBtn = e.target.closest('[data-alpha]');
+    if (alphaBtn) {
+      activeLetter = alphaBtn.dataset.alpha;
+      renderHome();
+      return;
+    }
+
+    const sortBtn = e.target.closest('[data-sort]');
+    if (sortBtn) {
+      activeSort = sortBtn.dataset.sort;
+      handleRoute();
+      return;
+    }
+
+    const watchLink = e.target.closest('[data-watch-idx]');
+    if (watchLink) {
+      currentWatch = {
+        title: watchLink.dataset.title,
+        views: Number(watchLink.dataset.views || 10222),
+        dateLabel: watchLink.dataset.dateLabel || '01 Aug 24',
+        image: watchLink.dataset.image,
+        href: watchLink.dataset.href,
+        category: 'Koleksi Utama TokoMedia',
+        description: DATA.watchExample.description,
+        tags: DATA.watchExample.tags
+      };
+      return;
+    }
+
+    if (e.target.closest('#prevAppPage')) {
+      if (appPage > 1) { appPage--; renderApps(); }
+      return;
+    }
+    if (e.target.closest('#nextAppPage')) {
+      appPage++; renderApps();
+      return;
+    }
+
+    const likeBtn = e.target.closest('#likeToggleBtn');
+    if (likeBtn) {
+      const pressed = likeBtn.getAttribute('aria-pressed') === 'true';
+      likeBtn.setAttribute('aria-pressed', String(!pressed));
+      likeBtn.classList.toggle('liked', !pressed);
+      return;
+    }
+
+    const quickChip = e.target.closest('[data-quick]');
+    if (quickChip) {
+      location.hash = '#search/' + encodeURIComponent(quickChip.dataset.quick);
+      return;
+    }
+
+    const vpBtn = e.target.closest('[data-vp]');
+    if (vpBtn) {
+      document.querySelectorAll('.vp-btn').forEach(b => b.classList.toggle('active', b === vpBtn));
+      viewportStage.classList.toggle('is-mobile-frame', vpBtn.dataset.vp === 'mobile');
+      return;
+    }
+  });
+
+  document.addEventListener('submit', (e) => {
+    if (e.target.matches('#watchCommentForm, #contactForm')) {
+      e.preventDefault();
+      const msg = e.target.querySelector('#formStatusMsg');
+      if (msg) msg.textContent = 'Terima kasih! Pesan simulasi berhasil divalidasi.';
+      e.target.reset();
+    }
+  });
+
+  document.getElementById('menuBtn').addEventListener('click', () => {
+    drawer.classList.add('open');
+    scrim.classList.add('open');
+  });
+  document.getElementById('closeDrawerBtn').addEventListener('click', () => {
+    drawer.classList.remove('open');
+    scrim.classList.remove('open');
+  });
+  scrim.addEventListener('click', () => {
+    drawer.classList.remove('open');
+    scrim.classList.remove('open');
+  });
+  backBtn.addEventListener('click', () => {
+    if (history.length > 1) history.back();
+    else location.hash = '#home';
+  });
+
+  document.getElementById('searchTrigger').addEventListener('click', () => {
+    searchModal.hidden = false;
+    setTimeout(() => searchInput.focus(), 40);
+  });
+  document.getElementById('closeSearchBtn').addEventListener('click', () => { searchModal.hidden = true; });
+  document.getElementById('searchBackdrop').addEventListener('click', () => { searchModal.hidden = true; });
+  document.getElementById('searchForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = searchInput.value.trim();
+    if (q) location.hash = '#search/' + encodeURIComponent(q);
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== searchInput && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+      e.preventDefault();
+      searchModal.hidden = false;
+      searchInput.focus();
+    } else if (e.key === 'Escape') {
+      searchModal.hidden = true;
+      drawer.classList.remove('open');
+      scrim.classList.remove('open');
+    }
+  });
+
+  window.addEventListener('hashchange', handleRoute);
+  handleRoute();
+})();
+
+</script>
+</body>
+</html>

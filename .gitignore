@@ -1,0 +1,23 @@
+# Dependencies & environment
+node_modules/
+.env
+.env.local
+
+# Android build outputs & local sdk config
+TokoMediaAndroid/.gradle/
+TokoMediaAndroid/.kotlin/
+TokoMediaAndroid/build/
+TokoMediaAndroid/app/build/
+TokoMediaAndroid/local.properties
+TokoMediaAndroid/*.apk
+
+# Large database dumps & zip backups (>10MB / sensitive)
+Backup/
+20261014 API TM App/*.sql
+20261014 API TM App/*.zip
+
+# Temporary & log files
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
