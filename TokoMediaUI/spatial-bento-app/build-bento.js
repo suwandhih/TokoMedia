@@ -118,7 +118,14 @@ const html = `<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#EEF2F6">
-<title>TOKO MEDIA — Spatial Glass &amp; Bento Edition</title>
+<title>TOKO MEDIA — Media Nusantara</title>
+<meta name="description" content="Pusat media rohani, film, video, dan aplikasi Kitab Suci dalam 177 bahasa daerah Nusantara.">
+<meta property="og:title" content="TOKO MEDIA — Media Nusantara">
+<meta property="og:description" content="Pusat media rohani, film, video, dan aplikasi Kitab Suci dalam 177 bahasa daerah Nusantara.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://suwandhih.github.io/TokoMedia/">
+<meta name="twitter:title" content="TOKO MEDIA — Media Nusantara">
+<meta name="twitter:description" content="Pusat media rohani, film, video, dan aplikasi Kitab Suci dalam 177 bahasa daerah Nusantara.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
