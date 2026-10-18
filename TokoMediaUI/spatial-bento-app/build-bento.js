@@ -638,14 +638,8 @@ main {
   grid-template-columns: 1fr;
   gap: 16px;
 }
-.hero-bento.hero-bento--streamlined {
-  grid-template-columns: 1fr;
-}
-.hero-bento--streamlined .hero-main-card {
-  min-height: 220px;
-}
 @media (min-width: 920px) {
-  .hero-bento:not(.hero-bento--streamlined) {
+  .hero-bento {
     grid-template-columns: 1.55fr 1fr;
   }
 }
@@ -1635,7 +1629,7 @@ html[data-mode="dark"] .lang-mono-badge {
             <img src="${logoSrc}" alt="TokoMedia" class="brand-link__logo">
             <div class="brand-link__text">
               <span class="brand-link__title">TOKO<span class="brand-play-pill">&#9654;</span>MEDIA</span>
-              <span class="brand-link__tag">SPATIAL BENTO EDITION</span>
+              <span class="brand-link__tag">MEDIA NUSANTARA</span>
             </div>
           </a>
         </div>
@@ -1905,7 +1899,7 @@ window.TM_PAYLOAD = ${JSON.stringify(payload)};
 
     appMain.innerHTML =
       '<!-- Spatial Hero Bento -->' +
-      '<section class="hero-bento hero-bento--streamlined">' +
+      '<section class="hero-bento">' +
       '<div class="hero-main-card">' +
       '<div class="hero-main-card__bg"></div>' +
       '<div class="hero-main-card__content">' +
@@ -1916,7 +1910,12 @@ window.TM_PAYLOAD = ${JSON.stringify(payload)};
       '<a href="#watch" class="btn-primary" data-watch="1" data-title="' + esc(heroVideo.title) + '" data-views="' + esc(heroVideo.views) + '" data-date-label="' + esc(heroVideo.dateLabel) + '" data-image="' + esc(heroImg) + '" data-href="' + esc(heroHref) + '">&#9654; Tonton Tayangan Sorotan</a>' +
       '<a href="#languages/film-riwayat-isa-al-masih" class="btn-glass">Jelajahi Wilayah &rarr;</a>' +
       '</div></div></div>' +
-      '</section>' +
+      '<div class="hero-stats-Side">' +
+      '<div class="stat-bento"><span class="stat-bento__tag">BAHASA DAERAH</span><strong class="stat-bento__num">177</strong><span class="stat-bento__label">Bahasa Suku &amp; Kepulauan</span></div>' +
+      '<div class="stat-bento"><span class="stat-bento__tag">KATALOG ANDROID</span><strong class="stat-bento__num">' + P.apps.length + '</strong><span class="stat-bento__label">Aplikasi Kitab Suci</span></div>' +
+      '<div class="stat-bento"><span class="stat-bento__tag">KOLEKSI MEDIA</span><strong class="stat-bento__num">5</strong><span class="stat-bento__label">Kategori Film &amp; Klip</span></div>' +
+      '<div class="stat-bento"><span class="stat-bento__tag">WILAYAH BESAR</span><strong class="stat-bento__num">5</strong><span class="stat-bento__label">Sumatera hingga Papua</span></div>' +
+      '</div></section>' +
 
       '<!-- Kategori Utama Bento -->' +
       '<section>' +
