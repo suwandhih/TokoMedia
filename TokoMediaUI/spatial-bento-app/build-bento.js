@@ -13,11 +13,35 @@ const outputPath = path.resolve(__dirname, 'index.html');
 const ui = JSON.parse(fs.readFileSync(uiPath, 'utf8'));
 
 const brand = ui.app.brand;
-const logoSrc = 'data:image/png;base64,' + fs.readFileSync(path.resolve(__dirname, '..', brand.logo)).toString('base64');
+const logoIconSrc = 'data:image/png;base64,' + fs.readFileSync(path.resolve(__dirname, '..', brand.logo)).toString('base64');
+const color = brand.color;
+const parts = brand.layout.parts;
+
+const textParts = parts.filter(p => p.text).map(p => {
+  return `<text x="${p.x}" y="${brand.layout.baseline}" textLength="${p.width}" lengthAdjust="spacingAndGlyphs">${p.text}</text>`;
+}).join('');
+
+const play = parts.find(p => p.play).play;
+const pause = parts.find(p => p.pause).pause;
+
+const pauseBars = [0, 1].map(i => {
+  return `<rect x="${pause.x + i * (pause.w + pause.gap)}" y="${pause.y}" width="${pause.w}" height="${pause.h}" fill="${color}"/>`;
+}).join('');
+
+const playCircle = `<circle cx="${play.cx}" cy="${play.cy}" r="${play.r}" fill="${color}"/><path d="${`M${play.cx - 3} ${play.cy - 4.5}V${play.cy + 4.5}L${play.cx + 4} ${play.cy}Z`}" fill="#fff"/>`;
+
+const logoSvg = `<svg class="brand-svg-logo" viewBox="0 0 ${brand.layout.width} ${brand.layout.height}" width="${brand.layout.width}" height="${brand.layout.height}" role="img" aria-label="TOKO MEDIA">
+  <image href="${logoIconSrc}" x="0" y="0" width="${brand.layout.iconWidth}" height="${brand.layout.height}" preserveAspectRatio="xMidYMid meet"/>
+  <g class="logo-letters" fill="currentColor" font-family="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif" font-size="${brand.layout.fontSize}" font-weight="700">
+    ${textParts}
+  </g>
+  ${playCircle}
+  ${pauseBars}
+</svg>`;
 
 const payload = {
   app: ui.app,
-  logoSrc,
+  logoSrc: logoIconSrc,
   categories: [
     {
       id: 'film-riwayat-isa-al-masih',
@@ -239,18 +263,15 @@ img { max-width: 100%; display: block; }
   gap: 8px;
   min-width: 0;
 }
-.stage-wrapper.mobile-frame .brand-link__logo {
-  width: 28px;
-  height: 30px;
+.stage-wrapper.mobile-frame .brand-svg-logo {
+  height: 25px;
+  width: auto;
+  max-width: 130px;
   flex: none;
 }
-.stage-wrapper.mobile-frame .brand-link__title {
-  font-size: 16px;
-  white-space: nowrap;
-}
 .stage-wrapper.mobile-frame .brand-link__tag {
-  font-size: 8.5px;
-  letter-spacing: 0.08em;
+  font-size: 8px;
+  letter-spacing: 0.1em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -310,47 +331,32 @@ img { max-width: 100%; display: block; }
 }
 .brand-link {
   display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
   flex-shrink: 0;
+  text-decoration: none;
 }
-.brand-link__logo {
-  width: 32px; height: 36px;
+.brand-svg-logo {
+  height: 26px;
+  width: auto;
+  max-width: 140px;
+  display: block;
   flex: none;
-  object-fit: contain;
+  color: var(--text);
+  overflow: visible;
 }
 .brand-link__text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.05;
-}
-.brand-link__title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 19px;
-  letter-spacing: -0.02em;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-}
-.brand-play-pill {
-  display: inline-grid;
-  place-items: center;
-  width: 19px; height: 19px;
-  flex: none;
-  border-radius: 50%;
-  background: var(--primary);
-  color: var(--primary-contrast);
-  font-size: 9px;
+  display: block;
+  line-height: 1;
 }
 .brand-link__tag {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.12em;
+  font-size: 7.5px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-top: 2px;
   white-space: nowrap;
 }
 
@@ -1625,10 +1631,9 @@ html[data-mode="dark"] .lang-mono-badge {
           <button type="button" class="glass-icon-btn" id="backBtn" aria-label="Kembali" hidden>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </button>
-          <a href="#home" class="brand-link">
-            <img src="${logoSrc}" alt="TokoMedia" class="brand-link__logo">
+          <a href="#home" class="brand-link" aria-label="Beranda TokoMedia">
+            ${logoSvg}
             <div class="brand-link__text">
-              <span class="brand-link__title">TOKO<span class="brand-play-pill">&#9654;</span>MEDIA</span>
               <span class="brand-link__tag">MEDIA NUSANTARA</span>
             </div>
           </a>
