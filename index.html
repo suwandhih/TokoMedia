@@ -537,19 +537,10 @@ main {
   grid-template-columns: 1fr;
   gap: 16px;
 }
-@media (min-width: 920px) {
-  .hero-bento {
-    grid-template-columns: 1.55fr 1fr;
-  }
-}
-.stage-wrapper.mobile-frame .hero-bento {
-  grid-template-columns: 1fr;
-}
-
 .hero-main-card {
   position: relative;
   border-radius: var(--radius-xl);
-  padding: clamp(22px, 3.5vw, 38px);
+  padding: clamp(24px, 4vw, 42px);
   background: var(--glass);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -1815,12 +1806,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '<a href="#watch" class="btn-primary" data-watch="1" data-title="' + esc(heroVideo.title) + '" data-views="' + esc(heroVideo.views) + '" data-date-label="' + esc(heroVideo.dateLabel) + '" data-image="' + esc(heroImg) + '" data-href="' + esc(heroHref) + '">&#9654; Tonton Tayangan Sorotan</a>' +
       '<a href="#languages/film-riwayat-isa-al-masih" class="btn-glass">Jelajahi Wilayah &rarr;</a>' +
       '</div></div></div>' +
-      '<div class="hero-stats-Side">' +
-      '<div class="stat-bento"><span class="stat-bento__tag">BAHASA DAERAH</span><strong class="stat-bento__num">177</strong><span class="stat-bento__label">Bahasa Suku &amp; Kepulauan</span></div>' +
-      '<div class="stat-bento"><span class="stat-bento__tag">KATALOG ANDROID</span><strong class="stat-bento__num">' + P.apps.length + '</strong><span class="stat-bento__label">Aplikasi Kitab Suci</span></div>' +
-      '<div class="stat-bento"><span class="stat-bento__tag">KOLEKSI MEDIA</span><strong class="stat-bento__num">5</strong><span class="stat-bento__label">Kategori Film &amp; Klip</span></div>' +
-      '<div class="stat-bento"><span class="stat-bento__tag">WILAYAH BESAR</span><strong class="stat-bento__num">5</strong><span class="stat-bento__label">Sumatera hingga Papua</span></div>' +
-      '</div></section>' +
+      '</section>' +
 
       '<!-- Kategori Utama Bento -->' +
       '<section>' +
