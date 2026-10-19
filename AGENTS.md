@@ -31,6 +31,7 @@
 | **A4** | Kalau ragu memahami maksud instruksi/chat → **TANYA dulu secara terstruktur**, jangan berasumsi atau menebak. |
 | **A5** | **Perbaikan error = langsung kerjakan**, tetap backup dulu bila diperlukan. |
 | **A6** | **Tiap selesai satu butir → uji & lapor ke Bapak** sebelum melanjutkan hal lain. |
+| **A7** | **WAJIB selalu commit & push ke GitHub** setiap selesai merevisi dan menguji. |
 
 ---
 
