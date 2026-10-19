@@ -1617,7 +1617,7 @@ html[data-mode="dark"] .lang-mono-badge {
   <div class="mesh-blob mesh-blob--3"></div>
 </div>
 
-<div class="stage-wrapper" id="stageWrapper">
+<div class="stage-wrapper mobile-frame" id="stageWrapper">
   <div class="app-container">
     <!-- Top Spatial Glass Header -->
     <header class="topbar">
@@ -1660,8 +1660,8 @@ html[data-mode="dark"] .lang-mono-badge {
       <div class="crumbs-ribbon">
         <nav class="crumbs-list" id="crumbs" aria-label="Breadcrumb"></nav>
         <div class="crumbs-tools">
-          <button type="button" class="mini-chip-btn active" data-vp="resp" title="Tampilan Responsif Penuh">Layar Penuh</button>
-          <button type="button" class="mini-chip-btn" data-vp="mobile" title="Simulasi Ukuran Layar HP 430px">Mode HP 430px</button>
+          <button type="button" class="mini-chip-btn active" data-vp="mobile" title="Simulasi Ukuran Layar HP 430px">Mode HP 430px</button>
+          <button type="button" class="mini-chip-btn" data-vp="resp" title="Tampilan Responsif Penuh">Layar Penuh</button>
         </div>
       </div>
     </header>
