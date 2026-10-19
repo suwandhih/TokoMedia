@@ -174,6 +174,7 @@ class Ikatan extends CI_Controller
 				$response['data'][$i]['id'] = $row['seq'];
 				$response['data'][$i]['name'] = $row['displayname'];
 				$response['data'][$i]['thumbnail'] = SERVER_URL . $row['thumbnail'];
+				$response['data'][$i]['slug'] = $row['slug'];
 				$response['data'][$i]['watchcounter'] = $row['watchcounter'];
 				$response['data'][$i]['duration'] = $row['duration'];
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
@@ -252,6 +253,7 @@ class Ikatan extends CI_Controller
 				$response['data'][$i]['id'] = $row['seq'];
 				$response['data'][$i]['name'] = $row['displayname'];
 				$response['data'][$i]['thumbnail'] = SERVER_URL . $row['thumbnail'];
+				$response['data'][$i]['slug'] = $row['slug'];
 				$response['data'][$i]['watchcounter'] = $row['watchcounter'];
 				$response['data'][$i]['duration'] = $row['duration'];
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
@@ -310,6 +312,7 @@ class Ikatan extends CI_Controller
 		$response['data']['tag'] = $video_detail['tagging'];
 		$response['data']['favcounter'] = $video_detail['favoritecounter'];
 		$response['data']['thumbnail'] = SERVER_URL . $video_detail['thumbnail'];
+		$response['data']['slug'] = $video_detail['slug'];
 
 		$recomended_video = $this->video->get_video_recomendation($_POST['id'], $video_detail['categoryarray'], 10);
 		$i = 0;
@@ -318,6 +321,7 @@ class Ikatan extends CI_Controller
 			$response['data']['recomended'][$i]['title'] = $row['displayname'];
 			$response['data']['recomended'][$i]['duration'] = $row['duration'];
 			$response['data']['recomended'][$i]['thumbnail'] = SERVER_URL . $row['thumbnail'];
+			$response['data']['recomended'][$i]['slug'] = $row['slug'];
 			$response['data']['recomended'][$i]['watchcounter'] = $row['watchcounter'];
 			$response['data']['recomended'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
 			$response['data']['recomended'][$i]['dateschedule_iso'] = api_iso_date($row['dateschedule']);

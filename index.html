@@ -1614,6 +1614,21 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
 <script>
 (function () {
   var P = window.TM_PAYLOAD;
+
+  // ---------------------------------------------------------------------------
+  // Konfigurasi API
+  // Ubah `apiBase` bila lokasi API berbeda. Untuk pengujian lokal tambahkan
+  // ?api=http://localhost:8080/api pada URL halaman.
+  // ---------------------------------------------------------------------------
+  var TM_CONFIG = {
+    apiBase: 'https://www.tokomedia.org/api/index.php/api',
+    token: 'GANTI_DENGAN_TOKEN_API_BARU'
+  };
+  (function () {
+    var override = new URLSearchParams(location.search).get('api');
+    if (override) TM_CONFIG.apiBase = override.replace(/\/+$/, '');
+  })();
+
   var SITE = P.app.siteUrl;
   var CHANNEL = P.app.channel;
   var SEARCH_URL = SITE + '/search/v/';
@@ -1626,17 +1641,163 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
   var searchInput = document.getElementById('searchInput');
   var stageWrapper = document.getElementById('stageWrapper');
 
-  var langMap = new Map();
-  P.regions.forEach(function (r) {
-    r.languages.forEach(function (l) {
-      if (!langMap.has(l.slug)) langMap.set(l.slug, { name: l.name, slug: l.slug, region: r.name, image: '' });
+  // ---------------------------------------------------------------------------
+  // Store data runtime.
+  // Nilai awal = payload tertanam, lalu ditimpa data API bila tersedia.
+  // ---------------------------------------------------------------------------
+  var TM = {
+    tree: null,
+    categories: P.categories,
+    regions: P.regions,
+    homeLanguages: P.homeLanguages,
+    latestVideos: P.latestVideos,
+    apps: P.apps,
+    watch: null,
+    loaded: {}
+  };
+
+  // Root kategori di database untuk setiap slug kategori pada UI.
+  var CATEGORY_ROOT = {
+    'film-riwayat-isa-al-masih': 1,
+    'video': 126,
+    'clip': 127,
+    'film-ikatan-ilahi': 304
+  };
+
+  function apiPost(path, params) {
+    var body = new URLSearchParams();
+    body.set('token', TM_CONFIG.token);
+    Object.keys(params || {}).forEach(function (key) {
+      var value = params[key];
+      if (value !== undefined && value !== null) body.set(key, value);
     });
-  });
-  P.homeLanguages.forEach(function (l) {
-    if (!langMap.has(l.slug)) langMap.set(l.slug, { name: l.name, slug: l.slug, region: 'Nusantara', image: l.image });
-    else langMap.get(l.slug).image = l.image;
-  });
-  var allLanguages = Array.from(langMap.values()).sort(function (a, b) { return a.name.localeCompare(b.name); });
+    return fetch(TM_CONFIG.apiBase + '/' + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+      body: body.toString()
+    }).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function (json) {
+      if (!json || typeof json.status === 'undefined') throw new Error('Respons API tidak valid');
+      return json;
+    });
+  }
+
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  function shortDate(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return ('0' + d.getDate()).slice(-2) + ' ' + MONTHS[d.getMonth()] + ' ' + String(d.getFullYear()).slice(-2);
+  }
+
+  function shortSlug(slug) {
+    var parts = String(slug || '').split('/');
+    return parts[parts.length - 1];
+  }
+
+  function parseTags(tagging) {
+    return String(tagging || '').split(/\s+/).filter(function (t) { return t; }).map(function (t) {
+      return t.replace(/^#/, '');
+    });
+  }
+
+  // Item daftar memakai `name`, item rekomendasi memakai `title`.
+  function apiVideoToCard(item) {
+    return {
+      id: item.id,
+      title: item.name || item.title || '',
+      image: item.thumbnail || '',
+      href: item.slug ? '/' + item.slug : '',
+      duration: item.duration || '',
+      views: Number(item.watchcounter || 0),
+      date: item.dateschedule_iso || '',
+      dateLabel: shortDate(item.dateschedule_iso)
+    };
+  }
+
+  // Konten video di database memakai <br> sebagai pemisah baris.
+  function plainText(html) {
+    return String(html || '')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  }
+
+  // Nama bahasa diambil dari segmen kedua slug, mis. "film-ikatan-ilahi/aceh/w/..."
+  function languageLabelFromSlug(slug) {
+    var parts = String(slug || '').split('/');
+    if (parts.length < 2) return '';
+    var entry = langMap.get(parts[1]);
+    return entry ? entry.name : parts[1].replace(/-/g, ' ');
+  }
+
+  function currentRoute() {
+    return decodeURIComponent(location.hash.replace(/^#/, '')) || 'home';
+  }
+
+  function rerenderIf(predicate) {
+    if (predicate(currentRoute())) showRoute();
+  }
+
+  var langMap = new Map();
+  var allLanguages = [];
+
+  // Indeks bahasa untuk Beranda (A–Z & galeri ikon) hanya memakai Film Isa
+  // Al-Masih, sama seperti desain awal. Kategori lain punya daftar bahasanya
+  // sendiri di halaman wilayah.
+  var HOME_ROOT_ID = 1;
+
+  function rebuildLangIndex() {
+    var all = new Map();
+    var home = new Map();
+
+    function add(target, name, slug, region, image) {
+      if (!slug) return;
+      var list = target.get(slug) || [];
+      list.push({ name: name, slug: slug, region: region, image: image || '' });
+      target.set(slug, list);
+    }
+
+    if (TM.tree) {
+      TM.tree.forEach(function (root) {
+        (root.children || []).forEach(function (region) {
+          var langs = (region.children && region.children.length) ? region.children : [region];
+          langs.forEach(function (l) {
+            var slug = shortSlug(l.slug);
+            add(all, l.name, slug, region.name, '');
+            if (root.id === HOME_ROOT_ID) add(home, l.name, slug, region.name, '');
+          });
+        });
+      });
+    }
+    TM.regions.forEach(function (r) {
+      r.languages.forEach(function (l) {
+        add(all, l.name, l.slug, r.name, '');
+        add(home, l.name, l.slug, r.name, '');
+      });
+    });
+    TM.homeLanguages.forEach(function (l) {
+      add(all, l.name, l.slug, 'Nusantara', l.image);
+      add(home, l.name, l.slug, 'Nusantara', l.image);
+    });
+
+    function pick(map) {
+      var out = new Map();
+      map.forEach(function (list, slug) {
+        // Bila satu slug muncul beberapa kali, utamakan entri "Indonesia".
+        out.set(slug, list.filter(function (c) { return c.name === 'Indonesia'; })[0] || list[0]);
+      });
+      return out;
+    }
+
+    langMap = pick(all);
+    allLanguages = Array.from(pick(home).values()).sort(function (a, b) { return a.name.localeCompare(b.name); });
+  }
+  rebuildLangIndex();
 
   var activeLetter = 'A';
   var langViewMode = 'az'; // 'az' | 'bubbles'
@@ -1645,6 +1806,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
   var lastCrumbs = [['Beranda', '#home']];
   var lastRoute = 'home';
   var watchData = P.watchExample;
+  var detailLoaded = null;
   var appPage = 1;
   var appPageSize = 12;
   var appFilter = '';
@@ -1701,6 +1863,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
     var likesStr = v.likes ? ' &#9829; ' + v.likes : '';
     return (
       '<a class="vcard" href="#watch" data-watch="1"' +
+      ' data-id="' + esc(v.id || '') + '"' +
       ' data-title="' + esc(v.title) + '"' +
       ' data-views="' + esc(v.views) + '"' +
       ' data-date-label="' + esc(v.dateLabel) + '"' +
@@ -1734,11 +1897,11 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
   }
 
   function renderHome() {
-    var heroVideo = P.latestVideos[0];
-    var heroImg = heroVideo.image ? encodeURI(SITE + heroVideo.image) : '';
-    var heroHref = heroVideo.href ? encodeURI(SITE + heroVideo.href) : '';
+    var heroVideo = TM.latestVideos[0] || {};
+    var heroImg = heroVideo.image ? (heroVideo.image.indexOf('http') === 0 ? heroVideo.image : encodeURI(SITE + heroVideo.image)) : '';
+    var heroHref = heroVideo.href ? (heroVideo.href.indexOf('http') === 0 ? heroVideo.href : encodeURI(SITE + heroVideo.href)) : '';
 
-    var catCardsHtml = P.categories.map(function (c) {
+    var catCardsHtml = TM.categories.map(function (c) {
       return (
         '<a class="cat-bento-card" href="#languages/' + esc(c.id) + '" style="--card-grad:' + c.grad + ';--card-accent:' + c.accent + ';--icon-bg:' + c.iconBg + '">' +
         '<div class="cat-bento-card__top">' +
@@ -1756,8 +1919,8 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       );
     }).join('');
 
-    var squirclesHtml = P.homeLanguages.map(function (l) {
-      var img = l.image ? '<img src="' + esc(encodeURI(SITE + l.image)) + '" alt="" loading="lazy" onerror="this.remove()">' : '';
+    var squirclesHtml = TM.homeLanguages.map(function (l) {
+      var img = l.image ? '<img src="' + esc(l.image.indexOf('http') === 0 ? l.image : encodeURI(SITE + l.image)) + '" alt="" loading="lazy" onerror="this.remove()">' : '';
       return (
         '<a class="squircle-item" href="#videos/' + esc(l.slug) + '">' +
         '<span class="squircle-avatar">' + esc(l.name.slice(0, 2).toUpperCase()) + img + '</span>' +
@@ -1790,7 +1953,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       );
     }).join('');
 
-    var sortedLatest = sortVideoItems(P.latestVideos);
+    var sortedLatest = sortVideoItems(TM.latestVideos);
     var homeFeaturedVideos = sortedLatest.slice(0, 4);
 
     appMain.innerHTML =
@@ -1803,7 +1966,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '<h1 class="hero-title">Film, Video &amp; Aplikasi Kitab Suci Nusantara.</h1>' +
       '<p class="hero-desc">Nikmati ribuan tayangan rohani bermakna, kisah para nabi, serta aplikasi Kitab Suci Android dalam bahasa ibu dari Sabang sampai Merauke.</p>' +
       '<div class="hero-cta-row">' +
-      '<a href="#watch" class="btn-primary" data-watch="1" data-title="' + esc(heroVideo.title) + '" data-views="' + esc(heroVideo.views) + '" data-date-label="' + esc(heroVideo.dateLabel) + '" data-image="' + esc(heroImg) + '" data-href="' + esc(heroHref) + '">&#9654; Tonton Tayangan Sorotan</a>' +
+      '<a href="#watch" class="btn-primary" data-watch="1" data-id="' + esc(heroVideo.id || '') + '" data-title="' + esc(heroVideo.title) + '" data-views="' + esc(heroVideo.views) + '" data-date-label="' + esc(heroVideo.dateLabel) + '" data-image="' + esc(heroImg) + '" data-href="' + esc(heroHref) + '">&#9654; Tonton Tayangan Sorotan</a>' +
       '<a href="#languages/film-riwayat-isa-al-masih" class="btn-glass">Jelajahi Wilayah &rarr;</a>' +
       '</div></div></div>' +
       '</section>' +
@@ -1851,10 +2014,38 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '</section>';
   }
 
+  // Ambil daftar wilayah + bahasa untuk satu kategori dari pohon kategori API.
+  // Anak root yang bernama "Indonesia" dijadikan Bahasa Nasional (bukan wilayah).
+  function regionsForCategory(categorySlug) {
+    var rootId = CATEGORY_ROOT[categorySlug];
+    if (!TM.tree || !rootId) return null;
+    var root = TM.tree.filter(function (n) { return n.id === rootId; })[0];
+    if (!root) return null;
+
+    var national = null;
+    var regions = [];
+    (root.children || []).forEach(function (child) {
+      var kids = child.children || [];
+      if (!national && /indonesia/i.test(child.name)) {
+        national = { name: 'Indonesia', slug: shortSlug(child.slug) };
+        return;
+      }
+      if (!kids.length) return;
+      regions.push({
+        name: child.name,
+        languages: kids.map(function (l) { return { name: l.name, slug: shortSlug(l.slug) }; })
+      });
+    });
+    return { national: national, regions: regions };
+  }
+
   function renderRegions(categorySlug) {
     lastCategory = categorySlug || 'film-riwayat-isa-al-masih';
-    var catObj = P.categories.find(function (c) { return c.id === lastCategory; }) || P.categories[0];
-    
+    var catObj = TM.categories.filter(function (c) { return c.id === lastCategory; })[0] || TM.categories[0];
+    var fromApi = regionsForCategory(lastCategory);
+    var national = fromApi ? fromApi.national : { name: 'Indonesia', slug: 'indonesia' };
+    var regionList = fromApi ? fromApi.regions : TM.regions;
+
     // Accordion Paling Atas: Indonesia (Bahasa Nasional)
     var indHtml =
       '<details class="region-bento region-bento--nasional">' +
@@ -1863,7 +2054,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '<div class="region-bento__content">' +
       '<ul class="lang-bento-grid">' +
       '<li class="lang-bento-item" style="--hue:150">' +
-      '<a href="#videos/indonesia">' +
+      '<a href="#videos/' + esc(national ? national.slug : 'indonesia') + '">' +
       '<span class="lang-mono-badge">ID</span>' +
       '<span class="lang-bento-name">Bahasa Indonesia</span>' +
       '<span class="lang-bento-arrow">&rsaquo;</span>' +
@@ -1872,7 +2063,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '</details>';
 
     // Accordion Wilayah Kepulauan Besar: Semua selalu tertutup secara default
-    var regionsHtml = P.regions.map(function (r) {
+    var regionsHtml = regionList.map(function (r) {
       var items = r.languages.map(function (l) {
         var ch = l.name.trim().charAt(0).toUpperCase();
         var hue = (ch.charCodeAt(0) * 37) % 360;
@@ -1903,9 +2094,36 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '<section class="region-stack">' + indHtml + regionsHtml + '</section>';
   }
 
+  // Endpoint daftar video per kategori UI.
+  var VIDEO_ENDPOINT = {
+    'film-riwayat-isa-al-masih': 'riwayat/languagepref',
+    'video': 'vkitab/languagepref',
+    'film-ikatan-ilahi': 'ikatan/languagepref',
+    'clip': 'ckitab/index'
+  };
+
   function renderLanguageVideos(langSlug) {
     var langObj = langMap.get(langSlug) || { name: langSlug, region: 'Nusantara' };
-    var vids = P.videos.map(function (v, i) {
+    var category = lastCategory;
+    var endpoint = VIDEO_ENDPOINT[category] || VIDEO_ENDPOINT['film-riwayat-isa-al-masih'];
+    var needsLang = endpoint !== 'ckitab/index';
+
+    function paint(items, note) {
+      var sorted = sortVideoItems(items);
+      appMain.innerHTML =
+        '<section class="glass-panel">' +
+        '<div class="sec-head">' +
+        '<div><span class="sec-eyebrow">KOLEKSI BAHASA &bull; ' + esc(langObj.region) + '</span>' +
+        '<h1 class="sec-title">Koleksi Media ' + esc(langObj.name) + '</h1></div>' +
+        renderSortChipsHtml() +
+        '</div>' +
+        (note ? '<p class="sec-sub" style="margin-bottom:12px">' + esc(note) + '</p>' : '') +
+        '<div class="video-bento-grid">' + sorted.map(renderVideoCardHtml).join('') + '</div>' +
+        '</section>';
+    }
+
+    // Data tertanam ditampilkan lebih dulu agar halaman tidak kosong saat memuat.
+    var fallback = P.videos.map(function (v, i) {
       var sample = P.latestVideos[i % P.latestVideos.length] || {};
       return {
         title: v.title.replace('{languageName}', langObj.name),
@@ -1917,39 +2135,43 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
         href: sample.href || ''
       };
     });
-    var sorted = sortVideoItems(vids);
+    paint(fallback, '');
 
-    appMain.innerHTML =
-      '<section class="glass-panel">' +
-      '<div class="sec-head">' +
-      '<div><span class="sec-eyebrow">KOLEKSI BAHASA &bull; ' + esc(langObj.region) + '</span>' +
-      '<h1 class="sec-title">Koleksi Media ' + esc(langObj.name) + '</h1></div>' +
-      renderSortChipsHtml() +
-      '</div>' +
-      '<div class="video-bento-grid">' + sorted.map(renderVideoCardHtml).join('') + '</div>' +
-      '</section>';
+    var params = needsLang ? { id: langSlug, per_page: 100 } : { per_page: 100 };
+    if (activeSort !== 'trending') params.sort = activeSort === 'unviral' ? 'unseen' : activeSort;
+    apiPost(endpoint, params).then(function (json) {
+      if (currentRoute() !== 'videos/' + langSlug) return;
+      var items = (json.data || []).map(apiVideoToCard);
+      if (!items.length) {
+        paint([], json.message || 'Belum ada video untuk bahasa ini.');
+        return;
+      }
+      paint(items, '');
+    }).catch(function () {
+      if (currentRoute() !== 'videos/' + langSlug) return;
+      paint(fallback, 'Menampilkan data luring — server API belum dapat dihubungi.');
+    });
   }
 
-  function renderApps() {
-    var filtered = P.apps.filter(function (a) {
-      return !appFilter || a.name.toLowerCase().indexOf(appFilter.toLowerCase()) > -1;
-    });
-    var pages = Math.max(1, Math.ceil(filtered.length / appPageSize));
+  function appCardHtml(app) {
+    var img = app.image
+      ? '<img src="' + esc(app.image.indexOf('http') === 0 ? app.image : encodeURI(SITE + app.image)) + '" alt="" loading="lazy" onerror="this.remove()">'
+      : '';
+    var init = esc(app.name.replace(/^Bahasas+/i, '').slice(0, 2).toUpperCase());
+    return (
+      '<article class="app-bento-card">' +
+      '<div class="app-bento-logo"><span>' + init + '</span>' + img + '</div>' +
+      '<h3 class="app-bento-name">' + esc(app.name) + ' <span style="color:var(--primary);font-size:11px">&#10004;</span></h3>' +
+      '<a class="app-bento-dl" href="' + esc(app.link) + '" target="_blank" rel="noopener">' + iconSvg('download') + '<span>Unduh</span></a>' +
+      '</article>'
+    );
+  }
+
+  function paintApps(state) {
+    var pages = Math.max(1, Math.ceil(state.total / appPageSize));
     if (appPage > pages) appPage = 1;
     var start = (appPage - 1) * appPageSize;
-    var slice = filtered.slice(start, start + appPageSize);
-
-    var cards = slice.map(function (app) {
-      var img = app.image ? '<img src="' + esc(encodeURI(SITE + app.image)) + '" alt="" loading="lazy" onerror="this.remove()">' : '';
-      var init = esc(app.name.replace(/^Bahasas+/i, '').slice(0, 2).toUpperCase());
-      return (
-        '<article class="app-bento-card">' +
-        '<div class="app-bento-logo"><span>' + init + '</span>' + img + '</div>' +
-        '<h3 class="app-bento-name">' + esc(app.name) + ' <span style="color:var(--primary);font-size:11px">&#10004;</span></h3>' +
-        '<a class="app-bento-dl" href="' + esc(app.link) + '" target="_blank" rel="noopener">' + iconSvg('download') + '<span>Unduh</span></a>' +
-        '</article>'
-      );
-    }).join('');
+    var cards = state.items.map(appCardHtml).join('');
 
     var opts = [];
     for (var i = 1; i <= pages; i++) {
@@ -1958,14 +2180,15 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
 
     appMain.innerHTML =
       '<section class="glass-panel">' +
-      '<span class="sec-eyebrow">KATALOG RESMI GOOGLE PLAY &bull; ' + P.apps.length + ' APLIKASI</span>' +
+      '<span class="sec-eyebrow">KATALOG RESMI GOOGLE PLAY &bull; ' + state.total + ' APLIKASI</span>' +
       '<h1 class="sec-title">Aplikasi Kitab Suci Nusantara</h1>' +
       '<div class="apps-toolbar" style="margin-top:14px">' +
       '<input type="search" id="appFilterInput" class="apps-filter-input" value="' + esc(appFilter) + '" placeholder="Filter nama bahasa aplikasi (mis. Toraja, Muna, Banjar, Sunda)...">' +
       '</div>' +
+      (state.note ? '<p class="sec-sub" style="margin-bottom:10px">' + esc(state.note) + '</p>' : '') +
       '<div class="apps-bento-grid">' + (cards || '<p class="sec-sub">Tidak ada aplikasi yang cocok dengan pencarian.</p>') + '</div>' +
       '<div class="pager-bar">' +
-      '<span>Konten : <b>' + (filtered.length ? start + 1 : 0) + '</b> - <b>' + Math.min(start + appPageSize, filtered.length) + '</b> dari total <b>' + filtered.length + '</b> Data.</span>' +
+      '<span>Konten : <b>' + (state.total ? start + 1 : 0) + '</b> - <b>' + Math.min(start + appPageSize, state.total) + '</b> dari total <b>' + state.total + '</b> Data.</span>' +
       '<label>Halaman: <select id="appPageSelect">' + opts.join('') + '</select> dari ' + pages + '</label>' +
       '</div></section>';
 
@@ -1991,12 +2214,44 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
     }
   }
 
+  function renderApps() {
+    // Data tertanam dipakai sebagai tampilan awal / cadangan.
+    var local = TM.apps.filter(function (a) {
+      return !appFilter || a.name.toLowerCase().indexOf(appFilter.toLowerCase()) > -1;
+    });
+    var start = (appPage - 1) * appPageSize;
+    paintApps({
+      items: local.slice(start, start + appPageSize),
+      total: local.length,
+      note: ''
+    });
+
+    var params = { page: appPage, per_page: appPageSize };
+    if (appFilter) params.q = appFilter;
+    if (activeSort !== 'trending') params.sort = activeSort === 'unviral' ? 'unseen' : activeSort;
+    apiPost('aplikasi/list', params).then(function (json) {
+      if (currentRoute() !== 'languages/app') return;
+      var items = (json.data || []).map(function (a) {
+        return { name: a.name, image: a.thumbnail, link: a.url };
+      });
+      var total = (json.pagination && json.pagination.total) || items.length;
+      paintApps({ items: items, total: total, note: '' });
+    }).catch(function () {
+      if (currentRoute() !== 'languages/app') return;
+      paintApps({
+        items: local.slice(start, start + appPageSize),
+        total: local.length,
+        note: 'Menampilkan data luring — server API belum dapat dihubungi.'
+      });
+    });
+  }
+
   function renderWatch() {
     var v = watchData || P.watchExample;
     var imgUrl = v.image ? (v.image.indexOf('http') === 0 ? v.image : encodeURI(SITE + v.image)) : '';
     var webHref = v.href ? (v.href.indexOf('http') === 0 ? v.href : encodeURI(SITE + v.href)) : SITE;
-    var tags = (v.tags && v.tags.length ? v.tags : P.watchExample.tags) || [];
-    var related = P.latestVideos.slice(0, 4);
+    var tags = v.tags || [];
+    var related = (v.related && v.related.length) ? v.related : TM.latestVideos.slice(0, 4);
 
     appMain.innerHTML =
       '<div class="watch-bento-layout">' +
@@ -2017,12 +2272,12 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '<div><strong style="color:var(--primary)">' + esc(CHANNEL) + ' &#10004;</strong>' +
       '<div class="sec-sub">Publikasi ' + esc(v.dateLabel || P.watchExample.dateLabel) + '</div></div>' +
       '</div>' +
-      '<button type="button" class="like-btn" aria-pressed="false">&#9829; Suka</button>' +
+      '<button type="button" class="like-btn" aria-pressed="false">&#9829; Suka' + (v.likes ? ' &middot; ' + Number(v.likes).toLocaleString('en-US') : '') + '</button>' +
       '</div></section>' +
 
       '<section class="glass-panel">' +
       '<h2 class="sec-title" style="font-size:18px;margin-bottom:8px">Deskripsi &amp; Tag</h2>' +
-      '<p style="font-size:14px;white-space:pre-line;color:var(--text-secondary)">' + esc(v.description || P.watchExample.description) + '</p>' +
+      '<p style="font-size:14px;white-space:pre-line;color:var(--text-secondary)">' + esc(v.description || 'Memuat deskripsi…') + '</p>' +
       '<div class="tag-list">' + tags.map(function (t) { return '<span class="tag-pill">#' + esc(t) + '</span>'; }).join('') + '</div>' +
       '</section>' +
 
@@ -2049,6 +2304,30 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '</div>';
 
     initCaptchas();
+
+    // Lengkapi detail video dari API (deskripsi, tag, jumlah suka, tayangan terkait).
+    // `detailLoaded` mencegah permintaan berulang setiap kali render.
+    if (v.id && detailLoaded !== v.id) {
+      detailLoaded = v.id;
+      apiPost('other/detailvideo_readonly', { id: v.id }).then(function (json) {
+        if (currentRoute() !== 'watch') return;
+        var d = json.data || {};
+        watchData = {
+          id: d.id,
+          title: d.title || v.title,
+          views: Number(d.watchcounter || v.views || 0),
+          dateLabel: shortDate(d.dateschedule_iso) || v.dateLabel,
+          image: d.thumbnail || v.image,
+          href: d.slug ? '/' + d.slug : v.href,
+          category: languageLabelFromSlug(d.slug) || v.category,
+          description: plainText(d.content) || v.description,
+          tags: parseTags(d.tag),
+          likes: Number(d.favcounter || 0),
+          related: (d.recomended || []).map(apiVideoToCard)
+        };
+        renderWatch();
+      }).catch(function () { /* tetap memakai data yang sudah tampil */ });
+    }
   }
 
   function renderContact() {
@@ -2104,33 +2383,11 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '</section>';
   }
 
-  function parseWebsiteSearchHtml(html) {
-    var doc = new DOMParser().parseFromString(html, 'text/html');
-    return Array.prototype.map.call(doc.querySelectorAll('.video-card'), function (card) {
-      var link = card.querySelector('.play-icon') || card.querySelector('a');
-      var img = card.querySelector('img');
-      var time = card.querySelector('.time');
-      var title = card.querySelector('.video-title');
-      var view = card.querySelector('.video-view');
-      var text = view ? view.textContent : '';
-      var views = ((text.match(/Dilihats*([d.,]+)/i) || text.match(/([d.,]+)s*views/i) || [])[1]) || '0';
-      var date = (text.match(/d{2} [A-Za-z]{3} d{2}/) || [])[0] || '';
-      return {
-        href: link ? link.getAttribute('href') : '',
-        image: img ? img.getAttribute('src') : '',
-        title: title ? title.textContent.trim() : '',
-        duration: time ? time.textContent.trim() : '',
-        views: Number(views.replace(/D/g, '') || 0),
-        dateLabel: date
-      };
-    });
-  }
-
   function renderSearch(query) {
     var q = (query || '').trim();
     var qLower = q.toLowerCase();
     var localLangs = allLanguages.filter(function (l) { return qLower && l.name.toLowerCase().indexOf(qLower) > -1; });
-    var localVids = P.latestVideos.filter(function (v) { return qLower && v.title.toLowerCase().indexOf(qLower) > -1; });
+    var localVids = TM.latestVideos.filter(function (v) { return qLower && v.title.toLowerCase().indexOf(qLower) > -1; });
 
     var langHtml = localLangs.length ? (
       '<div style="margin-top:16px"><h3 class="sec-title" style="font-size:17px;margin-bottom:10px">Bahasa Daerah Cocok (' + localLangs.length + ')</h3>' +
@@ -2154,22 +2411,20 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
 
     if (!q) return;
     var token = ++searchToken;
-    fetch(SEARCH_URL + encodeURIComponent(q))
-      .then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.text();
-      })
-      .then(function (html) {
+    apiPost('search', { q: q, per_page: 40 })
+      .then(function (json) {
         if (token !== searchToken) return;
-        var remoteItems = parseWebsiteSearchHtml(html);
+        var items = (json.data || []).map(apiVideoToCard);
         var grid = document.getElementById('searchResultsGrid');
         var status = document.getElementById('searchStatus');
-        if (remoteItems.length && grid) {
-          grid.innerHTML = remoteItems.map(renderVideoCardHtml).join('');
+        if (items.length && grid) {
+          grid.innerHTML = items.map(renderVideoCardHtml).join('');
         }
         if (status) {
-          var totalCount = remoteItems.length || localVids.length;
-          status.textContent = totalCount ? (totalCount + ' video & ' + localLangs.length + ' bahasa ditemukan') : 'Tidak ada video ditemukan untuk “' + q + '”';
+          var total = (json.pagination && json.pagination.total) || items.length;
+          status.textContent = total
+            ? (total + ' video & ' + localLangs.length + ' bahasa ditemukan')
+            : 'Tidak ada video ditemukan untuk “' + q + '”';
         }
       })
       .catch(function () {
@@ -2203,7 +2458,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
 
   function renderCrumbs(key, current) {
     var catTitles = {};
-    P.categories.forEach(function (c) { catTitles[c.id] = c.title; });
+    TM.categories.forEach(function (c) { catTitles[c.id] = c.title; });
     var items;
     if (key === 'home') {
       items = [['Beranda', null]];
@@ -2300,9 +2555,10 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
         dateLabel: watchCard.dataset.dateLabel || '',
         image: watchCard.dataset.image || '',
         href: watchCard.dataset.href || '',
-        category: P.watchExample.category,
-        description: P.watchExample.description,
-        tags: P.watchExample.tags
+        id: Number(watchCard.dataset.id || 0) || undefined,
+        category: languageLabelFromSlug(watchCard.dataset.href) || P.watchExample.category,
+        description: '',
+        tags: []
       };
       return;
     }
@@ -2330,7 +2586,25 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
 
     var likeBtn = e.target.closest('.like-btn');
     if (likeBtn) {
-      likeBtn.setAttribute('aria-pressed', String(likeBtn.getAttribute('aria-pressed') !== 'true'));
+      if (likeBtn.getAttribute('aria-pressed') === 'true') return;
+      var likeId = (watchData && watchData.id) || 0;
+      if (!likeId) {
+        likeBtn.setAttribute('aria-pressed', 'true');
+        return;
+      }
+      likeBtn.disabled = true;
+      apiPost('other/likevideo', { id: likeId }).then(function (json) {
+        likeBtn.setAttribute('aria-pressed', 'true');
+        var total = json.data && json.data.totallike;
+        if (total) {
+          likeBtn.innerHTML = '&#9829; Suka &middot; ' + Number(total).toLocaleString('en-US');
+          if (watchData) watchData.likes = total;
+        }
+      }).catch(function () {
+        likeBtn.setAttribute('aria-pressed', 'true');
+      }).then(function () {
+        likeBtn.disabled = false;
+      });
       return;
     }
 
@@ -2369,7 +2643,49 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       input.value = '';
       return;
     }
-    status.textContent = 'Pengiriman tanggapan belum terhubung ke server.';
+
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var isVideoForm = currentRoute() === 'watch';
+    var payload = {
+      contactname: (form.querySelector('[name="name"]') || {}).value || '',
+      emailaddress: (form.querySelector('[name="email"]') || {}).value || '',
+      phonenumber: (form.querySelector('[name="phone"]') || {}).value || '',
+      messagecontent: (form.querySelector('[name="message"]') || {}).value || ''
+    };
+    var endpoint;
+    if (isVideoForm) {
+      endpoint = 'other/commentvideo';
+      payload.videoid = (watchData && watchData.id) || '';
+      payload.videotitle = (watchData && watchData.title) || '';
+    } else {
+      endpoint = 'contact';
+      payload.linkid = 'web';
+      payload.linkname = 'Website TokoMedia';
+    }
+
+    if (submitBtn) submitBtn.disabled = true;
+    status.textContent = 'Mengirim...';
+
+    apiPost(endpoint, payload).then(function (json) {
+      if (json.status === 200) {
+        status.classList.remove('error');
+        status.textContent = json.message || 'Terima kasih, pesan Anda sudah terkirim.';
+        form.reset();
+        drawCaptcha(box);
+      } else {
+        status.classList.add('error');
+        status.textContent = json.message || 'Pengiriman gagal. Silakan coba lagi.';
+        drawCaptcha(box);
+        input.value = '';
+      }
+    }).catch(function () {
+      status.classList.add('error');
+      status.textContent = 'Server belum dapat dihubungi. Silakan coba lagi nanti.';
+      drawCaptcha(box);
+      input.value = '';
+    }).then(function () {
+      if (submitBtn) submitBtn.disabled = false;
+    });
   });
 
   document.getElementById('menuBtn').addEventListener('click', function () {
@@ -2419,6 +2735,39 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
 
   window.addEventListener('hashchange', showRoute);
   showRoute();
+
+  // ---------------------------------------------------------------------------
+  // Muat data awal dari API. Halaman sudah tampil dengan data tertanam, jadi
+  // kegagalan API tidak membuat UI kosong — hanya tetap memakai data luring.
+  // ---------------------------------------------------------------------------
+  function loadBootstrapData() {
+    apiPost('category/tree', {}).then(function (json) {
+      if (!json.data || !json.data.length) return;
+      TM.tree = json.data;
+      rebuildLangIndex();
+      rerenderIf(function (route) {
+        return route === 'home' || route.indexOf('languages/') === 0 || route.indexOf('videos/') === 0;
+      });
+    }).catch(function () { /* pakai data tertanam */ });
+
+    apiPost('other/latestvideo', { per_page: 12 }).then(function (json) {
+      var items = (json.data || []).map(apiVideoToCard);
+      if (!items.length) return;
+      TM.latestVideos = items;
+      rerenderIf(function (route) { return route === 'home' || route === 'watch'; });
+    }).catch(function () { /* pakai data tertanam */ });
+
+    apiPost('aplikasi/list', { page: 1, per_page: 100 }).then(function (json) {
+      var items = (json.data || []).map(function (a) {
+        return { name: a.name, image: a.thumbnail, link: a.url };
+      });
+      if (!items.length) return;
+      TM.apps = items;
+      rerenderIf(function (route) { return route === 'languages/app'; });
+    }).catch(function () { /* pakai data tertanam */ });
+  }
+
+  loadBootstrapData();
 })();
 </script>
 </body>

@@ -28,7 +28,7 @@ class Video_model extends CI_Model
     public function get_video_recomendation($id, $category, $limit)
     {
         // First part: Get videos after the given ID
-        $this->db->select('seq, displayname, duration, categoryarray, thumbnail, watchcounter, dateschedule');
+        $this->db->select('seq, displayname, slug, duration, categoryarray, thumbnail, watchcounter, dateschedule');
         $this->db->from('videodb');
         $this->db->where('categoryarray', $category);
         $this->db->where('isdeleted', 0);
@@ -46,7 +46,7 @@ class Video_model extends CI_Model
         // Second part: Get the remaining from the beginning
         $remaining = $limit - $count;
 
-        $this->db->select('seq, displayname, duration, categoryarray, thumbnail, watchcounter, dateschedule');
+        $this->db->select('seq, displayname, slug, duration, categoryarray, thumbnail, watchcounter, dateschedule');
         $this->db->from('videodb');
         $this->db->where('categoryarray', $category);
         $this->db->where('isdeleted', 0);
@@ -61,7 +61,7 @@ class Video_model extends CI_Model
 
     public function get_latest_video($limit, $offset, $sort = 'default')
     {
-        $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
+        $this->db->select('seq, displayname, slug, duration, categoryarray, thumbnail, watchcounter, dateschedule');
         $this->db->where_in('categoryarray', [2, 305]);
         $this->db->where('isdeleted', 0);
         if ($sort === 'default') {
@@ -83,7 +83,7 @@ class Video_model extends CI_Model
     // Fetch a videos by category
     public function get_video_by_category($id, $limit = null, $offset = 0, $sort = 'default')
     {
-        $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
+        $this->db->select('seq, displayname, slug, duration, categoryarray, thumbnail, watchcounter, dateschedule');
         $this->db->where('categoryarray', $id);
         $this->db->where('isdeleted', 0);
         api_apply_sort($this->db, $sort);
@@ -101,7 +101,7 @@ class Video_model extends CI_Model
     // Fetch videos dari beberapa kategori sekaligus
     public function get_video_by_categories($ids, $limit = null, $offset = 0, $sort = 'default')
     {
-        $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
+        $this->db->select('seq, displayname, slug, duration, categoryarray, thumbnail, watchcounter, dateschedule');
         $this->db->where_in('categoryarray', $ids);
         $this->db->where('isdeleted', 0);
         api_apply_sort($this->db, $sort);
@@ -119,7 +119,7 @@ class Video_model extends CI_Model
     // Fetch video kitab with custom parameter
     public function get_vkitab_by_book($book, $limit = null, $offset = 0, $sort = 'default')
     {
-        $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
+        $this->db->select('seq, displayname, slug, duration, categoryarray, thumbnail, watchcounter, dateschedule');
         $this->db->from('videodb');
         $this->db->like('displayname', 'Indonesia');
         $this->db->like('tagging', $book);
@@ -141,7 +141,7 @@ class Video_model extends CI_Model
     //Fetch video by tag
     public function get_by_tag($tag, $limit = null, $offset = 0, $sort = 'default')
     {
-        $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
+        $this->db->select('seq, displayname, slug, duration, categoryarray, thumbnail, watchcounter, dateschedule');
         $this->db->from('videodb');
         $this->db->like('tagging', $tag);
         $this->db->where('isdeleted', 0);
@@ -163,7 +163,7 @@ class Video_model extends CI_Model
      */
     public function search($keyword, $limit = null, $offset = 0, $sort = 'default')
     {
-        $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
+        $this->db->select('seq, displayname, slug, duration, categoryarray, thumbnail, watchcounter, dateschedule');
         $this->db->from('videodb');
         $this->db->group_start();
         $this->db->like('displayname', $keyword);

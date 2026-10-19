@@ -1114,4 +1114,60 @@ await post("other/commentvideo", {
 
 ---
 
+## 11. Integrasi UI Web (`index.html`)
+
+Halaman `index.html` di root repositori kini memakai API sebagai sumber data utama,
+dengan data tertanam (`window.TM_PAYLOAD`) sebagai cadangan bila API tidak terjangkau.
+
+### 11.1 Konfigurasi
+
+```javascript
+var TM_CONFIG = {
+  apiBase: 'https://www.tokomedia.org/api/index.php/api',
+  token:   '<TOKEN>'
+};
+```
+
+- `apiBase` dapat ditimpa lewat query string untuk pengujian lokal:
+  `index.html?api=http://127.0.0.1:8099/api`
+- Semua permintaan dikirim sebagai `POST` dengan `application/x-www-form-urlencoded`
+  melalui helper `apiPost(path, params)`.
+
+### 11.2 Peta menu UI → endpoint
+
+| Menu UI | Slug rute | Root kategori | Endpoint daftar bahasa | Endpoint daftar video |
+|---|---|---|---|---|
+| Film Isa Al-Masih | `film-riwayat-isa-al-masih` | 1 | `category/tree` | `riwayat/languagepref` |
+| Video Kitab Suci | `video` | 126 | `category/tree` | `vkitab/languagepref` |
+| Clip Kitab Suci | `clip` | 127 | `category/tree` | `ckitab/index` |
+| Film Ikatan Ilahi | `film-ikatan-ilahi` | 304 | `category/tree` | `ikatan/languagepref` |
+| Aplikasi Kitab Suci | `app` | — | — | `aplikasi/list` |
+| Tayangan Pilihan Terbaru | — | — | — | `other/latestvideo` |
+| Pencarian | — | — | — | `search` |
+| Detail video | — | — | — | `other/detailvideo_readonly` |
+| Suka video | — | — | — | `other/likevideo` |
+| Form kontak | — | — | — | `contact` |
+| Tanggapan video | — | — | — | `other/commentvideo` |
+
+Catatan penempatan data:
+
+- **Beranda** — indeks A–Z dan galeri ikon hanya memakai bahasa dari root **1**
+  (Film Isa Al-Masih), sesuai desain awal. Kategori lain punya daftar bahasanya
+  sendiri di halaman wilayah.
+- **Halaman wilayah** — anak root yang bernama `Indonesia` selalu ditampilkan
+  sebagai accordion **Indonesia (Bahasa Nasional)** di posisi teratas, bukan
+  sebagai wilayah kepulauan. Accordion wilayah default tertutup.
+- **Clip Kitab Suci** — hanya punya satu kategori (`clip/indonesia`, id 131),
+  sehingga endpoint `ckitab/index` tidak menerima parameter bahasa.
+- **Kebijakan Privasi** — masih memakai data tertanam karena belum ada endpoint-nya.
+
+### 11.3 Field `slug` pada respons video
+
+Seluruh respons daftar video dan detail video kini menyertakan `slug`
+(mis. `film-riwayat-isa-al-masih/aceh/w/riwayat-isa-al-masih`). UI memakainya
+untuk membentuk tautan "tonton di website" dan menentukan nama bahasa pada
+halaman detail.
+
+---
+
 *Dokumen ini dibuat berdasarkan analisis statis kode sumber dan dump database per 15 Oktober 2026.*
