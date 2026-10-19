@@ -20,6 +20,7 @@ TokoMediaAndroid/*.apk
 # Large database dumps & zip backups (>10MB / sensitive)
 Backup/
 20261014 API TM App/*.sql
+20261014 API TM App/*.sql.gz
 20261014 API TM App/*.zip
 
 # Temporary & log files
