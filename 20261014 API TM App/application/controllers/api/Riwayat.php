@@ -147,8 +147,8 @@ class Riwayat extends CI_Controller
 				]);
 				return;
 			}
-			$limit = isset($_POST['limit']) ? $_POST['limit'] : null;
-			$offset = isset($_POST['offset']) ? $_POST['offset'] : 0;
+			$page = api_page_params(0, 100);
+			$sort = api_sort();
 			$response = array('status' => 200, "message" => "Success");
 			if ($_POST['token'] != TOKEN) {
 				echo json_encode([
@@ -160,7 +160,7 @@ class Riwayat extends CI_Controller
 			}
 			$response = array('status' => 200, "message" => "Success");
 			$this->load->model('video_model', 'video');
-			$list_video = $this->video->get_video_by_category($_POST['id'], $limit,$offset);
+			$list_video = $this->video->get_video_by_category($_POST['id'], $page['per_page'], $page['offset'], $sort);
 			if (!$list_video) {
 				// Handle case where no categories are found
 				echo json_encode([
@@ -180,6 +180,11 @@ class Riwayat extends CI_Controller
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
 				$i++;
 			}
+			$response['pagination'] = api_pagination(
+				$this->video->count_video_by_category($_POST['id']),
+				$page['page'],
+				$page['per_page']
+			);
 		} else {
 			echo json_encode([
 				'status' => 404,
@@ -210,7 +215,8 @@ class Riwayat extends CI_Controller
 				]);
 				return;
 			}
-			$limit = isset($_POST['limit']) ? $_POST['limit'] : null;
+			$page = api_page_params(0, 100);
+			$sort = api_sort();
 
 			$response = array('status' => 200, "message" => "Success");
 			if ($_POST['token'] != TOKEN) {
@@ -224,10 +230,10 @@ class Riwayat extends CI_Controller
 			$this->load->model('video_model', 'video');
 			$this->load->model('category_model', 'category');
 			$cat_id = $this->category->get_category_name_by_pref(1, $_POST['id']);
-			if($_POST['id']=='indonesia'){
+			if ($_POST['id'] == 'indonesia') {
 				$cat_id = 2;
 			}
-			if ($cat_id == "") {
+			if ($cat_id === null || $cat_id === '') {
 				echo json_encode([
 					'status' => 201,
 					'message' => 'Bahasa ini tidak terdaftar di Film Isa Al-Masih',
@@ -236,7 +242,7 @@ class Riwayat extends CI_Controller
 				return;
 			}
 			$response = array('status' => 200, "message" => "Success");
-			$list_video = $this->video->get_video_by_category($cat_id, $limit);
+			$list_video = $this->video->get_video_by_category($cat_id, $page['per_page'], $page['offset'], $sort);
 			if (!$list_video) {
 				// Handle case where no categories are found
 				echo json_encode([
@@ -256,6 +262,11 @@ class Riwayat extends CI_Controller
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
 				$i++;
 			}
+			$response['pagination'] = api_pagination(
+				$this->video->count_video_by_category($cat_id),
+				$page['page'],
+				$page['per_page']
+			);
 		} else {
 			echo json_encode([
 				'status' => 404,

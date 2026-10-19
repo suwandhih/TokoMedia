@@ -14,7 +14,7 @@ class Video_model extends CI_Model
     public function get_all_videos($limit, $offset)
     {
         $this->db->order_by('slug', 'ASC');
-        $this->db->limit($limit, $offset);
+        $this->db->limit($limit > 0 ? $limit : null, $offset);
         $result = $this->db->get('videodb')->result_array();
         $this->total_rows = $this->db->count_all_results('videodb');
         return $result;
@@ -34,7 +34,7 @@ class Video_model extends CI_Model
         $this->db->where('isdeleted', 0);
         $this->db->where('seq >', $id);
         $this->db->order_by('seq', 'ASC');
-        $this->db->limit($limit);
+        $this->db->limit($limit > 0 ? $limit : null);
         $first_part = $this->db->get()->result_array();
 
         $count = count($first_part);
@@ -59,44 +59,133 @@ class Video_model extends CI_Model
     }
 
 
-    public function get_latest_video($limit, $offset)
+    public function get_latest_video($limit, $offset, $sort = 'default')
     {
         $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
         $this->db->where_in('categoryarray', [2, 305]);
         $this->db->where('isdeleted', 0);
-        $this->db->limit($limit, $offset); // Add limit and offset
-        $this->db->order_by('dateschedule', 'DESC');
+        if ($sort === 'default') {
+            $this->db->order_by('dateschedule', 'DESC');
+        } else {
+            api_apply_sort($this->db, $sort);
+        }
+        $this->db->limit($limit > 0 ? $limit : null, $offset); // Add limit and offset
         return $this->db->get('videodb')->result_array();
     }
 
+    public function count_latest_video()
+    {
+        $this->db->where_in('categoryarray', [2, 305]);
+        $this->db->where('isdeleted', 0);
+        return (int) $this->db->count_all_results('videodb');
+    }
+
     // Fetch a videos by category
-    public function get_video_by_category($id, $limit = null, $offset = 0)
+    public function get_video_by_category($id, $limit = null, $offset = 0, $sort = 'default')
     {
         $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
         $this->db->where('categoryarray', $id);
         $this->db->where('isdeleted', 0);
-        $this->db->limit($limit,$offset); // Add limit here
+        api_apply_sort($this->db, $sort);
+        $this->db->limit($limit > 0 ? $limit : null, $offset); // Add limit here
         return $this->db->get('videodb')->result_array();
     }
 
+    public function count_video_by_category($id)
+    {
+        $this->db->where('categoryarray', $id);
+        $this->db->where('isdeleted', 0);
+        return (int) $this->db->count_all_results('videodb');
+    }
+
+    // Fetch videos dari beberapa kategori sekaligus
+    public function get_video_by_categories($ids, $limit = null, $offset = 0, $sort = 'default')
+    {
+        $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
+        $this->db->where_in('categoryarray', $ids);
+        $this->db->where('isdeleted', 0);
+        api_apply_sort($this->db, $sort);
+        $this->db->limit($limit > 0 ? $limit : null, $offset);
+        return $this->db->get('videodb')->result_array();
+    }
+
+    public function count_video_by_categories($ids)
+    {
+        $this->db->where_in('categoryarray', $ids);
+        $this->db->where('isdeleted', 0);
+        return (int) $this->db->count_all_results('videodb');
+    }
+
     // Fetch video kitab with custom parameter
-    public function get_vkitab_by_book($book)
+    public function get_vkitab_by_book($book, $limit = null, $offset = 0, $sort = 'default')
+    {
+        $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
+        $this->db->from('videodb');
+        $this->db->like('displayname', 'Indonesia');
+        $this->db->like('tagging', $book);
+        $this->db->where('isdeleted', 0);
+        api_apply_sort($this->db, $sort);
+        $this->db->limit($limit > 0 ? $limit : null, $offset);
+        return $this->db->get()->result_array();
+    }
+
+    public function count_vkitab_by_book($book)
     {
         $this->db->from('videodb');
         $this->db->like('displayname', 'Indonesia');
         $this->db->like('tagging', $book);
-        return $this->db->get()->result_array();
+        $this->db->where('isdeleted', 0);
+        return (int) $this->db->count_all_results();
     }
 
     //Fetch video by tag
-    public function get_by_tag($tag, $limit = null, $offset = 0)
+    public function get_by_tag($tag, $limit = null, $offset = 0, $sort = 'default')
     {
         $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
         $this->db->from('videodb');
         $this->db->like('tagging', $tag);
         $this->db->where('isdeleted', 0);
-        $this->db->limit($limit, $offset); // Add limit here
+        api_apply_sort($this->db, $sort);
+        $this->db->limit($limit > 0 ? $limit : null, $offset); // Add limit here
         return $this->db->get()->result_array();
+    }
+
+    public function count_by_tag($tag)
+    {
+        $this->db->from('videodb');
+        $this->db->like('tagging', $tag);
+        $this->db->where('isdeleted', 0);
+        return (int) $this->db->count_all_results();
+    }
+
+    /**
+     * Pencarian pada judul, deskripsi, dan tag.
+     */
+    public function search($keyword, $limit = null, $offset = 0, $sort = 'default')
+    {
+        $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
+        $this->db->from('videodb');
+        $this->db->group_start();
+        $this->db->like('displayname', $keyword);
+        $this->db->or_like('messagecontent', $keyword);
+        $this->db->or_like('tagging', $keyword);
+        $this->db->group_end();
+        $this->db->where('isdeleted', 0);
+        api_apply_sort($this->db, $sort);
+        $this->db->limit($limit > 0 ? $limit : null, $offset);
+        return $this->db->get()->result_array();
+    }
+
+    public function count_search($keyword)
+    {
+        $this->db->from('videodb');
+        $this->db->group_start();
+        $this->db->like('displayname', $keyword);
+        $this->db->or_like('messagecontent', $keyword);
+        $this->db->or_like('tagging', $keyword);
+        $this->db->group_end();
+        $this->db->where('isdeleted', 0);
+        return (int) $this->db->count_all_results();
     }
 
 

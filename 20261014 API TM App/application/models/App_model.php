@@ -71,7 +71,63 @@ class App_model extends CI_Model
     // Fetch a single video by ID
     public function get_app_by_id($id)
     {
-        return $this->db->get_where('appdb', ['counter' => $id])->row_array();
+        return $this->db->get_where('appdb', ['counter' => $id, 'isdeleted' => 0])->row_array();
+    }
+
+    // Fetch a single app by slug
+    public function get_app_by_slug($slug)
+    {
+        return $this->db->get_where('appdb', ['slug' => $slug, 'isdeleted' => 0])->row_array();
+    }
+
+    /**
+     * Daftar semua aplikasi dengan pagination, pencarian, dan sorting.
+     */
+    public function get_apps($limit = null, $offset = 0, $keyword = '', $sort = 'default')
+    {
+        $this->db->select('counter, appname, slug, description, downloadlink, clicked, appimage, createddate, tagging, playstorename');
+        $this->db->from('appdb');
+        $this->db->where('isdeleted', 0);
+        if ($keyword !== '') {
+            $this->db->group_start();
+            $this->db->like('appname', $keyword);
+            $this->db->or_like('description', $keyword);
+            $this->db->or_like('tagging', $keyword);
+            $this->db->group_end();
+        }
+        switch ($sort) {
+            case 'popular':
+                $this->db->order_by('clicked', 'DESC');
+                $this->db->order_by('appname', 'ASC');
+                break;
+            case 'newest':
+                $this->db->order_by('createddate', 'DESC');
+                $this->db->order_by('appname', 'ASC');
+                break;
+            case 'oldest':
+                $this->db->order_by('createddate', 'ASC');
+                $this->db->order_by('appname', 'ASC');
+                break;
+            default:
+                $this->db->order_by('appname', 'ASC');
+                break;
+        }
+        $this->db->limit($limit, $offset);
+        return $this->db->get()->result_array();
+    }
+
+    public function count_apps($keyword = '')
+    {
+        $this->db->from('appdb');
+        $this->db->where('isdeleted', 0);
+        if ($keyword !== '') {
+            $this->db->group_start();
+            $this->db->like('appname', $keyword);
+            $this->db->or_like('description', $keyword);
+            $this->db->or_like('tagging', $keyword);
+            $this->db->group_end();
+        }
+        return (int) $this->db->count_all_results();
     }
 
 }

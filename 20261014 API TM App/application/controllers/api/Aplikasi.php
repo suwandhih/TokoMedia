@@ -52,6 +52,36 @@ class Aplikasi extends CI_Controller
 	}
 
 	/**
+	 * list
+	 * Semua aplikasi dengan pagination, pencarian, dan sorting
+	 * @return mixed JSON
+	 */
+	public function list()
+	{
+		header('Content-Type: application/json');
+		if (!api_require_token()) {
+			return;
+		}
+
+		$page = api_page_params(20, 100);
+		$sort = api_sort(array('default', 'popular', 'newest', 'oldest'), 'default');
+		$keyword = isset($_POST['q']) ? trim((string) $_POST['q']) : '';
+
+		$this->load->model('app_model', 'app');
+		$rows = $this->app->get_apps($page['per_page'], $page['offset'], $keyword, $sort);
+		$total = $this->app->count_apps($keyword);
+
+		$data = array();
+		foreach ($rows as $row) {
+			$data[] = api_app_item($row);
+		}
+
+		api_out(200, 'Success', $data, array(
+			'pagination' => api_pagination($total, $page['page'], $page['per_page']),
+		));
+	}
+
+	/**
 	 * area
 	 * Retrieve Language Data by Region
 	 * @return mixed JSON
@@ -141,7 +171,10 @@ class Aplikasi extends CI_Controller
 		}
 
 		$this->load->model('app_model', 'app');
-		$app_detail = $this->app->get_app_by_id($_POST['id']);
+		$id = $_POST['id'];
+		$app_detail = ctype_digit((string) $id)
+			? $this->app->get_app_by_id($id)
+			: $this->app->get_app_by_slug($id);
 		if (!$app_detail) {
 			echo json_encode([
 				'status' => 404,

@@ -38,9 +38,9 @@ class Ckitab extends CI_Controller
 			}
 			$response = array('status' => 200, "message" => "Success");
 			$this->load->model('video_model', 'video');
-			$limit = isset($_POST['limit']) ? $_POST['limit'] : null;
-			$offset = isset($_POST['offset']) ? $_POST['offset'] : null;
-			$list_video = $this->video->get_video_by_category(131, $limit,$offset);
+			$page = api_page_params(20, 100);
+			$sort = api_sort();
+			$list_video = $this->video->get_video_by_category(131, $page['per_page'], $page['offset'], $sort);
 			if (!$list_video) {
 				// Handle case where no categories are found
 				echo json_encode([
@@ -55,11 +55,16 @@ class Ckitab extends CI_Controller
 				$response['data'][$i]['id'] = $row['seq'];
 				$response['data'][$i]['name'] = $row['displayname'];
 				$response['data'][$i]['watchcounter'] = $row['watchcounter'];
-				$response['data'][$i]['dateschedule'] = $row['dateschedule'];
+				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
 				$response['data'][$i]['duration'] = $row['duration'];
 				$response['data'][$i]['thumbnail'] = SERVER_URL . $row['thumbnail'];
 				$i++;
 			}
+			$response['pagination'] = api_pagination(
+				$this->video->count_video_by_category(131),
+				$page['page'],
+				$page['per_page']
+			);
 		} else {
 			echo json_encode([
 				'status' => 404,

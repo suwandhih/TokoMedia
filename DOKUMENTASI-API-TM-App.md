@@ -2,6 +2,7 @@
 
 **Sumber kode:** `C:\data\TokoMedia\20261014 API TM App`
 **Tanggal analisis:** 15 Oktober 2026
+**Terakhir diperbarui:** 19 Oktober 2026 (Prioritas 1 & 2 selesai)
 **Tujuan dokumen:** menjelaskan isi API, cara pakainya, dan sejauh mana API ini sudah mencakup kebutuhan website [tokomedia.org](https://www.tokomedia.org/)
 
 ---
@@ -15,8 +16,8 @@
 | Database | MySQL, schema `tokomedia` (dump: `20261014-tokomedia DB Structure and Data.sql`, 27 MB) |
 | Jenis API | REST-ish, **POST form-data**, respons JSON |
 | Autentikasi | 1 token statis global (`TOKEN`) dikirim sebagai field `token` |
-| Jumlah controller API | 7 (`Aplikasi`, `Ckitab`, `Contact`, `Ikatan`, `Other`, `Riwayat`, `Vkitab`) |
-| Jumlah endpoint | 30 method publik |
+| Jumlah controller API | 11 (`Aplikasi`, `Audio`, `Category`, `Ckitab`, `Contact`, `Ikatan`, `Media`, `Other`, `Riwayat`, `Search`, `Vkitab`) |
+| Jumlah endpoint | 38 method publik (di luar `send_email_smtp()` internal) |
 | Isi database | 16.586 video, 321 kategori, 275 aplikasi, 640 komentar, 17.107 baris routing |
 
 API ini adalah **backend untuk aplikasi mobile** (Android/iOS) TokoMedia, bukan API untuk website. Website `tokomedia.org` saat ini berjalan dengan aplikasi PHP terpisah (bukan CodeIgniter ini) yang membaca database yang sama.
@@ -150,34 +151,62 @@ Base: `POST /api/<controller>/<method>`
 | 1 | `aplikasi` | `index` | Daftar region aplikasi | `token` |
 | 2 | `aplikasi` | `area` | Daftar aplikasi per region | `token`, `id` |
 | 3 | `aplikasi` | `language` | Daftar aplikasi per region (alias `area`) | `token`, `id` |
-| 4 | `aplikasi` | `detail` | Detail aplikasi berdasarkan `counter` | `token`, `id` |
-| 5 | `ckitab` | `index` | Daftar Clip Kitab Suci (kategori 131) | `token`, `limit`, `offset` |
-| 6 | `ckitab` | `detail` | Detail clip + rekomendasi | `token`, `id` |
-| 7 | `contact` | `index` | Kirim form kontak + email | `token`, `contactname`, `emailaddress`, `phonenumber`, `messagecontent`, `linkid`, `linkname` |
-| 8 | `ikatan` | `index` | Daftar region Film Ikatan Ilahi | `token` |
-| 9 | `ikatan` | `area` | Daftar bahasa per region | `token`, `id` |
-| 10 | `ikatan` | `language` | Daftar video per kategori | `token`, `id`, `limit`, `offset` |
-| 11 | `ikatan` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `limit` |
-| 12 | `other` | `index` | Placeholder (data kosong) | `token` |
-| 13 | `other` | `latestvideo` | Video terbaru (kategori 2 & 305) | `token`, `limit`, `offset` |
-| 14 | `other` | `commentvideo` | Kirim komentar video + email | `token`, `contactname`, `emailaddress`, `phonenumber`, `messagecontent`, `videoid`, `videotitle` |
-| 15 | `other` | `detailvideo` | Detail video + **increment watchcounter** + rekomendasi | `token`, `id` |
-| 16 | `other` | `gettag` | Cari video berdasarkan tag | `token`, `tag`, `limit`, `offset` |
-| 17 | `other` | `likevideo` | **Increment favoritecounter** | `token`, `id` |
-| 18 | `riwayat` | `index` | Daftar region Film Isa Al-Masih | `token` |
-| 19 | `riwayat` | `area` | Daftar bahasa per region | `token`, `id` |
-| 20 | `riwayat` | `language` | Daftar video per kategori | `token`, `id`, `limit`, `offset` |
-| 21 | `riwayat` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `limit` |
-| 22 | `riwayat` | `detail` | Detail video + rekomendasi | `token`, `id` |
-| 23 | `vkitab` | `index` | Daftar region Video Kitab Suci | `token` |
-| 24 | `vkitab` | `area` | Daftar kitab (id=144) / sub-kategori | `token`, `id` |
-| 25 | `vkitab` | `language` | Daftar video per kategori | `token`, `id`, `limit` |
-| 26 | `vkitab` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `limit` |
-| 27 | `vkitab` | `custom` | Video per kitab (Matius/Markus/Lukas/Yahya/Kisah) | `token`, `id` |
-| 28 | `vkitab` | `detail` | Detail video + rekomendasi | `token`, `id` |
-| 29 | `welcome` | `index` | Halaman default CI3 (bukan API) | – |
+| 4 | `aplikasi` | `detail` | Detail aplikasi (`counter` atau `slug`) | `token`, `id` |
+| 5 | `aplikasi` | `list` | **Semua** aplikasi + pagination + cari + sort | `token`, `page`, `per_page`, `q`, `sort` |
+| 6 | `audio` | `index` | Daftar Audio Kitab Suci (root 128) | `token`, `page`, `per_page`, `sort` |
+| 7 | `audio` | `area` | Sub-kategori Audio Kitab Suci | `token` |
+| 8 | `category` | `index` / `tree` | Pohon kategori lengkap (root → region → bahasa) | `token` |
+| 9 | `category` | `languages` | Semua bahasa lintas region untuk satu root | `token`, `id` |
+| 10 | `ckitab` | `index` | Daftar Clip Kitab Suci (kategori 131) | `token`, `page`, `per_page`, `sort` |
+| 11 | `ckitab` | `detail` | Detail clip + rekomendasi | `token`, `id` |
+| 12 | `contact` | `index` | Kirim form kontak + email | `token`, `contactname`, `emailaddress`, `phonenumber`, `messagecontent`, `linkid`, `linkname` |
+| 13 | `ikatan` | `index` | Daftar region Film Ikatan Ilahi | `token` |
+| 14 | `ikatan` | `area` | Daftar bahasa per region | `token`, `id` |
+| 15 | `ikatan` | `language` | Daftar video per kategori | `token`, `id`, `page`, `per_page`, `sort` |
+| 16 | `ikatan` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `page`, `per_page`, `sort` |
+| 17 | `media` | `index` | Daftar Media Lainnya (root 129) | `token`, `page`, `per_page`, `sort` |
+| 18 | `media` | `area` | Sub-kategori Media Lainnya | `token` |
+| 19 | `other` | `index` | Placeholder (data kosong) | `token` |
+| 20 | `other` | `latestvideo` | Video terbaru (kategori 2 & 305) | `token`, `page`, `per_page`, `sort` |
+| 21 | `other` | `commentvideo` | Kirim komentar video + email | `token`, `contactname`, `emailaddress`, `phonenumber`, `messagecontent`, `videoid`, `videotitle` |
+| 22 | `other` | `detailvideo` | Detail video + **increment watchcounter** + rekomendasi | `token`, `id` |
+| 23 | `other` | `gettag` | Cari video berdasarkan tag | `token`, `tag`, `page`, `per_page`, `sort` |
+| 24 | `other` | `likevideo` | **Increment favoritecounter** | `token`, `id` |
+| 25 | `riwayat` | `index` | Daftar region Film Isa Al-Masih | `token` |
+| 26 | `riwayat` | `area` | Daftar bahasa per region | `token`, `id` |
+| 27 | `riwayat` | `language` | Daftar video per kategori | `token`, `id`, `page`, `per_page`, `sort` |
+| 28 | `riwayat` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `page`, `per_page`, `sort` |
+| 29 | `riwayat` | `detail` | Detail video + rekomendasi | `token`, `id` |
+| 30 | `search` | `index` / `video` | **Pencarian** judul + deskripsi + tag | `token`, `q`, `page`, `per_page`, `sort` |
+| 31 | `vkitab` | `index` | Daftar region Video Kitab Suci | `token` |
+| 32 | `vkitab` | `area` | Daftar kitab (id=144) / sub-kategori | `token`, `id` |
+| 33 | `vkitab` | `language` | Daftar video per kategori | `token`, `id`, `page`, `per_page`, `sort` |
+| 34 | `vkitab` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `page`, `per_page`, `sort` |
+| 35 | `vkitab` | `custom` | Video per kitab (Matius/Markus/Lukas/Yahya/Kisah) | `token`, `id`, `page`, `per_page`, `sort` |
+| 36 | `vkitab` | `detail` | Detail video + rekomendasi | `token`, `id` |
+| 37 | `welcome` | `index` | Halaman default CI3 (bukan API) | – |
 
 > `contact/infoo` (phpinfo) sudah **dihapus** — lihat bagian 9.
+
+### 4.1 Pagination & sorting (berlaku di semua endpoint daftar)
+
+| Parameter | Keterangan |
+|---|---|
+| `page` | Nomor halaman, mulai dari 1 |
+| `per_page` | Jumlah baris per halaman (maks 100). Default 20 untuk endpoint baru; endpoint lama tanpa `per_page`/`limit` mengembalikan semua baris seperti sebelumnya |
+| `limit` / `offset` | Gaya lama, tetap didukung |
+| `sort` | `trending` (watchcounter ↓), `popular` (favoritecounter ↓), `newest` (dateschedule ↓), `oldest` (dateschedule ↑), `unseen` (watchcounter ↑), `default` |
+
+Respons daftar menyertakan objek `pagination`:
+
+```json
+{
+  "status": 200,
+  "message": "Success",
+  "data": [ ... ],
+  "pagination": { "total": 168, "page": 1, "per_page": 20, "has_more": true }
+}
+```
 
 ---
 
@@ -764,7 +793,7 @@ Menyimpan ke tabel `videocomment` **dan** mengirim email ke `info@tokomedia.org`
 | Kebutuhan website | Endpoint API | Status |
 |---|---|---|
 | Home – daftar kategori utama | – | ❌ **Tidak ada** |
-| Home – daftar bahasa (letter grid) | `riwayat/area`, `vkitab/area`, `ikatan/area` | ⚠️ Per-region, tidak ada endpoint "semua bahasa" |
+| Home – daftar bahasa (letter grid) | `category/languages` | ✅ Semua bahasa lintas region |
 | Home – tayangan terbaru | `other/latestvideo` | ✅ Ada (hanya kategori 2 & 305) |
 | Film Isa Al-Masih – region | `riwayat` | ✅ |
 | Film Isa Al-Masih – bahasa | `riwayat/area` | ✅ |
@@ -782,16 +811,16 @@ Menyimpan ke tabel `videocomment` **dan** mengirim email ke `info@tokomedia.org`
 | Clip Kitab Suci – daftar | `ckitab` | ✅ |
 | Clip Kitab Suci – detail | `ckitab/detail` | ✅ |
 | Aplikasi – daftar per region | `aplikasi/area` | ✅ |
-| Aplikasi – **semua** aplikasi | – | ❌ **Tidak ada** |
-| Aplikasi – detail aplikasi | `aplikasi/detail` | ✅ |
+| Aplikasi – **semua** aplikasi | `aplikasi/list` | ✅ Dengan pagination & pencarian |
+| Aplikasi – detail aplikasi | `aplikasi/detail` | ✅ (`counter` atau `slug`) |
 | Kontak – kirim pesan | `contact` | ✅ |
 | Komentar video | `other/commentvideo` | ✅ |
 | Like video | `other/likevideo` | ✅ |
-| Pencarian | `other/gettag` | ⚠️ Hanya by tag, bukan full-text |
-| Pencarian (seperti website) | – | ❌ **Tidak ada** |
+| Pencarian | `other/gettag` | ⚠️ Hanya by tag |
+| Pencarian (seperti website) | `search` | ✅ Judul + deskripsi + tag |
 | Kebijakan Privasi | – | ❌ Tidak ada (statis di UI) |
-| Audio Kitab Suci | – | ❌ Tidak ada (kategori 128 kosong) |
-| Media Lainnya | – | ❌ Tidak ada (kategori 129 kosong) |
+| Audio Kitab Suci | `audio` | ✅ (kategori 128 masih kosong di DB) |
+| Media Lainnya | `media` | ✅ (kategori 129 masih kosong di DB) |
 | Admin / manajemen konten | – | ❌ Tidak ada (di luar cakupan) |
 
 ### 7.3 Ringkasan kesenjangan
@@ -800,14 +829,11 @@ Menyimpan ke tabel `videocomment` **dan** mengirim email ke `info@tokomedia.org`
 
 **Belum tercakup:**
 
-1. **Endpoint "semua bahasa"** — website menampilkan 100 bahasa di home (`homeLanguages`), API hanya bisa per-region.
-2. **Daftar semua aplikasi** — website `/koleksi-aplikasi` menampilkan 269 aplikasi sekaligus; API hanya per-region.
-3. **Pencarian full-text** — website `/search/v/?v=` mencari di judul + deskripsi + tag; API hanya `gettag`.
-4. **Daftar kategori utama** — untuk membangun home page.
-5. **Audio Kitab Suci & Media Lainnya** — kategori ada di database tapi belum ada controller.
-6. **Sorting** — UI baru (`TokoMediaUI`) punya chip Tren/Populer/Unseen/New/Old; API hanya bisa urut `dateschedule DESC` (latestvideo) atau default.
-7. **Pagination metadata** — tidak ada `total`, `page`, `has_more` di respons.
-8. **Detail video tanpa menambah view** — `other/detailvideo` selalu menambah `watchcounter`; tidak ada varian "read-only".
+1. **Detail video tanpa menambah view** — `other/detailvideo` selalu menambah `watchcounter`; tidak ada varian "read-only".
+2. **Kebijakan Privasi** — masih statis di UI, belum ada endpoint.
+3. **Admin / manajemen konten** — di luar cakupan API mobile.
+
+> Item "semua bahasa", "semua aplikasi", "pencarian", "kategori utama", "audio/media", "sorting", dan "pagination metadata" sudah tersedia — lihat bagian 9 Prioritas 2.
 
 ---
 
@@ -835,7 +861,7 @@ Menyimpan ke tabel `videocomment` **dan** mengirim email ke `info@tokomedia.org`
 | 2 | `contact` menulis ke tabel `contact` yang tidak ada | `Contact_model.php` | ✅ Diperbaiki |
 | 3 | `Videocomment_model::get_by_videoid()` memanggil `fresult_array()` (typo) | `Videocomment_model.php` | ⏳ Belum |
 | 4 | `Video_model::delete_video()` menghapus dari tabel `video` (bukan `videodb`) | `Video_model.php` | ⏳ Belum |
-| 5 | `ckitab` tidak memformat `dateschedule` | `Ckitab.php` | ⏳ Belum |
+| 5 | `ckitab` tidak memformat `dateschedule` | `Ckitab.php` | ✅ Diperbaiki |
 | 6 | `Ikatan` tidak punya method `detail` | `Ikatan.php` | ⏳ Belum |
 | 7 | `Aplikasi::index` mendefinisikan `$response` dua kali (dead code) | `Aplikasi.php` | ✅ Diperbaiki |
 | 8 | `Category_model::get_category_name_by_pref()` error jika hasil kosong (`$result['seq']` pada `null`) | `Category_model.php` | ✅ Diperbaiki |
@@ -846,7 +872,8 @@ Menyimpan ke tabel `videocomment` **dan** mengirim email ke `info@tokomedia.org`
 
 - **Tidak ada `routes.php` kustom** → URL bergantung nama class/method. Kalau ingin `api/v1/...`, perlu tambah route.
 - **Tidak ada `.htaccess` di root** → URL harus menyertakan `index.php` kecuali server dikonfigurasi lain.
-- **`autoload`** memuat helper `url`, `template`, `form`, `share` dan library `session` di setiap request.
+- **`autoload`** memuat helper `url`, `template`, `form`, `share`, `api` dan library `session` di setiap request.
+- **`helpers/api_helper.php`** menyediakan `api_require_token()`, `api_out()`, `api_page_params()`, `api_pagination()`, `api_sort()`, `api_apply_sort()`, `api_video_item()`, `api_app_item()` — dipakai controller baru agar format respons konsisten.
 - **`config.php`**: `base_url` kosong, `index_page = 'index.php'`, `encryption_key` kosong.
 - **`database.php`**: kredensial masih placeholder (`root` / `YourmySQLipasswordhere`) — perlu diisi saat deploy.
 - **`composer.json`** hanya mendeklarasikan CodeIgniter framework; tidak ada dependency tambahan.
@@ -911,14 +938,47 @@ return array(
 > ⚠️ **Token lama** (`TOKEN_LAMA…`) sudah pernah terekspos di source code & riwayat Git.
 > Sebaiknya **ganti dengan token baru** saat deploy.
 
-### Prioritas 2 — Agar API bisa menggantikan website
-6. Tambah endpoint `category/tree` (semua kategori + hierarki) untuk home page.
-7. Tambah endpoint `app/list` (semua aplikasi, dengan pagination) dan `app/detail`.
-8. Tambah endpoint `search` (full-text di `displayname`, `messagecontent`, `tagging`).
-9. Tambah endpoint `language/all` (semua bahasa lintas region).
-10. Tambah controller `audio` dan `media` untuk kategori 128 & 129.
-11. Tambahkan metadata pagination (`total`, `page`, `per_page`, `has_more`) di semua respons daftar.
-12. Tambah parameter `sort` (`trending`/`popular`/`newest`/`oldest`) agar mendukung chip sorting di UI baru.
+### Prioritas 2 — Agar API bisa menggantikan website ✅ **SELESAI**
+
+| # | Item | Endpoint | Status |
+|---|---|---|---|
+| 6 | Pohon kategori untuk home page | `category/index`, `category/tree` | ✅ |
+| 7 | Semua aplikasi + pagination & detail | `aplikasi/list`, `aplikasi/detail` | ✅ |
+| 8 | Pencarian judul + deskripsi + tag | `search/index`, `search/video` | ✅ |
+| 9 | Semua bahasa lintas region | `category/languages` | ✅ |
+| 10 | Controller Audio & Media (kategori 128 & 129) | `audio/*`, `media/*` | ✅ |
+| 11 | Metadata pagination di semua respons daftar | semua endpoint daftar | ✅ |
+| 12 | Parameter `sort` (trending/popular/newest/oldest/unseen) | semua endpoint daftar | ✅ |
+
+#### Contoh pemakaian endpoint baru
+
+```bash
+# Pohon kategori (root -> region -> bahasa)
+curl -X POST "$BASE/category/tree" -d "token=$TOKEN"
+
+# Semua bahasa Film Isa Al-Masih (168 bahasa)
+curl -X POST "$BASE/category/languages" -d "token=$TOKEN&id=1"
+
+# Semua aplikasi, halaman 2, 50 per halaman, urut terpopuler
+curl -X POST "$BASE/aplikasi/list" \
+     -d "token=$TOKEN&page=2&per_page=50&sort=popular"
+
+# Detail aplikasi lewat slug
+curl -X POST "$BASE/aplikasi/detail" -d "token=$TOKEN&id=bahasa-muna-2"
+
+# Pencarian
+curl -X POST "$BASE/search" -d "token=$TOKEN&q=matius&sort=trending"
+
+# Audio & Media
+curl -X POST "$BASE/audio" -d "token=$TOKEN&per_page=20"
+curl -X POST "$BASE/media" -d "token=$TOKEN&per_page=20"
+```
+
+> **Catatan `category/languages`:** jumlah bahasa per root mengikuti isi database —
+> Film Isa Al-Masih **169**, Video Kitab Suci **103**, Ikatan Ilahi **11**.
+> Region yang tidak punya sub-bahasa (mis. "Indonesia") dihitung sebagai bahasa itu
+> sendiri. `category/languages` mengembalikan **semua** bahasa lintas region (bukan
+> hanya 100 seperti `homeLanguages` di UI).
 
 ### Prioritas 3 — Perbaikan kualitas
 13. Standarkan format tanggal (semua pakai `format_indo_date()` atau ISO 8601).

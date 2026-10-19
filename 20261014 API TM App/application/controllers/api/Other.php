@@ -67,9 +67,9 @@ class Other extends CI_Controller
 				return;
 			}
 			$response = array('status' => 200, "message" => "Success");
-			$limit = isset($_POST['limit']) ? $_POST['limit'] : null;
-			$offset = isset($_POST['offset']) ? $_POST['offset'] : null;
-			$list_video = $this->video->get_latest_video($limit, $offset);
+			$page = api_page_params(20, 100);
+			$sort = api_sort();
+			$list_video = $this->video->get_latest_video($page['per_page'], $page['offset'], $sort);
 			if (!$list_video) {
 				// Handle case where no categories are found
 				echo json_encode([
@@ -89,6 +89,11 @@ class Other extends CI_Controller
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
 				$i++;
 			}
+			$response['pagination'] = api_pagination(
+				$this->video->count_latest_video(),
+				$page['page'],
+				$page['per_page']
+			);
 		} else {
 			echo json_encode([
 				'status' => 404,
@@ -271,8 +276,8 @@ class Other extends CI_Controller
 				]);
 				return;
 			}
-			$limit = isset($_POST['limit']) ? $_POST['limit'] : null;
-			$offset = isset($_POST['offset']) ? $_POST['offset'] : 0;
+			$page = api_page_params(20, 100);
+			$sort = api_sort();
 
 			$response = array('status' => 200, "message" => "Success");
 			if ($_POST['token'] != TOKEN) {
@@ -285,7 +290,7 @@ class Other extends CI_Controller
 			}
 			$response = array('status' => 200, "message" => "Success");
 			$this->load->model('video_model', 'video');
-			$list_video = $this->video->get_by_tag($_POST['tag'], $limit, $offset);
+			$list_video = $this->video->get_by_tag($_POST['tag'], $page['per_page'], $page['offset'], $sort);
 			if (!$list_video) {
 				// Handle case where no categories are found
 				echo json_encode([
@@ -305,6 +310,11 @@ class Other extends CI_Controller
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
 				$i++;
 			}
+			$response['pagination'] = api_pagination(
+				$this->video->count_by_tag($_POST['tag']),
+				$page['page'],
+				$page['per_page']
+			);
 		} else {
 			echo json_encode([
 				'status' => 404,

@@ -147,7 +147,8 @@ class Vkitab extends CI_Controller
 				]);
 				return;
 			}
-			$limit = isset($_POST['limit']) ? $_POST['limit'] : null;
+			$page = api_page_params(0, 100);
+			$sort = api_sort();
 			$response = array('status' => 200, "message" => "Success");
 			if ($_POST['token'] != TOKEN) {
 				echo json_encode([
@@ -159,7 +160,7 @@ class Vkitab extends CI_Controller
 			}
 			$response = array('status' => 200, "message" => "Success");
 			$this->load->model('video_model', 'video');
-			$list_video = $this->video->get_video_by_category($_POST['id'], $limit);
+			$list_video = $this->video->get_video_by_category($_POST['id'], $page['per_page'], $page['offset'], $sort);
 			if (!$list_video) {
 				// Handle case where no categories are found
 				echo json_encode([
@@ -179,6 +180,11 @@ class Vkitab extends CI_Controller
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
 				$i++;
 			}
+			$response['pagination'] = api_pagination(
+				$this->video->count_video_by_category($_POST['id']),
+				$page['page'],
+				$page['per_page']
+			);
 		} else {
 			echo json_encode([
 				'status' => 404,
@@ -208,7 +214,8 @@ class Vkitab extends CI_Controller
 				]);
 				return;
 			}
-			$limit = isset($_POST['limit']) ? $_POST['limit'] : null;
+			$page = api_page_params(0, 100);
+			$sort = api_sort();
 
 			$response = array('status' => 200, "message" => "Success");
 			if ($_POST['token'] != TOKEN) {
@@ -225,7 +232,7 @@ class Vkitab extends CI_Controller
 			if ($_POST['id'] == 'indonesia') {
 				$cat_id = 144;
 			}
-			if ($cat_id == "") {
+			if ($cat_id === null || $cat_id === '') {
 				echo json_encode([
 					'status' => 201,
 					'message' => 'Bahasa ini tidak terdaftar di Video Kitab Suci',
@@ -235,7 +242,7 @@ class Vkitab extends CI_Controller
 			}
 
 			$response = array('status' => 200, "message" => "Success");
-			$list_video = $this->video->get_video_by_category($cat_id, $limit);
+			$list_video = $this->video->get_video_by_category($cat_id, $page['per_page'], $page['offset'], $sort);
 			if (!$list_video) {
 				// Handle case where no categories are found
 				echo json_encode([
@@ -255,6 +262,11 @@ class Vkitab extends CI_Controller
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
 				$i++;
 			}
+			$response['pagination'] = api_pagination(
+				$this->video->count_video_by_category($cat_id),
+				$page['page'],
+				$page['per_page']
+			);
 		} else {
 			echo json_encode([
 				'status' => 404,
@@ -295,28 +307,27 @@ class Vkitab extends CI_Controller
 				]);
 				return;
 			}
+			$page = api_page_params(0, 100);
+			$sort = api_sort();
 			$response = array('status' => 200, "message" => "Success");
 			$this->load->model('video_model', 'video');
-			$list_video = array();
-			switch ($_POST['id']) {
-				case 'matius':
-					$list_video = $this->video->get_vkitab_by_book('Matius');
-					break;
-				case 'markus':
-					$list_video = $this->video->get_vkitab_by_book('Markus');
-					break;
-				case 'lukas':
-					$list_video = $this->video->get_vkitab_by_book('Lukas');
-					break;
-				case 'yahya':
-					$list_video = $this->video->get_vkitab_by_book('Yahya');
-					break;
-				case 'kisah':
-					$list_video = $this->video->get_vkitab_by_book('KisahParaRasul');
-					break;
-				default:
-					break;
+			$books = array(
+				'matius' => 'Matius',
+				'markus' => 'Markus',
+				'lukas' => 'Lukas',
+				'yahya' => 'Yahya',
+				'kisah' => 'KisahParaRasul',
+			);
+			$book = isset($books[$_POST['id']]) ? $books[$_POST['id']] : null;
+			if ($book === null) {
+				echo json_encode([
+					'status' => 404,
+					'message' => 'No Video found',
+					'data' => []
+				]);
+				return;
 			}
+			$list_video = $this->video->get_vkitab_by_book($book, $page['per_page'], $page['offset'], $sort);
 			if (!$list_video) {
 				// Handle case where no categories are found
 				echo json_encode([
@@ -336,6 +347,11 @@ class Vkitab extends CI_Controller
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
 				$i++;
 			}
+			$response['pagination'] = api_pagination(
+				$this->video->count_vkitab_by_book($book),
+				$page['page'],
+				$page['per_page']
+			);
 		} else {
 			echo json_encode([
 				'status' => 404,
