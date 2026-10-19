@@ -82,17 +82,21 @@ class Video_model extends CI_Model
     // Fetch video kitab with custom parameter
     public function get_vkitab_by_book($book)
     {
-        return $this->db->get_where('videodb', "displayname LIKE '%Indonesia%' AND tagging LIKE '%" . $book . "%'")->result_array();
+        $this->db->from('videodb');
+        $this->db->like('displayname', 'Indonesia');
+        $this->db->like('tagging', $book);
+        return $this->db->get()->result_array();
     }
 
     //Fetch video by tag
     public function get_by_tag($tag, $limit = null, $offset = 0)
     {
         $this->db->select('seq, displayname, duration, categoryarray, thumbnail,watchcounter,dateschedule');
-        $this->db->where("tagging LIKE '%" . $tag . "%'");
+        $this->db->from('videodb');
+        $this->db->like('tagging', $tag);
         $this->db->where('isdeleted', 0);
         $this->db->limit($limit, $offset); // Add limit here
-        return $this->db->get('videodb')->result_array();
+        return $this->db->get()->result_array();
     }
 
 

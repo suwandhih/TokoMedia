@@ -3,6 +3,9 @@ node_modules/
 .env
 .env.local
 
+# API secrets (kredensial lokal, jangan di-commit)
+20261014 API TM App/application/config/secrets.local.php
+
 # Android build outputs & local sdk config
 TokoMediaAndroid/.gradle/
 TokoMediaAndroid/.kotlin/

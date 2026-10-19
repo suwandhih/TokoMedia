@@ -89,23 +89,19 @@ class Contact extends CI_Controller
 		echo json_encode($response, JSON_PRETTY_PRINT);
 	}
 
-	public function infoo(){
-		echo phpinfo();
-	}
-
 	public function send_email_smtp($from_email, $from_name, $message_body)
 	{
 		// Load the email library
 		$this->load->library('email');
 
-		// SMTP configuration
+		// SMTP configuration (kredensial dari environment variable / secrets.local.php)
 		$config = array(
 			'protocol' => 'smtp',
-			'smtp_host' => 'sg2plzcpnl506705.prod.sin2.secureserver.net',
-			'smtp_port' => 587,
-			'smtp_user' => 'info@tokomedia.org',
-			'smtp_pass' => 'GANTI_PASSWORD_SMTP_ANDA',
-			'smtp_crypto' => 'tls', // this is important for port 465
+			'smtp_host' => SMTP_HOST,
+			'smtp_port' => SMTP_PORT,
+			'smtp_user' => SMTP_USER,
+			'smtp_pass' => SMTP_PASS,
+			'smtp_crypto' => SMTP_CRYPTO,
 			'mailtype' => 'html',
 			'charset' => 'utf-8',
 			'newline' => "\r\n",
@@ -113,14 +109,19 @@ class Contact extends CI_Controller
 			'wordwrap' => TRUE
 		);
 
+		if (SMTP_HOST === '' || SMTP_USER === '' || SMTP_PASS === '') {
+			log_message('error', 'SMTP credentials are not configured');
+			return false;
+		}
+
 		$data = array('full_name' => $from_name, 'email' => $from_email, 'message' => $message_body);
 		$html = $this->load->view('email_contact', $data, TRUE);
 
 		$this->email->initialize($config);
 
 		// Set email parameters
-		$this->email->from('info@tokomedia.org', 'Mobile Apps'); // change this
-		$this->email->to('info@tokomedia.org');
+		$this->email->from(SMTP_FROM, SMTP_FROM_NAME);
+		$this->email->to(SMTP_TO);
 		$this->email->subject("Contact Us Page");
 		$this->email->message($html);
 

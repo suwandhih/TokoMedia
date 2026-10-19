@@ -84,7 +84,9 @@ defined('EXIT_DATABASE') or define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN') or define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX') or define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
-define('TOKEN', 'GANTI_DENGAN_TOKEN_API_BARU');
+// Kredensial (TOKEN, SMTP_*) dimuat dari environment variable / secrets.local.php
+require_once APPPATH . 'config/secrets.php';
+
 define('SERVER_URL', 'https://www.tokomedia.org');
 define('BASE_URL', 'https://www.tokomedia.org');
 define('VIDEO_LINK_S', 'https://61146e7ab7a66.streamlock.net:8089/tokomedia/definst/mp4:');

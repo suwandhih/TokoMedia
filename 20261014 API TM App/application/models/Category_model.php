@@ -33,9 +33,12 @@ class Category_model extends CI_Model
 
     public function get_category_name_by_pref($parent_category, $category_name)
     {
-        // Subquery
-        $subquery = "(SELECT seq FROM category WHERE parentid = " . $parent_category . ")";
-
+        // Subquery (di-escape oleh query builder)
+        $subquery = $this->db
+            ->select('seq')
+            ->from('category')
+            ->where('parentid', $parent_category)
+            ->get_compiled_select();
 
         // Main query
         $this->db->select('seq');
@@ -43,7 +46,7 @@ class Category_model extends CI_Model
         $this->db->where("parentid IN ($subquery)", null, false); // raw subquery
         $this->db->where('categoryname', $category_name);
         $result = $this->db->get()->row_array();
-        return $result['seq'];
+        return $result ? $result['seq'] : null;
     }
 
 

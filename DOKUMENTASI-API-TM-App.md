@@ -60,8 +60,11 @@ define('VIDEO_LINK_S',     'https://61146e7ab7a66.streamlock.net:8089/tokomedia/
 define('VIDEO_LINK_E',     '/playlist.m3u8');
 define('LOCAL_SERVER_URL', 'http://localhost/tokomedia/public/');
 define('LOCAL_BASE_URL',   'http://localhost/tokomedia/public/index.php/');
-define('TOKEN',            'GANTI_DENGAN_TOKEN_API_BARU');
 ```
+
+`TOKEN` dan konstanta `SMTP_*` **tidak lagi** didefinisikan di `constants.php`.
+Nilainya dimuat oleh `application/config/secrets.php` dari environment variable
+atau `application/config/secrets.local.php` (lihat bagian 9).
 
 **Status deployment (diverifikasi 15 Okt 2026):** folder API ini **belum terpasang di produksi**. Semua percobaan akses ke `https://www.tokomedia.org/api/...` mengembalikan halaman login website (bukan JSON). Jadi API ini masih tahap pengembangan/lokal.
 
@@ -69,11 +72,11 @@ define('TOKEN',            'GANTI_DENGAN_TOKEN_API_BARU');
 
 ```bash
 curl -X POST "https://www.tokomedia.org/api/index.php/api/vkitab" \
-     -d "token=GANTI_DENGAN_TOKEN_API_BARU"
+     -d "token=<token-anda>"
 ```
 
 ```javascript
-const TOKEN = "GANTI_DENGAN_TOKEN_API_BARU";
+const TOKEN = "<token-anda>"; // nilai TM_API_TOKEN di server
 const res = await fetch(`${BASE}/api/vkitab/language`, {
   method: "POST",
   headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -146,34 +149,35 @@ Base: `POST /api/<controller>/<method>`
 |---|---|---|---|---|
 | 1 | `aplikasi` | `index` | Daftar region aplikasi | `token` |
 | 2 | `aplikasi` | `area` | Daftar aplikasi per region | `token`, `id` |
-| 3 | `aplikasi` | `language` | ⚠️ **Bug** – mengembalikan video, bukan aplikasi | `token`, `id` |
-| 4 | `aplikasi` | `detail` | ⚠️ **Bug** – mengembalikan video, bukan aplikasi | `token`, `id` |
+| 3 | `aplikasi` | `language` | Daftar aplikasi per region (alias `area`) | `token`, `id` |
+| 4 | `aplikasi` | `detail` | Detail aplikasi berdasarkan `counter` | `token`, `id` |
 | 5 | `ckitab` | `index` | Daftar Clip Kitab Suci (kategori 131) | `token`, `limit`, `offset` |
 | 6 | `ckitab` | `detail` | Detail clip + rekomendasi | `token`, `id` |
 | 7 | `contact` | `index` | Kirim form kontak + email | `token`, `contactname`, `emailaddress`, `phonenumber`, `messagecontent`, `linkid`, `linkname` |
-| 8 | `contact` | `infoo` | ⚠️ **Bahaya** – `phpinfo()` terbuka | – |
-| 9 | `ikatan` | `index` | Daftar region Film Ikatan Ilahi | `token` |
-| 10 | `ikatan` | `area` | Daftar bahasa per region | `token`, `id` |
-| 11 | `ikatan` | `language` | Daftar video per kategori | `token`, `id`, `limit`, `offset` |
-| 12 | `ikatan` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `limit` |
-| 13 | `other` | `index` | Placeholder (data kosong) | `token` |
-| 14 | `other` | `latestvideo` | Video terbaru (kategori 2 & 305) | `token`, `limit`, `offset` |
-| 15 | `other` | `commentvideo` | Kirim komentar video + email | `token`, `contactname`, `emailaddress`, `phonenumber`, `messagecontent`, `videoid`, `videotitle` |
-| 16 | `other` | `detailvideo` | Detail video + **increment watchcounter** + rekomendasi | `token`, `id` |
-| 17 | `other` | `gettag` | Cari video berdasarkan tag | `token`, `tag`, `limit`, `offset` |
-| 18 | `other` | `likevideo` | **Increment favoritecounter** | `token`, `id` |
-| 19 | `riwayat` | `index` | Daftar region Film Isa Al-Masih | `token` |
-| 20 | `riwayat` | `area` | Daftar bahasa per region | `token`, `id` |
-| 21 | `riwayat` | `language` | Daftar video per kategori | `token`, `id`, `limit`, `offset` |
-| 22 | `riwayat` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `limit` |
-| 23 | `riwayat` | `detail` | Detail video + rekomendasi | `token`, `id` |
-| 24 | `vkitab` | `index` | Daftar region Video Kitab Suci | `token` |
-| 25 | `vkitab` | `area` | Daftar kitab (id=144) / sub-kategori | `token`, `id` |
-| 26 | `vkitab` | `language` | Daftar video per kategori | `token`, `id`, `limit` |
-| 27 | `vkitab` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `limit` |
-| 28 | `vkitab` | `custom` | Video per kitab (Matius/Markus/Lukas/Yahya/Kisah) | `token`, `id` |
-| 29 | `vkitab` | `detail` | Detail video + rekomendasi | `token`, `id` |
-| 30 | `welcome` | `index` | Halaman default CI3 (bukan API) | – |
+| 8 | `ikatan` | `index` | Daftar region Film Ikatan Ilahi | `token` |
+| 9 | `ikatan` | `area` | Daftar bahasa per region | `token`, `id` |
+| 10 | `ikatan` | `language` | Daftar video per kategori | `token`, `id`, `limit`, `offset` |
+| 11 | `ikatan` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `limit` |
+| 12 | `other` | `index` | Placeholder (data kosong) | `token` |
+| 13 | `other` | `latestvideo` | Video terbaru (kategori 2 & 305) | `token`, `limit`, `offset` |
+| 14 | `other` | `commentvideo` | Kirim komentar video + email | `token`, `contactname`, `emailaddress`, `phonenumber`, `messagecontent`, `videoid`, `videotitle` |
+| 15 | `other` | `detailvideo` | Detail video + **increment watchcounter** + rekomendasi | `token`, `id` |
+| 16 | `other` | `gettag` | Cari video berdasarkan tag | `token`, `tag`, `limit`, `offset` |
+| 17 | `other` | `likevideo` | **Increment favoritecounter** | `token`, `id` |
+| 18 | `riwayat` | `index` | Daftar region Film Isa Al-Masih | `token` |
+| 19 | `riwayat` | `area` | Daftar bahasa per region | `token`, `id` |
+| 20 | `riwayat` | `language` | Daftar video per kategori | `token`, `id`, `limit`, `offset` |
+| 21 | `riwayat` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `limit` |
+| 22 | `riwayat` | `detail` | Detail video + rekomendasi | `token`, `id` |
+| 23 | `vkitab` | `index` | Daftar region Video Kitab Suci | `token` |
+| 24 | `vkitab` | `area` | Daftar kitab (id=144) / sub-kategori | `token`, `id` |
+| 25 | `vkitab` | `language` | Daftar video per kategori | `token`, `id`, `limit` |
+| 26 | `vkitab` | `languagepref` | Daftar video per slug bahasa | `token`, `id`, `limit` |
+| 27 | `vkitab` | `custom` | Video per kitab (Matius/Markus/Lukas/Yahya/Kisah) | `token`, `id` |
+| 28 | `vkitab` | `detail` | Detail video + rekomendasi | `token`, `id` |
+| 29 | `welcome` | `index` | Halaman default CI3 (bukan API) | – |
+
+> `contact/infoo` (phpinfo) sudah **dihapus** — lihat bagian 9.
 
 ---
 
@@ -236,9 +240,37 @@ Base: `POST /api/<controller>/<method>`
 | `#Sumatera` | 15 |
 | `#Indonesia` / `#indonesia` | 10 |
 
-#### ⚠️ `POST /api/aplikasi/language` dan `/api/aplikasi/detail`
+#### `POST /api/aplikasi/language` — Daftar aplikasi per region (alias `area`)
 
-Kedua method ini **salah implementasi** — isinya hasil copy-paste dari `Vkitab`, sehingga memanggil `video_model` dan mengembalikan **data video**, bukan aplikasi. Endpoint ini tidak bisa dipakai.
+**Request:** `token`, `id` (slug region)
+
+Respons **identik** dengan `aplikasi/area` (method ini hanya memanggil `area()`),
+yaitu `data` berupa array `{ name, url, thumbnail, clicked }`.
+
+#### `POST /api/aplikasi/detail` — Detail aplikasi
+
+**Request:** `token`, `id` (`counter` numerik dari `appdb`)
+
+**Response:**
+```json
+{
+  "status": 200,
+  "message": "Success",
+  "data": {
+    "id": 12,
+    "name": "Bahasa Muna (2)",
+    "slug": "bahasa-muna-2",
+    "description": "…",
+    "url": "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.muna",
+    "playstorename": "Bahasa Muna",
+    "clicked": 0,
+    "tag": "#Sulawesi",
+    "thumbnail": "https://www.tokomedia.org/img/appdb/muna.webp"
+  }
+}
+```
+
+> Kedua method ini sebelumnya salah implementasi (copy-paste dari `Vkitab`, memanggil `video_model`). Sekarang memakai `App_model` (`get_app_by_area()` / `get_app_by_id()`).
 
 ---
 
@@ -619,11 +651,9 @@ Menyimpan ke tabel `videocomment` **dan** mengirim email ke `info@tokomedia.org`
 { "status": 200, "message": "Terimakasih telah menghubungi kami. Kami akan segera merespon anda", "data": { } }
 ```
 
-> ⚠️ **Bug:** `Contact_model::insert_contact()` menulis ke tabel **`contact`**, tetapi tabel tersebut **tidak ada** di dump database. Tabel yang tersedia adalah **`contributor`** (struktur kolom identik). Akibatnya insert akan gagal dan API mengembalikan `status: 201`.
+> ✅ **Sudah diperbaiki:** `Contact_model::insert_contact()` kini menulis ke tabel **`contributor`** (sebelumnya menulis ke tabel `contact` yang tidak ada, sehingga insert selalu gagal).
 
-#### ⚠️ `GET /api/contact/infoo`
-
-Menjalankan `phpinfo()` tanpa autentikasi — membocorkan konfigurasi server (path, versi PHP, environment variable, kredensial). **Harus dihapus sebelum deploy.**
+> ℹ️ Endpoint `contact/infoo` (yang menjalankan `phpinfo()` tanpa autentikasi) sudah **dihapus** dari controller.
 
 ---
 
@@ -637,8 +667,7 @@ Menjalankan `phpinfo()` tanpa autentikasi — membocorkan konfigurasi server (pa
 | `category` | 321 | `riwayat`, `vkitab`, `ikatan` | Hierarki kategori (self-referencing `parentid`) |
 | `appdb` | 275 | `aplikasi` | Daftar aplikasi Android |
 | `videocomment` | 640 | `other/commentvideo` | Komentar video |
-| `contributor` | 18 | *(tidak dipakai API)* | Tabel kontak yang sebenarnya |
-| `contact` | **tidak ada** | `contact` | ⚠️ Dirujuk model tapi tidak ada |
+| `contributor` | 18 | `contact` | Tabel kontak (dipakai `Contact_model`) |
 | `apppohon` | 12 | *(tidak dipakai API)* | Aplikasi "Pohon Kehidupan" |
 | `routerdb` | 17.107 | *(tidak dipakai API)* | Routing URL website |
 | `user`, `user_login` | 4 + 4 | *(tidak dipakai API)* | Admin website |
@@ -754,8 +783,8 @@ Menjalankan `phpinfo()` tanpa autentikasi — membocorkan konfigurasi server (pa
 | Clip Kitab Suci – detail | `ckitab/detail` | ✅ |
 | Aplikasi – daftar per region | `aplikasi/area` | ✅ |
 | Aplikasi – **semua** aplikasi | – | ❌ **Tidak ada** |
-| Aplikasi – detail aplikasi | – | ❌ **Tidak ada** (`aplikasi/detail` rusak) |
-| Kontak – kirim pesan | `contact` | ⚠️ Ada tapi **gagal** (tabel `contact` tidak ada) |
+| Aplikasi – detail aplikasi | `aplikasi/detail` | ✅ |
+| Kontak – kirim pesan | `contact` | ✅ |
 | Komentar video | `other/commentvideo` | ✅ |
 | Like video | `other/likevideo` | ✅ |
 | Pencarian | `other/gettag` | ⚠️ Hanya by tag, bukan full-text |
@@ -773,14 +802,12 @@ Menjalankan `phpinfo()` tanpa autentikasi — membocorkan konfigurasi server (pa
 
 1. **Endpoint "semua bahasa"** — website menampilkan 100 bahasa di home (`homeLanguages`), API hanya bisa per-region.
 2. **Daftar semua aplikasi** — website `/koleksi-aplikasi` menampilkan 269 aplikasi sekaligus; API hanya per-region.
-3. **Detail aplikasi** — website punya `/app/p/{slug}`; `aplikasi/detail` rusak.
-4. **Pencarian full-text** — website `/search/v/?v=` mencari di judul + deskripsi + tag; API hanya `gettag`.
-5. **Daftar kategori utama** — untuk membangun home page.
-6. **Kontak** — endpoint ada tapi gagal karena tabel salah.
-7. **Audio Kitab Suci & Media Lainnya** — kategori ada di database tapi belum ada controller.
-8. **Sorting** — UI baru (`TokoMediaUI`) punya chip Tren/Populer/Unseen/New/Old; API hanya bisa urut `dateschedule DESC` (latestvideo) atau default.
-9. **Pagination metadata** — tidak ada `total`, `page`, `has_more` di respons.
-10. **Detail video tanpa menambah view** — `other/detailvideo` selalu menambah `watchcounter`; tidak ada varian "read-only".
+3. **Pencarian full-text** — website `/search/v/?v=` mencari di judul + deskripsi + tag; API hanya `gettag`.
+4. **Daftar kategori utama** — untuk membangun home page.
+5. **Audio Kitab Suci & Media Lainnya** — kategori ada di database tapi belum ada controller.
+6. **Sorting** — UI baru (`TokoMediaUI`) punya chip Tren/Populer/Unseen/New/Old; API hanya bisa urut `dateschedule DESC` (latestvideo) atau default.
+7. **Pagination metadata** — tidak ada `total`, `page`, `has_more` di respons.
+8. **Detail video tanpa menambah view** — `other/detailvideo` selalu menambah `watchcounter`; tidak ada varian "read-only".
 
 ---
 
@@ -788,32 +815,32 @@ Menjalankan `phpinfo()` tanpa autentikasi — membocorkan konfigurasi server (pa
 
 ### 8.1 Keamanan
 
-| # | Tingkat | Temuan | Lokasi |
-|---|---|---|---|
-| 1 | 🔴 Kritis | `phpinfo()` terbuka tanpa autentikasi | `Contact::infoo()` |
-| 2 | 🔴 Kritis | Kredensial SMTP hardcoded di source code | `Contact::send_email_smtp()`, `Other::send_email_smtp()` |
-| 3 | 🔴 Kritis | Token API hardcoded & dipakai bersama semua client | `constants.php` |
-| 4 | 🟠 Tinggi | SQL injection via `LIKE` tanpa escaping | `Video_model::get_vkitab_by_book()`, `get_by_tag()` |
-| 5 | 🟠 Tinggi | SQL injection via subquery string concat | `Category_model::get_category_name_by_pref()` |
-| 6 | 🟡 Sedang | Password hash SHA-1 tanpa salt | tabel `user_login` |
-| 7 | 🟡 Sedang | Tidak ada rate limiting pada `likevideo` / `detailvideo` | `Other` |
-| 8 | 🟡 Sedang | Tidak ada validasi format email/telepon | `Contact`, `Other::commentvideo` |
-| 9 | ⚪ Rendah | `db_debug` aktif saat non-production | `database.php` |
+| # | Tingkat | Temuan | Lokasi | Status |
+|---|---|---|---|---|
+| 1 | 🔴 Kritis | `phpinfo()` terbuka tanpa autentikasi | `Contact::infoo()` | ✅ Dihapus |
+| 2 | 🔴 Kritis | Kredensial SMTP hardcoded di source code | `Contact::send_email_smtp()`, `Other::send_email_smtp()` | ✅ Dipindah ke `secrets.php` |
+| 3 | 🔴 Kritis | Token API hardcoded & dipakai bersama semua client | `constants.php` | ✅ Dipindah ke `secrets.php` |
+| 4 | 🟠 Tinggi | SQL injection via `LIKE` tanpa escaping | `Video_model::get_vkitab_by_book()`, `get_by_tag()` | ✅ Pakai query builder `like()` |
+| 5 | 🟠 Tinggi | SQL injection via subquery string concat | `Category_model::get_category_name_by_pref()` | ✅ Pakai `get_compiled_select()` |
+| 6 | 🟡 Sedang | Password hash SHA-1 tanpa salt | tabel `user_login` | ⏳ Belum |
+| 7 | 🟡 Sedang | Tidak ada rate limiting pada `likevideo` / `detailvideo` | `Other` | ⏳ Belum |
+| 8 | 🟡 Sedang | Tidak ada validasi format email/telepon | `Contact`, `Other::commentvideo` | ⏳ Belum |
+| 9 | ⚪ Rendah | `db_debug` aktif saat non-production | `database.php` | ⏳ Belum |
 
 ### 8.2 Bug fungsional
 
-| # | Bug | Lokasi |
-|---|---|---|
-| 1 | `aplikasi/language` & `aplikasi/detail` mengembalikan data video | `Aplikasi.php` |
-| 2 | `contact` menulis ke tabel `contact` yang tidak ada | `Contact_model.php` |
-| 3 | `Videocomment_model::get_by_videoid()` memanggil `fresult_array()` (typo) | `Videocomment_model.php` |
-| 4 | `Video_model::delete_video()` menghapus dari tabel `video` (bukan `videodb`) | `Video_model.php` |
-| 5 | `ckitab` tidak memformat `dateschedule` | `Ckitab.php` |
-| 6 | `Ikatan` tidak punya method `detail` | `Ikatan.php` |
-| 7 | `Aplikasi::index` mendefinisikan `$response` dua kali (dead code) | `Aplikasi.php` |
-| 8 | `Category_model::get_category_name_by_pref()` error jika hasil kosong (`$result['seq']` pada `null`) | `Category_model.php` |
-| 9 | `sourcelink` tidak di-URL-encode saat membentuk `source` | semua controller detail |
-| 10 | `MY_Controller` memuat `user_model` yang tidak ada di folder models | `MY_Controller.php` |
+| # | Bug | Lokasi | Status |
+|---|---|---|---|
+| 1 | `aplikasi/language` & `aplikasi/detail` mengembalikan data video | `Aplikasi.php` | ✅ Diperbaiki |
+| 2 | `contact` menulis ke tabel `contact` yang tidak ada | `Contact_model.php` | ✅ Diperbaiki |
+| 3 | `Videocomment_model::get_by_videoid()` memanggil `fresult_array()` (typo) | `Videocomment_model.php` | ⏳ Belum |
+| 4 | `Video_model::delete_video()` menghapus dari tabel `video` (bukan `videodb`) | `Video_model.php` | ⏳ Belum |
+| 5 | `ckitab` tidak memformat `dateschedule` | `Ckitab.php` | ⏳ Belum |
+| 6 | `Ikatan` tidak punya method `detail` | `Ikatan.php` | ⏳ Belum |
+| 7 | `Aplikasi::index` mendefinisikan `$response` dua kali (dead code) | `Aplikasi.php` | ✅ Diperbaiki |
+| 8 | `Category_model::get_category_name_by_pref()` error jika hasil kosong (`$result['seq']` pada `null`) | `Category_model.php` | ✅ Diperbaiki |
+| 9 | `sourcelink` tidak di-URL-encode saat membentuk `source` | semua controller detail | ⏳ Belum |
+| 10 | `MY_Controller` memuat `user_model` yang tidak ada di folder models | `MY_Controller.php` | ⏳ Belum |
 
 ### 8.3 Catatan implementasi
 
@@ -828,12 +855,61 @@ Menjalankan `phpinfo()` tanpa autentikasi — membocorkan konfigurasi server (pa
 
 ## 9. Rekomendasi
 
-### Prioritas 1 — Sebelum deploy
-1. Hapus `Contact::infoo()`.
-2. Pindahkan kredensial SMTP & token ke environment variable / file config di luar web root.
-3. Perbaiki `Contact_model` agar menulis ke tabel `contributor`.
-4. Perbaiki `aplikasi/language` & `aplikasi/detail` agar memakai `App_model`.
-5. Tambahkan escaping pada semua query `LIKE` dan subquery.
+### Prioritas 1 — Sebelum deploy ✅ **SELESAI**
+
+| # | Item | Status |
+|---|---|---|
+| 1 | Hapus `Contact::infoo()` | ✅ |
+| 2 | Pindahkan kredensial SMTP & token ke environment variable / file config | ✅ |
+| 3 | Perbaiki `Contact_model` agar menulis ke tabel `contributor` | ✅ |
+| 4 | Perbaiki `aplikasi/language` & `aplikasi/detail` agar memakai `App_model` | ✅ |
+| 5 | Tambahkan escaping pada semua query `LIKE` dan subquery | ✅ |
+
+#### Cara mengatur kredensial (WAJIB dibaca sebelum deploy)
+
+Kredensial **tidak lagi** ditulis di source code. Nilainya dibaca oleh
+`application/config/secrets.php` dengan urutan prioritas:
+
+1. **Environment variable** (disarankan untuk produksi)
+2. **`application/config/secrets.local.php`** (untuk lokal, **tidak di-commit** — sudah masuk `.gitignore`)
+3. Nilai default (kosong / `587` / `tls` / `Mobile Apps`)
+
+| Environment variable | Keterangan |
+|---|---|
+| `TM_API_TOKEN` | Token API global (field `token`) |
+| `TM_SMTP_HOST` | Host SMTP |
+| `TM_SMTP_PORT` | Port SMTP (default `587`) |
+| `TM_SMTP_USER` | User SMTP |
+| `TM_SMTP_PASS` | Password SMTP |
+| `TM_SMTP_CRYPTO` | `tls` / `ssl` (default `tls`) |
+| `TM_SMTP_FROM` | Alamat pengirim |
+| `TM_SMTP_FROM_NAME` | Nama pengirim (default `Mobile Apps`) |
+| `TM_SMTP_TO` | Alamat tujuan notifikasi |
+
+Jika `TM_API_TOKEN` kosong, **semua endpoint menolak request** (`status: 404`,
+`No Permission`) — ini disengaja agar aman secara default. Jika kredensial SMTP
+kosong, pengiriman email gagal dan API mengembalikan `status: 201`.
+
+Contoh `secrets.local.php` (buat manual di server, jangan di-commit):
+
+```php
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+return array(
+	'TM_API_TOKEN'   => 'token-rahasia-anda',
+	'TM_SMTP_HOST'   => 'smtp.contoh.com',
+	'TM_SMTP_PORT'   => 587,
+	'TM_SMTP_USER'   => 'info@contoh.com',
+	'TM_SMTP_PASS'   => 'password-smtp',
+	'TM_SMTP_CRYPTO' => 'tls',
+	'TM_SMTP_FROM'   => 'info@contoh.com',
+	'TM_SMTP_TO'     => 'info@contoh.com',
+);
+```
+
+> ⚠️ **Token lama** (`TOKEN_LAMA…`) sudah pernah terekspos di source code & riwayat Git.
+> Sebaiknya **ganti dengan token baru** saat deploy.
 
 ### Prioritas 2 — Agar API bisa menggantikan website
 6. Tambah endpoint `category/tree` (semua kategori + hierarki) untuk home page.
@@ -862,7 +938,7 @@ Menjalankan `phpinfo()` tanpa autentikasi — membocorkan konfigurasi server (pa
 
 ```javascript
 const BASE  = "https://www.tokomedia.org/api/index.php/api";
-const TOKEN = "GANTI_DENGAN_TOKEN_API_BARU";
+const TOKEN = "<token-anda>"; // nilai TM_API_TOKEN di server
 
 const post = (path, body) =>
   fetch(`${BASE}/${path}`, {
