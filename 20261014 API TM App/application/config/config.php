@@ -102,7 +102,23 @@ $config['charset'] = 'UTF-8';
 | setting this variable to TRUE (boolean).  See the user guide for details.
 |
 */
-$config['enable_hooks'] = FALSE;
+$config['enable_hooks'] = TRUE;
+
+/*
+|--------------------------------------------------------------------------
+| CORS — Origin yang diizinkan memanggil API
+|--------------------------------------------------------------------------
+|
+| UI TokoMedia berjalan di GitHub Pages (origin berbeda), sehingga browser
+| memerlukan header Access-Control-Allow-Origin. Tambahkan origin host API
+| sendiri bila UI juga dipasang di sana.
+|
+*/
+$config['cors_origins'] = array(
+	'https://suwandhih.github.io',
+	'https://tokomedia.org',
+	'https://www.tokomedia.org',
+);
 
 /*
 |--------------------------------------------------------------------------

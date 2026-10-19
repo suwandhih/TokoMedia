@@ -73,20 +73,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
+/*
+| Kredensial database diambil dari environment variable / secrets.local.php
+| (lihat application/config/secrets.php) agar tidak tersimpan di Git.
+| Nilai di bawah hanya cadangan untuk pengembangan lokal.
+*/
+$tm_db = array();
+$tm_db_file = __DIR__ . '/secrets.local.php';
+if (is_file($tm_db_file)) {
+	$tm_db = include $tm_db_file;
+	if (!is_array($tm_db)) {
+		$tm_db = array();
+	}
+}
+
+if (!function_exists('tm_db_conf')) {
+	function tm_db_conf($key, $local, $default = '')
+	{
+		$value = getenv($key);
+		if ($value === false || $value === '') {
+			$value = isset($_SERVER[$key]) ? $_SERVER[$key] : '';
+		}
+		if ($value === '') {
+			$value = isset($local[$key]) ? $local[$key] : $default;
+		}
+		return $value;
+	}
+}
+
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => 'YourmySQLipasswordhere',
-	'database' => 'tokomedia',
+	'hostname' => tm_db_conf('TM_DB_HOST', $tm_db, 'localhost'),
+	'username' => tm_db_conf('TM_DB_USER', $tm_db, 'root'),
+	'password' => tm_db_conf('TM_DB_PASS', $tm_db, ''),
+	'database' => tm_db_conf('TM_DB_NAME', $tm_db, 'tokomedia'),
+	'port' => (int) tm_db_conf('TM_DB_PORT', $tm_db, 3306),
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
 	'cache_on' => FALSE,
 	'cachedir' => '',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
+	'char_set' => 'utf8mb4',
+	'dbcollat' => 'utf8mb4_unicode_ci',
 	'swap_pre' => '',
 	'encrypt' => FALSE,
 	'compress' => FALSE,

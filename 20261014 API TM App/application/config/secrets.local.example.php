@@ -22,4 +22,11 @@ return array(
 	'TM_SMTP_FROM' => 'info@contoh.com',
 	'TM_SMTP_FROM_NAME' => 'Mobile Apps',
 	'TM_SMTP_TO' => 'info@contoh.com',
+
+	// Database (diisi dari cPanel/VistaPanel byet.host)
+	'TM_DB_HOST' => 'sqlXXX.byethostX.com',
+	'TM_DB_USER' => 'bXX_XXXXXXX',
+	'TM_DB_PASS' => 'password-database',
+	'TM_DB_NAME' => 'bXX_XXXXXXX_tokomedia',
+	'TM_DB_PORT' => 3306,
 );

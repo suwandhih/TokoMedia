@@ -1,0 +1,24 @@
+# TokoMedia API — konfigurasi Apache
+# Blokir akses langsung ke berkas sensitif & folder internal.
+# Pola RewriteRule bersifat relatif terhadap folder .htaccess ini,
+# sehingga tetap benar walau API dipasang di subfolder.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Folder internal tidak boleh diakses langsung
+    RewriteRule ^(application|system|database|docs)(/|$) - [F,L]
+
+    # Jangan pernah layani dump SQL / arsip / log dari web
+    RewriteRule \.(sql|zip|tar|gz|bak|log|ini)$ - [F,L]
+</IfModule>
+
+# Sembunyikan berkas konfigurasi & metadata
+<FilesMatch "(^\.|\.(sql|zip|tar|gz|bak|log|ini|md|lock)$|^composer\.|^secrets)">
+    <IfModule authz_core_module>
+        Require all denied
+    </IfModule>
+    <IfModule !authz_core_module>
+        Deny from all
+    </IfModule>
+</FilesMatch>
