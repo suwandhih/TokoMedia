@@ -177,6 +177,7 @@ class Ikatan extends CI_Controller
 				$response['data'][$i]['watchcounter'] = $row['watchcounter'];
 				$response['data'][$i]['duration'] = $row['duration'];
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
+				$response['data'][$i]['dateschedule_iso'] = api_iso_date($row['dateschedule']);
 				$i++;
 			}
 			$response['pagination'] = api_pagination(
@@ -254,6 +255,7 @@ class Ikatan extends CI_Controller
 				$response['data'][$i]['watchcounter'] = $row['watchcounter'];
 				$response['data'][$i]['duration'] = $row['duration'];
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
+				$response['data'][$i]['dateschedule_iso'] = api_iso_date($row['dateschedule']);
 				$i++;
 			}
 			$response['pagination'] = api_pagination(
@@ -268,6 +270,58 @@ class Ikatan extends CI_Controller
 				'data' => []
 			]);
 			return;
+		}
+
+		echo json_encode($response);
+	}
+
+	/**
+	 * detail
+	 * Retrieve Detail Video by id
+	 * @return mixed JSON
+	 */
+	public function detail()
+	{
+		header('Content-Type: application/json');
+		if (!api_require_token()) {
+			return;
+		}
+		if (!isset($_POST['id'])) {
+			api_out(404, 'Parameter is needed');
+			return;
+		}
+
+		$this->load->model('video_model', 'video');
+		$video_detail = $this->video->get_video_by_id($_POST['id']);
+		if (!$video_detail) {
+			api_out(404, 'Video not found');
+			return;
+		}
+
+		$response = array('status' => 200, "message" => "Success");
+		$response['data']['id'] = $video_detail['seq'];
+		$response['data']['title'] = $video_detail['displayname'];
+		$response['data']['content'] = $video_detail['messagecontent'];
+		$response['data']['source'] = api_video_source($video_detail['sourcelink']);
+		$response['data']['duration'] = $video_detail['duration'];
+		$response['data']['watchcounter'] = $video_detail['watchcounter'];
+		$response['data']['dateschedule'] = format_indo_date($video_detail['dateschedule']);
+		$response['data']['dateschedule_iso'] = api_iso_date($video_detail['dateschedule']);
+		$response['data']['tag'] = $video_detail['tagging'];
+		$response['data']['favcounter'] = $video_detail['favoritecounter'];
+		$response['data']['thumbnail'] = SERVER_URL . $video_detail['thumbnail'];
+
+		$recomended_video = $this->video->get_video_recomendation($_POST['id'], $video_detail['categoryarray'], 10);
+		$i = 0;
+		foreach ($recomended_video as $row) {
+			$response['data']['recomended'][$i]['id'] = $row['seq'];
+			$response['data']['recomended'][$i]['title'] = $row['displayname'];
+			$response['data']['recomended'][$i]['duration'] = $row['duration'];
+			$response['data']['recomended'][$i]['thumbnail'] = SERVER_URL . $row['thumbnail'];
+			$response['data']['recomended'][$i]['watchcounter'] = $row['watchcounter'];
+			$response['data']['recomended'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
+			$response['data']['recomended'][$i]['dateschedule_iso'] = api_iso_date($row['dateschedule']);
+			$i++;
 		}
 
 		echo json_encode($response);

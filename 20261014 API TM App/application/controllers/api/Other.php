@@ -87,6 +87,7 @@ class Other extends CI_Controller
 				$response['data'][$i]['watchcounter'] = $row['watchcounter'];
 				$response['data'][$i]['duration'] = $row['duration'];
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
+				$response['data'][$i]['dateschedule_iso'] = api_iso_date($row['dateschedule']);
 				$i++;
 			}
 			$response['pagination'] = api_pagination(
@@ -138,6 +139,26 @@ class Other extends CI_Controller
 					return;
 				}
 			}
+
+			$validation_error = $this->validate_comment_input();
+			if ($validation_error !== null) {
+				echo json_encode([
+					'status' => 201,
+					'message' => $validation_error,
+					'data' => []
+				]);
+				return;
+			}
+
+			if (!api_rate_limit('commentvideo', 10, 300)) {
+				echo json_encode([
+					'status' => 201,
+					'message' => 'Terlalu banyak komentar. Coba lagi beberapa saat lagi',
+					'data' => []
+				]);
+				return;
+			}
+
 			date_default_timezone_set('Asia/Jakarta');
 			$data = [
 				'contactname' => $_POST['contactname'],
@@ -183,77 +204,100 @@ class Other extends CI_Controller
 	}
 
 	/**
+	 * Validasi format email, telepon, dan panjang komentar.
+	 *
+	 * @return string|null Pesan error, atau NULL bila valid
+	 */
+	private function validate_comment_input()
+	{
+		if (!api_validate_email($_POST['emailaddress'])) {
+			return 'Format email tidak valid';
+		}
+		if (!api_validate_phone($_POST['phonenumber'])) {
+			return 'Format nomor telepon tidak valid';
+		}
+		if (!api_validate_length($_POST['contactname'], 2, 100)) {
+			return 'Nama harus 2-100 karakter';
+		}
+		if (!api_validate_length($_POST['messagecontent'], 5, 5000)) {
+			return 'Komentar harus 5-5000 karakter';
+		}
+		return null;
+	}
+
+	/**
 	 * detail
-	 * Retrieve Detail Video by id
+	 * Retrieve Detail Video by id (menambah watchcounter)
 	 * @return mixed JSON
 	 */
 	public function detailvideo()
 	{
+		$this->render_video_detail(true);
+	}
+
+	/**
+	 * detailvideo_readonly
+	 * Detail video tanpa menambah watchcounter
+	 * @return mixed JSON
+	 */
+	public function detailvideo_readonly()
+	{
+		$this->render_video_detail(false);
+	}
+
+	/**
+	 * Bangun respons detail video.
+	 *
+	 * @param bool $increment TRUE untuk menambah watchcounter (perilaku lama)
+	 */
+	private function render_video_detail($increment)
+	{
 		header('Content-Type: application/json');
-		if (isset($_POST['token']) && isset($_POST['id'])) {
-			if ($_POST['token'] != TOKEN) {
-				echo json_encode([
-					'status' => 404,
-					'message' => 'No Permission',
-					'data' => []
-				]);
-				return;
-			}
-
-			$response = array('status' => 200, "message" => "Success");
-			if ($_POST['token'] != TOKEN) {
-				echo json_encode([
-					'status' => 404,
-					'message' => 'No Permission',
-					'data' => []
-				]);
-				return;
-			}
-			$response = array('status' => 200, "message" => "Success");
-			$this->load->model('video_model', 'video');
-			$video_detail = $this->video->get_video_by_id($_POST['id']);
-			if (!$video_detail) {
-				// Handle case where no categories are found
-				echo json_encode([
-					'status' => 404,
-					'message' => 'No categories found',
-					'data' => []
-				]);
-				return;
-			}
-			$response['data']['id'] = $video_detail['seq'];
-			$response['data']['title'] = $video_detail['displayname'];
-			$response['data']['content'] = $video_detail['messagecontent'];
-			$response['data']['source'] = VIDEO_LINK_S . $video_detail['sourcelink'] . VIDEO_LINK_E;
-			$response['data']['duration'] = $video_detail['duration'];
-			$totalview = $video_detail['watchcounter'] + 1;
-			$response['data']['watchcounter'] = $totalview;
-			$response['data']['dateschedule'] = format_indo_date($video_detail['dateschedule']);
-			$response['data']['tag'] = $video_detail['tagging'];
-			$response['data']['favcounter'] = $video_detail['favoritecounter'];
-			$response['data']['thumbnail'] = SERVER_URL . $video_detail['thumbnail'];
-			$this->video->update_video($response['data']['id'], ['watchcounter' => $response['data']['watchcounter']]);
-			$recomended_video = $this->video->get_video_recomendation($_POST['id'], $video_detail['categoryarray'], 10);
-			$i = 0;
-			foreach ($recomended_video as $row) {
-				$response['data']['recomended'][$i]['id'] = $row['seq'];
-				$response['data']['recomended'][$i]['title'] = $row['displayname'];
-				$response['data']['recomended'][$i]['duration'] = $row['duration'];
-				$response['data']['recomended'][$i]['thumbnail'] = SERVER_URL . $row['thumbnail'];
-				$response['data']['recomended'][$i]['watchcounter'] = $row['watchcounter'];
-				$response['data']['recomended'][$i]['duration'] = $row['duration'];
-				$response['data']['recomended'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
-				$i++;
-			}
-
-
-		} else {
-			echo json_encode([
-				'status' => 404,
-				'message' => 'Parameter is needed',
-				'data' => []
-			]);
+		if (!api_require_token()) {
 			return;
+		}
+		if (!isset($_POST['id'])) {
+			api_out(404, 'Parameter is needed');
+			return;
+		}
+
+		$this->load->model('video_model', 'video');
+		$video_detail = $this->video->get_video_by_id($_POST['id']);
+		if (!$video_detail) {
+			api_out(404, 'Video not found');
+			return;
+		}
+
+		$response = array('status' => 200, "message" => "Success");
+		$response['data']['id'] = $video_detail['seq'];
+		$response['data']['title'] = $video_detail['displayname'];
+		$response['data']['content'] = $video_detail['messagecontent'];
+		$response['data']['source'] = api_video_source($video_detail['sourcelink']);
+		$response['data']['duration'] = $video_detail['duration'];
+		$response['data']['watchcounter'] = $increment
+			? $video_detail['watchcounter'] + 1
+			: $video_detail['watchcounter'];
+		$response['data']['dateschedule'] = format_indo_date($video_detail['dateschedule']);
+		$response['data']['dateschedule_iso'] = api_iso_date($video_detail['dateschedule']);
+		$response['data']['tag'] = $video_detail['tagging'];
+		$response['data']['favcounter'] = $video_detail['favoritecounter'];
+		$response['data']['thumbnail'] = SERVER_URL . $video_detail['thumbnail'];
+
+		if ($increment) {
+			$this->video->update_video($response['data']['id'], ['watchcounter' => $response['data']['watchcounter']]);
+		}
+
+		$recomended_video = $this->video->get_video_recomendation($_POST['id'], $video_detail['categoryarray'], 10);
+		$i = 0;
+		foreach ($recomended_video as $row) {
+			$response['data']['recomended'][$i]['id'] = $row['seq'];
+			$response['data']['recomended'][$i]['title'] = $row['displayname'];
+			$response['data']['recomended'][$i]['duration'] = $row['duration'];
+			$response['data']['recomended'][$i]['thumbnail'] = SERVER_URL . $row['thumbnail'];
+			$response['data']['recomended'][$i]['watchcounter'] = $row['watchcounter'];
+			$response['data']['recomended'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
+			$response['data']['recomended'][$i]['dateschedule_iso'] = api_iso_date($row['dateschedule']);
+			$i++;
 		}
 
 		echo json_encode($response);
@@ -308,6 +352,7 @@ class Other extends CI_Controller
 				$response['data'][$i]['watchcounter'] = $row['watchcounter'];
 				$response['data'][$i]['duration'] = $row['duration'];
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
+				$response['data'][$i]['dateschedule_iso'] = api_iso_date($row['dateschedule']);
 				$i++;
 			}
 			$response['pagination'] = api_pagination(
@@ -330,54 +375,41 @@ class Other extends CI_Controller
 	public function likevideo()
 	{
 		header('Content-Type: application/json');
-		if (isset($_POST['token']) && isset($_POST['id'])) {
-			if ($_POST['token'] != TOKEN) {
-				echo json_encode([
-					'status' => 404,
-					'message' => 'No Permission',
-					'data' => []
-				]);
-				return;
-			}
-
-
-			if ($_POST['token'] != TOKEN) {
-				echo json_encode([
-					'status' => 404,
-					'message' => 'No Permission',
-					'data' => []
-				]);
-				return;
-			}
-			$this->load->model('video_model', 'video');
-			$video_detail = $this->video->get_video_by_id($_POST['id']);
-			if (!$video_detail) {
-				// Handle case where no categories are found
-				echo json_encode([
-					'status' => 404,
-					'message' => 'No categories found',
-					'data' => []
-				]);
-				return;
-			}
-			// debug($video_detail);
-			$totallike = $video_detail['favoritecounter'] + 1;
-			$this->video->update_video($video_detail['seq'], ['favoritecounter' => $totallike]);
-			$response['status'] = 200;
-			$response['data']['totallike'] = $totallike;
-			$response['message'] = "Terimakasih telah menyukai video ini";
-
-
-		} else {
-			echo json_encode([
-				'status' => 404,
-				'message' => 'Parameter is needed',
-				'data' => []
-			]);
+		if (!api_require_token()) {
+			return;
+		}
+		if (!isset($_POST['id'])) {
+			api_out(404, 'Parameter is needed');
 			return;
 		}
 
-		echo json_encode($response);
+		if (!api_rate_limit('likevideo', 30, 60)) {
+			api_out(201, 'Terlalu banyak permintaan. Coba lagi sebentar lagi');
+			return;
+		}
+
+		$this->load->model('video_model', 'video');
+		$video_detail = $this->video->get_video_by_id($_POST['id']);
+		if (!$video_detail) {
+			api_out(404, 'Video not found');
+			return;
+		}
+
+		$clientid = api_client_id();
+		$this->load->model('videolike_model', 'videolike');
+		if (!$this->videolike->record_like($video_detail['seq'], $clientid)) {
+			api_out(201, 'Anda sudah menyukai video ini', array(
+				'totallike' => (int) $video_detail['favoritecounter'],
+			));
+			return;
+		}
+
+		$totallike = $video_detail['favoritecounter'] + 1;
+		$this->video->update_video($video_detail['seq'], ['favoritecounter' => $totallike]);
+
+		api_out(200, 'Terimakasih telah menyukai video ini', array(
+			'totallike' => $totallike,
+		));
 	}
 
 	public function send_email_smtp($from_email, $from_name, $video, $message_body)

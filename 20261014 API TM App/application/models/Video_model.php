@@ -205,7 +205,7 @@ class Video_model extends CI_Model
     // Delete a video
     public function delete_video($id)
     {
-        return $this->db->delete('video', ['id' => $id]);
+        return $this->db->delete('videodb', ['seq' => $id]);
     }
 }
 ?>

@@ -1,0 +1,775 @@
+openapi: 3.0.3
+info:
+  title: TokoMedia API (TM App)
+  version: 2.0.0
+  description: |
+    Backend untuk aplikasi mobile TokoMedia (CodeIgniter 3).
+
+    **Konvensi penting**
+
+    * Semua endpoint memakai `POST` dengan `application/x-www-form-urlencoded`.
+    * Semua endpoint memerlukan field `token` (nilai `TM_API_TOKEN` di server).
+    * HTTP status **selalu 200**; status sebenarnya ada di body:
+      * `200` sukses
+      * `201` peringatan / validasi gagal
+      * `404` gagal / tidak ditemukan / tanpa izin
+    * Endpoint daftar mendukung `page`, `per_page` (maks 100), `limit`, `offset`,
+      dan `sort` (`trending`, `popular`, `newest`, `oldest`, `unseen`, `default`),
+      serta menyertakan objek `pagination`.
+  contact:
+    name: TokoMedia
+    url: https://www.tokomedia.org
+servers:
+  - url: https://www.tokomedia.org/api/index.php/api
+    description: Produksi
+  - url: http://localhost/tokomedia/public/index.php/api
+    description: Lokal
+
+tags:
+  - name: Aplikasi
+  - name: Audio
+  - name: Category
+  - name: Ckitab
+  - name: Contact
+  - name: Ikatan
+  - name: Media
+  - name: Other
+  - name: Riwayat
+  - name: Search
+  - name: Vkitab
+
+components:
+  parameters:
+    Token:
+      name: token
+      in: query
+      required: true
+      schema: { type: string }
+      description: Token API global (dikirim sebagai field POST).
+    Id:
+      name: id
+      in: query
+      required: true
+      schema: { type: string }
+      description: ID / slug sesuai endpoint.
+    Page:
+      name: page
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, default: 1 }
+    PerPage:
+      name: per_page
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    Sort:
+      name: sort
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [default, trending, popular, newest, oldest, unseen]
+        default: default
+
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        total: { type: integer }
+        page: { type: integer }
+        per_page: { type: integer }
+        has_more: { type: boolean }
+
+    VideoItem:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        thumbnail: { type: string }
+        watchcounter: { type: integer }
+        duration: { type: string }
+        dateschedule: { type: string, example: "01 Apr 2021" }
+        dateschedule_iso: { type: string, nullable: true, example: "2021-04-01T14:06:00+07:00" }
+
+    AppItem:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        slug: { type: string }
+        url: { type: string }
+        thumbnail: { type: string }
+        clicked: { type: integer }
+        tag: { type: string }
+
+    CategoryNode:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        slug: { type: string }
+        description: { type: string, nullable: true }
+        thumbnail: { type: string, nullable: true }
+        haschild: { type: integer, enum: [0, 1] }
+        children:
+          type: array
+          items: { $ref: '#/components/schemas/CategoryNode' }
+
+    LanguageItem:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        slug: { type: string }
+        region: { type: string }
+
+    Error:
+      type: object
+      properties:
+        status: { type: integer, enum: [201, 404] }
+        message: { type: string }
+        data: { type: array, items: {} }
+
+  responses:
+    NoPermission:
+      description: Token tidak dikirim atau salah
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example: { status: 404, message: "No Permission", data: [] }
+    ParameterNeeded:
+      description: Parameter wajib tidak ada
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example: { status: 404, message: "Parameter is needed", data: [] }
+    NotFound:
+      description: Data tidak ditemukan
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example: { status: 404, message: "No Video found", data: [] }
+
+paths:
+  /aplikasi:
+    post:
+      tags: [Aplikasi]
+      summary: Daftar region aplikasi
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                status: 200
+                message: Success
+                data:
+                  - { id: indonesia, name: Indonesia }
+                  - { id: sumatera, name: Sumatera }
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /aplikasi/area:
+    post:
+      tags: [Aplikasi]
+      summary: Daftar aplikasi per region
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                status: 200
+                message: Success
+                data:
+                  - name: "Bahasa Muna (2)"
+                    url: "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.muna"
+                    thumbnail: "https://www.tokomedia.org/img/appdb/muna.webp"
+                    clicked: 0
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /aplikasi/language:
+    post:
+      tags: [Aplikasi]
+      summary: Alias dari /aplikasi/area
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200': { description: Sama dengan /aplikasi/area }
+
+  /aplikasi/list:
+    post:
+      tags: [Aplikasi]
+      summary: Semua aplikasi dengan pagination, pencarian, dan sorting
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+        - name: q
+          in: query
+          required: false
+          schema: { type: string }
+          description: Kata kunci pada appname/description/tagging
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer }
+                  message: { type: string }
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/AppItem' }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /aplikasi/detail:
+    post:
+      tags: [Aplikasi]
+      summary: Detail aplikasi berdasarkan counter atau slug
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                status: 200
+                message: Success
+                data:
+                  id: 12
+                  name: "Bahasa Muna (2)"
+                  slug: bahasa-muna-2
+                  description: "..."
+                  url: "https://play.google.com/store/apps/details?id=org.ipsapps.indonesia.muna"
+                  playstorename: "Bahasa Muna"
+                  clicked: 0
+                  tag: "#Sulawesi"
+                  thumbnail: "https://www.tokomedia.org/img/appdb/muna.webp"
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /audio:
+    post:
+      tags: [Audio]
+      summary: Daftar Audio Kitab Suci (root kategori 128)
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer }
+                  message: { type: string }
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/VideoItem' }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /audio/area:
+    post:
+      tags: [Audio]
+      summary: Sub-kategori Audio Kitab Suci
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /media:
+    post:
+      tags: [Media]
+      summary: Daftar Media Lainnya (root kategori 129)
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /media/area:
+    post:
+      tags: [Media]
+      summary: Sub-kategori Media Lainnya
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /category:
+    post:
+      tags: [Category]
+      summary: Pohon kategori lengkap (root -> region -> bahasa)
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer }
+                  message: { type: string }
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/CategoryNode' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /category/tree:
+    post:
+      tags: [Category]
+      summary: Alias dari /category
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200': { description: OK }
+
+  /category/languages:
+    post:
+      tags: [Category]
+      summary: Semua bahasa lintas region untuk satu kategori root
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - name: id
+          in: query
+          required: false
+          schema: { type: integer, default: 1 }
+          description: ID kategori root (1 = Film Isa Al-Masih, 126 = Video Kitab Suci, 304 = Ikatan Ilahi)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer }
+                  message: { type: string }
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/LanguageItem' }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ckitab:
+    post:
+      tags: [Ckitab]
+      summary: Daftar Clip Kitab Suci (kategori 131)
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ckitab/detail:
+    post:
+      tags: [Ckitab]
+      summary: Detail clip + rekomendasi
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /contact:
+    post:
+      tags: [Contact]
+      summary: Kirim form kontak + email
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - { name: contactname, in: query, required: true, schema: { type: string, minLength: 2, maxLength: 100 } }
+        - { name: emailaddress, in: query, required: true, schema: { type: string, format: email } }
+        - { name: phonenumber, in: query, required: true, schema: { type: string } }
+        - { name: messagecontent, in: query, required: true, schema: { type: string, minLength: 5, maxLength: 5000 } }
+        - { name: linkid, in: query, required: true, schema: { type: string } }
+        - { name: linkname, in: query, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                status: 200
+                message: "Terimakasih telah menghubungi kami. Kami akan segera merespon anda"
+                data: {}
+        '201':
+          description: Validasi gagal / email gagal terkirim
+          content:
+            application/json:
+              example: { status: 201, message: "Format email tidak valid", data: [] }
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /ikatan:
+    post:
+      tags: [Ikatan]
+      summary: Daftar region Film Ikatan Ilahi
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /ikatan/area:
+    post:
+      tags: [Ikatan]
+      summary: Daftar bahasa per region
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /ikatan/language:
+    post:
+      tags: [Ikatan]
+      summary: Daftar video per kategori
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ikatan/languagepref:
+    post:
+      tags: [Ikatan]
+      summary: Daftar video per slug bahasa
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200': { description: OK }
+        '201': { description: Bahasa tidak terdaftar }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ikatan/detail:
+    post:
+      tags: [Ikatan]
+      summary: Detail video + rekomendasi
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /other:
+    post:
+      tags: [Other]
+      summary: Placeholder (data kosong)
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example: { status: 200, message: Success, data: [] }
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /other/latestvideo:
+    post:
+      tags: [Other]
+      summary: Video terbaru (kategori 2 & 305)
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /other/commentvideo:
+    post:
+      tags: [Other]
+      summary: Kirim komentar video + email
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - { name: contactname, in: query, required: true, schema: { type: string, minLength: 2, maxLength: 100 } }
+        - { name: emailaddress, in: query, required: true, schema: { type: string, format: email } }
+        - { name: phonenumber, in: query, required: true, schema: { type: string } }
+        - { name: messagecontent, in: query, required: true, schema: { type: string, minLength: 5, maxLength: 5000 } }
+        - { name: videoid, in: query, required: true, schema: { type: integer } }
+        - { name: videotitle, in: query, required: true, schema: { type: string } }
+      responses:
+        '200': { description: OK }
+        '201': { description: Validasi gagal / rate limit / email gagal }
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /other/detailvideo:
+    post:
+      tags: [Other]
+      summary: Detail video + increment watchcounter + rekomendasi
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /other/detailvideo_readonly:
+    post:
+      tags: [Other]
+      summary: Detail video tanpa increment watchcounter
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /other/gettag:
+    post:
+      tags: [Other]
+      summary: Cari video berdasarkan tag
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - { name: tag, in: query, required: true, schema: { type: string } }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /other/likevideo:
+    post:
+      tags: [Other]
+      summary: Increment favoritecounter (sekali per client per video)
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+        - name: device_id
+          in: query
+          required: false
+          schema: { type: string, maxLength: 64 }
+          description: ID perangkat. Bila kosong, dipakai hash IP + User-Agent.
+      responses:
+        '200':
+          description: Like tercatat
+          content:
+            application/json:
+              example: { status: 200, message: "Terimakasih telah menyukai video ini", data: { totallike: 9170 } }
+        '201':
+          description: Sudah pernah like / rate limit
+          content:
+            application/json:
+              example: { status: 201, message: "Anda sudah menyukai video ini", data: { totallike: 9169 } }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /riwayat:
+    post:
+      tags: [Riwayat]
+      summary: Daftar region Film Isa Al-Masih
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /riwayat/area:
+    post:
+      tags: [Riwayat]
+      summary: Daftar bahasa per region
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /riwayat/language:
+    post:
+      tags: [Riwayat]
+      summary: Daftar video per kategori
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /riwayat/languagepref:
+    post:
+      tags: [Riwayat]
+      summary: Daftar video per slug bahasa
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200': { description: OK }
+        '201': { description: Bahasa tidak terdaftar }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /riwayat/detail:
+    post:
+      tags: [Riwayat]
+      summary: Detail video + rekomendasi
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /search:
+    post:
+      tags: [Search]
+      summary: Pencarian pada judul, deskripsi, dan tag
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+          description: Kata kunci (alias `keyword` juga diterima)
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer }
+                  message: { type: string }
+                  keyword: { type: string }
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/VideoItem' }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+        '404': { $ref: '#/components/responses/ParameterNeeded' }
+
+  /search/video:
+    post:
+      tags: [Search]
+      summary: Alias dari /search
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - { name: q, in: query, required: true, schema: { type: string } }
+      responses:
+        '200': { description: OK }
+
+  /vkitab:
+    post:
+      tags: [Vkitab]
+      summary: Daftar region Video Kitab Suci
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /vkitab/area:
+    post:
+      tags: [Vkitab]
+      summary: Daftar kitab (id=144) atau sub-kategori
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NoPermission' }
+
+  /vkitab/language:
+    post:
+      tags: [Vkitab]
+      summary: Daftar video per kategori
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /vkitab/languagepref:
+    post:
+      tags: [Vkitab]
+      summary: Daftar video per slug bahasa
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200': { description: OK }
+        '201': { description: Bahasa tidak terdaftar }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /vkitab/custom:
+    post:
+      tags: [Vkitab]
+      summary: Video per kitab (matius/markus/lukas/yahya/kisah)
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [matius, markus, lukas, yahya, kisah]
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /vkitab/detail:
+    post:
+      tags: [Vkitab]
+      summary: Detail video + rekomendasi
+      parameters:
+        - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200': { description: OK }
+        '404': { $ref: '#/components/responses/NotFound' }

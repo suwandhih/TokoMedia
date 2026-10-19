@@ -2,7 +2,7 @@
 
 **Sumber kode:** `C:\data\TokoMedia\20261014 API TM App`
 **Tanggal analisis:** 15 Oktober 2026
-**Terakhir diperbarui:** 19 Oktober 2026 (Prioritas 1 & 2 selesai)
+**Terakhir diperbarui:** 19 Oktober 2026 (Prioritas 1, 2 & 3 selesai)
 **Tujuan dokumen:** menjelaskan isi API, cara pakainya, dan sejauh mana API ini sudah mencakup kebutuhan website [tokomedia.org](https://www.tokomedia.org/)
 
 ---
@@ -17,7 +17,7 @@
 | Jenis API | REST-ish, **POST form-data**, respons JSON |
 | Autentikasi | 1 token statis global (`TOKEN`) dikirim sebagai field `token` |
 | Jumlah controller API | 11 (`Aplikasi`, `Audio`, `Category`, `Ckitab`, `Contact`, `Ikatan`, `Media`, `Other`, `Riwayat`, `Search`, `Vkitab`) |
-| Jumlah endpoint | 38 method publik (di luar `send_email_smtp()` internal) |
+| Jumlah endpoint | 40 method publik (di luar `send_email_smtp()` internal) |
 | Isi database | 16.586 video, 321 kategori, 275 aplikasi, 640 komentar, 17.107 baris routing |
 
 API ini adalah **backend untuk aplikasi mobile** (Android/iOS) TokoMedia, bukan API untuk website. Website `tokomedia.org` saat ini berjalan dengan aplikasi PHP terpisah (bukan CodeIgniter ini) yang membaca database yang sama.
@@ -171,7 +171,8 @@ Base: `POST /api/<controller>/<method>`
 | 21 | `other` | `commentvideo` | Kirim komentar video + email | `token`, `contactname`, `emailaddress`, `phonenumber`, `messagecontent`, `videoid`, `videotitle` |
 | 22 | `other` | `detailvideo` | Detail video + **increment watchcounter** + rekomendasi | `token`, `id` |
 | 23 | `other` | `gettag` | Cari video berdasarkan tag | `token`, `tag`, `page`, `per_page`, `sort` |
-| 24 | `other` | `likevideo` | **Increment favoritecounter** | `token`, `id` |
+| 24 | `other` | `likevideo` | **Increment favoritecounter** (sekali per client) | `token`, `id`, `device_id` |
+| 24a | `other` | `detailvideo_readonly` | Detail video **tanpa** increment `watchcounter` | `token`, `id` |
 | 25 | `riwayat` | `index` | Daftar region Film Isa Al-Masih | `token` |
 | 26 | `riwayat` | `area` | Daftar bahasa per region | `token`, `id` |
 | 27 | `riwayat` | `language` | Daftar video per kategori | `token`, `id`, `page`, `per_page`, `sort` |
@@ -848,10 +849,10 @@ Menyimpan ke tabel `videocomment` **dan** mengirim email ke `info@tokomedia.org`
 | 3 | 🔴 Kritis | Token API hardcoded & dipakai bersama semua client | `constants.php` | ✅ Dipindah ke `secrets.php` |
 | 4 | 🟠 Tinggi | SQL injection via `LIKE` tanpa escaping | `Video_model::get_vkitab_by_book()`, `get_by_tag()` | ✅ Pakai query builder `like()` |
 | 5 | 🟠 Tinggi | SQL injection via subquery string concat | `Category_model::get_category_name_by_pref()` | ✅ Pakai `get_compiled_select()` |
-| 6 | 🟡 Sedang | Password hash SHA-1 tanpa salt | tabel `user_login` | ⏳ Belum |
-| 7 | 🟡 Sedang | Tidak ada rate limiting pada `likevideo` / `detailvideo` | `Other` | ⏳ Belum |
-| 8 | 🟡 Sedang | Tidak ada validasi format email/telepon | `Contact`, `Other::commentvideo` | ⏳ Belum |
-| 9 | ⚪ Rendah | `db_debug` aktif saat non-production | `database.php` | ⏳ Belum |
+| 6 | 🟡 Sedang | Password hash SHA-1 tanpa salt | tabel `user_login` | ✅ Library `Password_hash` + migrasi SQL |
+| 7 | 🟡 Sedang | Tidak ada rate limiting pada `likevideo` / `detailvideo` | `Other` | ✅ `api_rate_limit()` |
+| 8 | 🟡 Sedang | Tidak ada validasi format email/telepon | `Contact`, `Other::commentvideo` | ✅ `api_validate_*()` |
+| 9 | ⚪ Rendah | `db_debug` aktif saat non-production | `database.php` | ✅ `ENVIRONMENT !== 'production'` |
 
 ### 8.2 Bug fungsional
 
@@ -859,21 +860,24 @@ Menyimpan ke tabel `videocomment` **dan** mengirim email ke `info@tokomedia.org`
 |---|---|---|---|
 | 1 | `aplikasi/language` & `aplikasi/detail` mengembalikan data video | `Aplikasi.php` | ✅ Diperbaiki |
 | 2 | `contact` menulis ke tabel `contact` yang tidak ada | `Contact_model.php` | ✅ Diperbaiki |
-| 3 | `Videocomment_model::get_by_videoid()` memanggil `fresult_array()` (typo) | `Videocomment_model.php` | ⏳ Belum |
-| 4 | `Video_model::delete_video()` menghapus dari tabel `video` (bukan `videodb`) | `Video_model.php` | ⏳ Belum |
+| 3 | `Videocomment_model::get_by_videoid()` memanggil `fresult_array()` (typo) | `Videocomment_model.php` | ✅ Diperbaiki |
+| 4 | `Video_model::delete_video()` menghapus dari tabel `video` (bukan `videodb`) | `Video_model.php` | ✅ Diperbaiki |
 | 5 | `ckitab` tidak memformat `dateschedule` | `Ckitab.php` | ✅ Diperbaiki |
-| 6 | `Ikatan` tidak punya method `detail` | `Ikatan.php` | ⏳ Belum |
+| 6 | `Ikatan` tidak punya method `detail` | `Ikatan.php` | ✅ Diperbaiki |
 | 7 | `Aplikasi::index` mendefinisikan `$response` dua kali (dead code) | `Aplikasi.php` | ✅ Diperbaiki |
 | 8 | `Category_model::get_category_name_by_pref()` error jika hasil kosong (`$result['seq']` pada `null`) | `Category_model.php` | ✅ Diperbaiki |
-| 9 | `sourcelink` tidak di-URL-encode saat membentuk `source` | semua controller detail | ⏳ Belum |
-| 10 | `MY_Controller` memuat `user_model` yang tidak ada di folder models | `MY_Controller.php` | ⏳ Belum |
+| 9 | `sourcelink` tidak di-URL-encode saat membentuk `source` | semua controller detail | ✅ Diperbaiki |
+| 10 | `MY_Controller` memuat `user_model` yang tidak ada di folder models | `MY_Controller.php` | ✅ Diperbaiki |
 
 ### 8.3 Catatan implementasi
 
 - **Tidak ada `routes.php` kustom** → URL bergantung nama class/method. Kalau ingin `api/v1/...`, perlu tambah route.
 - **Tidak ada `.htaccess` di root** → URL harus menyertakan `index.php` kecuali server dikonfigurasi lain.
 - **`autoload`** memuat helper `url`, `template`, `form`, `share`, `api` dan library `session` di setiap request.
-- **`helpers/api_helper.php`** menyediakan `api_require_token()`, `api_out()`, `api_page_params()`, `api_pagination()`, `api_sort()`, `api_apply_sort()`, `api_video_item()`, `api_app_item()` — dipakai controller baru agar format respons konsisten.
+- **`helpers/api_helper.php`** menyediakan `api_require_token()`, `api_out()`, `api_page_params()`, `api_pagination()`, `api_sort()`, `api_apply_sort()`, `api_video_item()`, `api_app_item()`, `api_iso_date()`, `api_video_source()`, `api_validate_email()`, `api_validate_phone()`, `api_validate_length()`, `api_client_id()`, `api_rate_limit()` — dipakai controller agar format respons konsisten.
+- **`libraries/Password_hash.php`** — verifikasi + upgrade otomatis hash SHA-1 lama ke argon2id/bcrypt.
+- **`database/20261019_priority3.sql`** — migrasi tabel `videolike` dan kolom `user_login.password`/`password_algo`.
+- **`docs/openapi.yaml`** — spesifikasi OpenAPI 3.0.3 untuk seluruh endpoint.
 - **`config.php`**: `base_url` kosong, `index_page = 'index.php'`, `encryption_key` kosong.
 - **`database.php`**: kredensial masih placeholder (`root` / `YourmySQLipasswordhere`) — perlu diisi saat deploy.
 - **`composer.json`** hanya mendeklarasikan CodeIgniter framework; tidak ada dependency tambahan.
@@ -980,15 +984,77 @@ curl -X POST "$BASE/media" -d "token=$TOKEN&per_page=20"
 > sendiri. `category/languages` mengembalikan **semua** bahasa lintas region (bukan
 > hanya 100 seperti `homeLanguages` di UI).
 
-### Prioritas 3 — Perbaikan kualitas
-13. Standarkan format tanggal (semua pakai `format_indo_date()` atau ISO 8601).
-14. Tambah `detail` di controller `Ikatan`.
-15. Tambah varian detail video tanpa increment `watchcounter`.
-16. Tambah proteksi duplikat pada `likevideo` (berbasis device/IP).
-17. Tambah validasi input (email, telepon, panjang pesan).
-18. Tambah rate limiting.
-19. Ganti hash password SHA-1 ke `password_hash()` (bcrypt/argon2).
-20. Tambah dokumentasi OpenAPI/Swagger.
+### Prioritas 3 — Perbaikan kualitas ✅ **SELESAI**
+
+| # | Item | Implementasi | Status |
+|---|---|---|---|
+| 13 | Standarkan format tanggal | `dateschedule` (Indonesia) + `dateschedule_iso` (ISO 8601) di semua respons | ✅ |
+| 14 | `detail` di controller `Ikatan` | `ikatan/detail` | ✅ |
+| 15 | Detail video tanpa increment view | `other/detailvideo_readonly` | ✅ |
+| 16 | Proteksi duplikat like | tabel `videolike` + `device_id`/IP | ✅ |
+| 17 | Validasi input | `api_validate_email/phone/length()` di `contact` & `other/commentvideo` | ✅ |
+| 18 | Rate limiting | `api_rate_limit()` — like 30/menit, komentar 10/5 menit | ✅ |
+| 19 | Hash password modern | `application/libraries/Password_hash.php` + migrasi SQL | ✅ |
+| 20 | Dokumentasi OpenAPI | `docs/openapi.yaml` (OpenAPI 3.0.3, 40 path) | ✅ |
+
+#### Migrasi database (WAJIB sebelum deploy)
+
+Jalankan sekali pada database `tokomedia`:
+
+```bash
+mysql -u <user> -p tokomedia < "20261014 API TM App/database/20261019_priority3.sql"
+```
+
+Migrasi membuat tabel `videolike` dan memperlebar kolom `user_login.password`
+menjadi `varchar(255)` + menambah kolom `password_algo`.
+
+#### Format tanggal
+
+Semua respons yang memuat tanggal kini menyediakan dua bentuk:
+
+```json
+{
+  "dateschedule": "01 Apr 2021",
+  "dateschedule_iso": "2021-04-01T14:06:00+07:00"
+}
+```
+
+`dateschedule` dipertahankan agar client lama tidak rusak; `dateschedule_iso`
+untuk parsing/sorting di client baru. Nilai `0000-00-00` menjadi `null`.
+
+#### Proteksi duplikat like
+
+`other/likevideo` menerima `device_id` (opsional). Bila kosong, server memakai
+hash IP + User-Agent. Satu client hanya bisa like sekali per video:
+
+```json
+{ "status": 201, "message": "Anda sudah menyukai video ini", "data": { "totallike": 9169 } }
+```
+
+#### Rate limiting
+
+Berbasis file di `application/cache/ratelimit_*.json` (sudah masuk `.gitignore`).
+Bila folder cache tidak bisa ditulis, rate limit otomatis dilewati agar API
+tetap berjalan.
+
+#### Upgrade hash password
+
+```php
+$this->load->library('password_hash');
+$r = $this->password_hash->verify_and_upgrade($input, $row['password'], $row['password_algo']);
+if ($r['valid'] && $r['upgraded']) {
+    // simpan $r['hash'] ke kolom password, $r['algo'] ke password_algo
+}
+```
+
+Hash SHA-1 lama tetap bisa diverifikasi dan otomatis di-upgrade ke
+argon2id/bcrypt saat login berikutnya.
+
+#### Dokumentasi OpenAPI
+
+`20261014 API TM App/docs/openapi.yaml` — dapat dibuka di Swagger Editor,
+Postman, atau Redoc. Catatan: karena API memakai `POST` form-data, parameter
+`token` didokumentasikan sebagai parameter form.
 
 ---
 

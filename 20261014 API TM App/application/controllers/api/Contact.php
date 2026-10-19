@@ -45,6 +45,17 @@ class Contact extends CI_Controller
 					return;
 				}
 			}
+
+			$validation_error = $this->validate_contact_input();
+			if ($validation_error !== null) {
+				echo json_encode([
+					'status' => 201,
+					'message' => $validation_error,
+					'data' => []
+				]);
+				return;
+			}
+
 			date_default_timezone_set('Asia/Jakarta');
 			$data = [
 				'contactname' => $_POST['contactname'],
@@ -87,6 +98,28 @@ class Contact extends CI_Controller
 		}
 
 		echo json_encode($response, JSON_PRETTY_PRINT);
+	}
+
+	/**
+	 * Validasi format email, telepon, dan panjang pesan.
+	 *
+	 * @return string|null Pesan error, atau NULL bila valid
+	 */
+	private function validate_contact_input()
+	{
+		if (!api_validate_email($_POST['emailaddress'])) {
+			return 'Format email tidak valid';
+		}
+		if (!api_validate_phone($_POST['phonenumber'])) {
+			return 'Format nomor telepon tidak valid';
+		}
+		if (!api_validate_length($_POST['contactname'], 2, 100)) {
+			return 'Nama harus 2-100 karakter';
+		}
+		if (!api_validate_length($_POST['messagecontent'], 5, 5000)) {
+			return 'Pesan harus 5-5000 karakter';
+		}
+		return null;
 	}
 
 	public function send_email_smtp($from_email, $from_name, $message_body)

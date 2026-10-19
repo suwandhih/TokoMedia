@@ -25,7 +25,7 @@ class Videocomment_model extends CI_Model
     }
     public function get_by_videoid($id)
     {
-        return $this->db->get_where('videocomment', ['videoid' => $id])->fresult_array();
+        return $this->db->get_where('videocomment', ['videoid' => $id])->result_array();
     }
 
     public function insert_comment($data)

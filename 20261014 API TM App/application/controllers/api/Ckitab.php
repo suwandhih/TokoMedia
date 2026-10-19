@@ -56,6 +56,7 @@ class Ckitab extends CI_Controller
 				$response['data'][$i]['name'] = $row['displayname'];
 				$response['data'][$i]['watchcounter'] = $row['watchcounter'];
 				$response['data'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
+				$response['data'][$i]['dateschedule_iso'] = api_iso_date($row['dateschedule']);
 				$response['data'][$i]['duration'] = $row['duration'];
 				$response['data'][$i]['thumbnail'] = SERVER_URL . $row['thumbnail'];
 				$i++;
@@ -119,7 +120,7 @@ class Ckitab extends CI_Controller
 			$response['data']['id'] = $video_detail['seq'];
 			$response['data']['title'] = $video_detail['displayname'];
 			$response['data']['content'] = $video_detail['messagecontent'];
-			$response['data']['source'] = VIDEO_LINK_S . $video_detail['sourcelink'] . VIDEO_LINK_E;
+			$response['data']['source'] = api_video_source($video_detail['sourcelink']);
 			$response['data']['duration'] = $video_detail['duration'];
 			$response['data']['watchcounter'] = $video_detail['watchcounter'];
 			$response['data']['tag'] = $video_detail['tagging'];
@@ -133,8 +134,8 @@ class Ckitab extends CI_Controller
 				$response['data']['recomended'][$i]['duration'] = $row['duration'];
 				$response['data']['recomended'][$i]['thumbnail'] = SERVER_URL . $row['thumbnail'];
 				$response['data']['recomended'][$i]['watchcounter'] = $row['watchcounter'];
-				$response['data']['recomended'][$i]['dateschedule'] = $row['dateschedule'];
-				$response['data']['recomended'][$i]['duration'] = $row['duration'];
+				$response['data']['recomended'][$i]['dateschedule'] = format_indo_date($row['dateschedule']);
+				$response['data']['recomended'][$i]['dateschedule_iso'] = api_iso_date($row['dateschedule']);
 				$i++;
 			}
 
