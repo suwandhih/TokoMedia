@@ -58,7 +58,12 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('session');
+/*
+| API bersifat stateless: tidak ada controller yang memakai session.
+| Memuat session hanya menambah beban dan bisa gagal di server yang
+| tidak menyediakan path session (menghasilkan HTTP 500).
+*/
+$autoload['libraries'] = array();
 
 /*
 | -------------------------------------------------------------------

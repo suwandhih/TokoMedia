@@ -54,9 +54,38 @@ class Aplikasi extends CI_Controller
 	/**
 	 * list
 	 * Semua aplikasi dengan pagination, pencarian, dan sorting
+	 *
+	 * Catatan: `list` adalah kata kunci PHP sehingga tidak boleh dipakai
+	 * sebagai nama method pada PHP 5.6. Endpoint /aplikasi/list ditangani
+	 * oleh _remap() di bawah.
+	 *
 	 * @return mixed JSON
 	 */
-	public function list()
+	public function list_data()
+	{
+		$this->render_list();
+	}
+
+	/**
+	 * _remap
+	 * Meneruskan nama method yang tidak sah di PHP 5.6 (mis. `list`).
+	 */
+	public function _remap($method, $params = array())
+	{
+		if ($method === 'list') {
+			$this->render_list();
+			return;
+		}
+		if (method_exists($this, $method)) {
+			return call_user_func_array(array($this, $method), $params);
+		}
+		show_404();
+	}
+
+	/**
+	 * Isi respons daftar aplikasi.
+	 */
+	private function render_list()
 	{
 		header('Content-Type: application/json');
 		if (!api_require_token()) {
