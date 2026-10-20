@@ -218,6 +218,19 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.
 ### C19. Arahkan `apiBase` UI ke server InfinityFree (D2) — ✅ SELESAI (20 Okt 2026)
 
 - `index.html` baris 1626: `https://www.tokomedia.org/api/index.php/api` → `https://suwandhih.site.je/index.php/api`.
+- **Uji sintaks:** `node --check` pada skrip utama `index.html` → **valid**.
+- **Uji live (aturan B5):**
+
+| Mode | Lebar | Header | Overflow horizontal |
+|---|---|---|---|
+| Layar Penuh | 1440 px | ✅ Utuh, nav horizontal tampil | 0 px |
+| Layar Penuh | 1024 px | ✅ Utuh | 0 px |
+| Mode HP 430px | 430 px | ✅ Utuh, tidak terpotong | 0 px |
+| HP kecil | 360 px | ✅ Utuh | 10 px (bawaan desain, bukan akibat revisi) |
+
+- **Bukti D2 sudah live:** Console browser di <https://suwandhih.github.io/TokoMedia/> menampilkan error CORS yang menyebut `https://suwandhih.site.je/index.php/api/category/tree` — artinya UI **sudah** memanggil server InfinityFree, bukan lagi `tokomedia.org`.
+- **UI tetap tampil normal** walau API belum bisa dipanggil — semua panggilan API punya `.catch()` yang jatuh ke data tertanam (`window.TM_PAYLOAD`). Tidak ada halaman kosong.
+- Error CORS tersebut adalah hal yang diperbaiki oleh **D1**.
 
 ### C20. Perbarui `DEPLOY.md` (D3) — ✅ SELESAI (20 Okt 2026)
 
