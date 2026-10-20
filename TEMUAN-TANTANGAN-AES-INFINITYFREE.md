@@ -136,14 +136,50 @@ Tantangan AES hanya menimpa host uji InfinityFree.
 
 | # | Cara | Perlu apa | Peluang berhasil |
 |---|---|---|---|
-| **1** | Pasang **Cloudflare** di depan domain | Domain + ubah nameserver | **Paling besar** — gratis, ±15 menit |
-| **2** | Pindah ke **host gratis lain** | Ekspor DB (±26 MB) + unggah ulang | Besar |
+| **1** | ~~Pasang **Cloudflare** di depan domain~~ | — | ❌ **Tidak mungkin** — `site.je` subdomain gratis InfinityFree, NS-nya milik InfinityFree (`ns1.byet.org` dll). Cloudflare butuh kontrol NS domain induk. |
+| **2** | **Pindah ke host gratis lain** | Ekspor DB (±26 MB) + unggah ulang | Besar |
 | **3** | **XAMPP di laptop** untuk demo | Instal XAMPP | Pasti jalan, tapi hanya lokal/LAN |
 | **4** | Pakai **API live client** (`tokomedia.org:8009`) | Client menambah CORS + endpoint `category/tree` & `aplikasi/list` | Bergantung client |
 | **5** | Biarkan apa adanya | — | UI tetap tampil, tapi pakai data tertanam |
+| **6** | ⭐ **Taruh UI di InfinityFree, satu origin dengan API** | Unggah `index.html` 208 KB | ✅ **Sudah terbukti jalan** |
 
 **Catatan:** UI **tidak rusak** walau API gagal. Setiap panggilan API punya
 penangan `.catch()` yang jatuh ke data tertanam, jadi halaman tetap tampil.
+
+---
+
+## ⭐ Temuan tambahan: tantangan AES bisa dilewati — asal satu origin
+
+Tantangan AES **hanya** menghalangi permintaan **lintas-origin**. Bila halaman
+UI dibuka dari origin yang sama dengan API, browser sudah menyelesaikan
+tantangan saat memuat halaman, lalu permintaan API lolos.
+
+**Bukti — Console dibuka di `https://suwandhih.site.je/` lalu panggil API:**
+
+| Yang diperiksa | Hasil |
+|---|---|
+| `origin` | `https://suwandhih.site.je` |
+| Cookie `__test` ada? | ✅ ya (dibuat browser saat halaman dimuat) |
+| `Content-Type` | `application/json` ✅ |
+| Panjang isi | **68.819 byte** — data asli ✅ |
+| `Access-Control-Allow-Origin` | `null` — **tidak perlu**, memang same-origin ✅ |
+
+Cookie juga **muncul kembali** setelah dihapus lalu halaman dimuat ulang. Dan
+berkas statis pun bisa diakses dari origin yang sama (`/aes.js` → 200,
+`/nope-xyz.html` → 404 asli, bukan halaman tantangan).
+
+**Artinya:** bila `index.html` ditaruh di `htdocs/` InfinityFree, UI dan API
+berada di satu origin → **tidak ada CORS sama sekali**, dan token API tidak
+perlu dikirim dari berkas publik.
+
+**Kendala:** `index.html` berukuran **208.515 byte** — perlu diuji apakah
+InfinityFree menerimanya.
+
+```mermaid
+flowchart LR
+    A["GitHub Pages<br/>suwandhih.github.io"] -.->|"❌ lintas-origin<br/>kena tantangan AES"| B["API<br/>suwandhih.site.je"]
+    C["UI di InfinityFree<br/>suwandhih.site.je/index.html"] -->|"✅ satu origin<br/>tanpa CORS"| B
+```
 
 ---
 
@@ -175,4 +211,4 @@ Kalimat siap kirim:
 - Berlaku juga untuk HTTP (bukan hanya HTTPS)
 - **Bukan** bisa dimatikan dari panel InfinityFree — ini mekanisme anti-bot bawaan mereka
 
-**Referensi kerja:** `rencanakerja.md` bagian **C23** (temuan) dan **D7** (rencana).
+**Referensi kerja:** `rencanakerja.md` bagian **C23**, **C24**, **C25** (temuan) dan **D7** (rencana).

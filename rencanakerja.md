@@ -60,6 +60,8 @@
 | 25 | **Temukan Live API client di `tokomedia.org:8009` (sebelumnya disangka belum dipasang)** | ✅ SELESAI | 20 Okt 2026 |
 | 26 | **AKAR MASALAH TERBUKTI — tantangan JavaScript AES InfinityFree (bukan CORS)** | ✅ SELESAI | 20 Okt 2026 |
 | 27 | **Ganti host API — tinggalkan InfinityFree** | 🟡 MENUNGGU KEPUTUSAN | — |
+| 28 | **Tantangan AES terbukti bisa dilewati bila UI satu origin dengan API** | ✅ TERBUKTI | 20 Okt 2026 |
+| 29 | **Cloudflare terbukti tidak mungkin untuk `suwandhih.site.je`** | ✅ TERBUKTI | 20 Okt 2026 |
 | 26 | **Petakan endpoint Live API client vs salinan sendiri** | ✅ SELESAI | 20 Okt 2026 |
 | 27 | **Catat jawaban IT client: self-host adalah jalur yang dimaksudkan** | ✅ SELESAI | 20 Okt 2026 |
 
@@ -384,6 +386,58 @@ location.href="https://suwandhih.site.je/index.php/api/category/tree?i=1";</scri
 
 **Konsekuensi:** **InfinityFree tidak bisa dipakai sebagai host API.** Tidak ada pengaturan di panel InfinityFree untuk mematikan tantangan ini — ini memang mekanisme anti-bot mereka. Solusinya ada di **D7**.
 
+### C24. Tantangan AES ternyata BISA DILEWATI — syaratnya UI sekamar dengan API — ✅ TERBUKTI (20 Okt 2026)
+
+**Temuan:** tantangan AES hanya menghalangi permintaan **lintas-origin**. Bila halaman UI berada di **origin yang sama** dengan API, browser sudah menyelesaikan tantangan saat memuat halaman, sehingga permintaan API lolos.
+
+**Bukti 1 — dari origin yang sama, API menjawab sempurna.** Console dibuka **di halaman InfinityFree itu sendiri** (`https://suwandhih.site.je/`), lalu API dipanggil dengan jalur relatif:
+
+| Yang diperiksa | Hasil |
+|---|---|
+| `origin` | `https://suwandhih.site.je` |
+| Cookie `__test` ada? | ✅ **ya** (dibuat browser saat halaman dimuat) |
+| `Content-Type` | `application/json` ✅ |
+| Panjang isi | **68.819 byte** — data asli ✅ |
+| `Access-Control-Allow-Origin` | `null` — **tidak perlu**, memang same-origin ✅ |
+
+**Bukti 2 — cookie tetap bertahan setelah cookie dibersihkan.** Setelah `clearCookies()` lalu halaman dimuat ulang, cookie `__test` **muncul kembali** dan API tetap membalas `application/json` 68.819 byte. Jadi browser **selalu** bisa melewatinya selama halaman dibuka langsung dari origin itu.
+
+**Bukti 3 — berkas statis juga bisa dilewatkan.** Diperiksa dari origin yang sama:
+
+| Jalur | Status | `Content-Type` | Panjang | Arti |
+|---|---|---|---|---|
+| `/aes.js` | `200` | `application/javascript` | 13.733 | berkas tantangan disajikan normal |
+| `/index.html` | `404` | `text/plain` | 220 | `index.html` **belum ada** di `htdocs/` |
+| `/application/hooks/index.html` | `403` | `text/plain` | 241 | diblokir `.htaccess` (memang benar) |
+| `/nope-xyz.html` | `404` | `text/plain` | 220 | jujur 404 — **bukan** tantangan |
+
+Rentetan ini membuktikan permintaan dari origin yang sama **sungguh sampai ke server** (bukan tantangan), karena 404 dan 403 asli bisa dibedakan.
+
+**Akibat — jalur baru: taruh UI di InfinityFree bersama API.** Bila `index.html` UI ditaruh di `htdocs/index.html` (atau `htdocs/ui/index.html`), maka:
+
+- UI dan API **satu origin** → CORS tidak berlaku sama sekali.
+- Tantangan AES **sudah** dilewati browser saat halaman dimuat.
+- Token API **tidak perlu** dikirim lewat berkas publik, karena bisa dibaca dari `secrets.php` server.
+- GitHub Pages tetap dipertahankan sebagai **pratinjau**, bukan sumber data.
+
+**Kendala:** berkas UI saat ini **208.515 byte** (208 KB, satu berkas mandiri). InfinityFree biasanya membatasi ukuran berkas, jadi perlu diuji. Cara unggah: File Manager → **Upload** (halaman **tidak** kena tantangan, yang kena hanya permintaan `fetch`).
+
+### C25. Cloudflare TIDAK BISA dipakai untuk `suwandhih.site.je` — ✅ TERBUKTI (20 Okt 2026)
+
+**Kesimpulan:** pilihan "pasang Cloudflare" di **D7 nomor 1** **tidak mungkin dijalankan** dan sudah dicoret.
+
+**Alasannya:** `site.je` adalah **subdomain gratis** dari InfinityFree. Nameserver domain induknya milik InfinityFree:
+
+| Domain | Nameserver |
+|---|---|
+| `site.je` | `ns1.byet.org`, `ns2.byet.org`, `ns3.byet.org`, `ns1.site.je` |
+
+Cloudflare mengendalikan **seluruh zone** — untuk mengaktifkannya, **nameserver domain induk harus diganti** ke nameserver Cloudflare. Karena `site.je` bukan milik Bapak dan NS-nya tidak bisa diubah dari panel InfinityFree, Cloudflare tidak bisa dipasang.
+
+**Syarat bila tetap ingin Cloudflare:** harus punya **domain sendiri** (mis. `tokomedia.id`) dengan akses nameserver penuh, lalu diarahkan ke InfinityFree. Itu berarti biaya tambahan.
+
+**Catatan:** Cloudflare juga **tidak akan menolong** — tantangan AES dipasang InfinityFree **sesudah** Cloudflare, jadi permintaan tetap kena tantangan.
+
 ---
 
 ## D. TAHAP BARU
@@ -491,17 +545,18 @@ Token tetap dibaca dari `window.TM_CONFIG` (tidak ditulis di `index.html`).
 
 | # | Cara | Untung | Rugi |
 |---|---|---|---|
-| **1** | **Pasang Cloudflare** di depan `suwandhih.site.je` | Gratis, cepat (±15 menit), tetap pakai InfinityFree, paling besar peluang berhasil | Perlu punya domain & ubah nameserver |
+| ~~**1**~~ | ~~**Pasang Cloudflare** di depan `suwandhih.site.je`~~ | — | ❌ **TIDAK MUNGKIN** — lihat C24: `site.je` adalah subdomain gratis InfinityFree, nameserver-nya milik InfinityFree (`ns1.byet.org`, `ns2.byet.org`, `ns3.byet.org`). Cloudflare mengendalikan **seluruh zone** (butuh NS domain utama), jadi **tidak bisa** dipasang pada subdomain yang NS-nya bukan milik kita. |
 | **2** | **Pindah ke host gratis lain** (mis. Render, Railway, InfinityFree alternatif, atau host lokal Indonesia) | Bersih tanpa tantangan | Perlu ekspor DB (dump ±26 MB) + unggah ulang |
 | **3** | **Demo lewat XAMPP di laptop** | Gratis, langsung jalan, aman | Hanya bisa diakses lokal/LAN — tidak bisa publik |
 | **4** | **Minta client pakai API live mereka** (`tokomedia.org:8009`) + aktifkan CORS | Tanpa hosting sendiri | Endpoint `category/tree` & `aplikasi/list` **tidak ada** di sana (404) |
 | **5** | **Biarkan apa adanya, demo pakai data tertanam** | Nol usaha | API tidak terpakai di GitHub Pages |
+| **6** | **Titipkan UI ke InfinityFree bersama API** (satu origin) | ✅ **Terbukti jalan** (C24) — CORS tidak berlaku, tantangan sudah dilewati browser, token aman di server | Perlu unggah `index.html` 208 KB; GitHub Pages jadi pratinjau saja |
 
 **Catatan penting:** UI sudah **tidak rusak** kalau API gagal — tiap panggilan punya penangan `.catch` sehingga halaman tetap tampil memakai data tertanam. Situs GitHub Pages sekarang **tetap bisa dibuka**, hanya tidak menarik data dari API.
 
-**Rekomendasi urutan:** coba **1** dulu (paling ringan); kalau tidak bisa, **3** untuk demo cepat ke client, atau **2** kalau ingin permanen.
+**Rekomendasi urutan:** **6** (taruh UI di InfinityFree — sudah terbukti jalan, lihat C24), lalu **2** bila ingin permanen, atau **3** untuk demo cepat. **Pilihan 1 (Cloudflare) sudah dicoret** — lihat C25.
 
-**Kriteria selesai:** UI di GitHub Pages berhasil menampilkan data dari API tanpa diblokir. → *menunggu pilihan Bapak*
+**Kriteria selesai:** UI berhasil menampilkan data dari API tanpa diblokir. → *menunggu pilihan Bapak*
 
 ---
 
