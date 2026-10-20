@@ -134,6 +134,12 @@ Berkas ini **tidak boleh** di-commit ke Git (sudah ada di `.gitignore`).
 >
 > Jadi uji **wajib dari browser**. Ini normal dan bukan tanda API rusak.
 
+> ⚠️ **Console harus dibuka DI halaman InfinityFree itu sendiri** (satu origin).
+> Bila Console dibuka di halaman GitHub Pages, permintaan bersifat lintas-origin,
+> cookie `__test` tidak dikirim, dan yang diterima adalah halaman tantangan
+> (`text/html` ±871 byte) — bukan JSON. Itu keterbatasan host, bukan API-nya.
+> Penjelasan lengkap: **8a**.
+
 ### 6a. Uji dari Console browser
 
 Buka <https://suwandhih.site.je/> di browser, tekan **F12 → Console**, lalu tempel:
@@ -161,7 +167,9 @@ fetch('https://suwandhih.site.je/index.php/api/category/tree', {
 ```
 
 Harus mencetak `ACAO = https://suwandhih.github.io` (atau origin tempat UI dibuka).
-Bila `ACAO = null` → lihat **Troubleshooting CORS** di bawah.
+Bila `ACAO = null` → lihat **8. Troubleshooting CORS**. Perhatikan juga
+`Content-Type` balasan: `text/html` berarti permintaan tidak sampai ke PHP
+(tantangan InfinityFree — bagian **8a**), bukan masalah konfigurasi.
 
 ### 6c. Uji token salah
 
@@ -227,7 +235,46 @@ Bila UI juga dipasang di domain API, tambahkan origin tersebut ke
 Gejala: API membalas JSON dengan benar bila dibuka langsung, tetapi UI di
 GitHub Pages gagal dengan pesan CORS di Console browser.
 
-### Penyebab paling sering: `config.php` versi lama
+### Langkah pertama: bedakan 2 kemungkinan
+
+Buka Console browser di halaman UI, lalu periksa **`Content-Type`** balasan:
+
+| `Content-Type` balasan | Artinya | Tindakan |
+|---|---|---|
+| `text/html` (±871 byte) | Permintaan **tidak sampai ke PHP** — dijawab halaman tantangan InfinityFree | Lihat **8a** |
+| `application/json` tapi tanpa `Access-Control-Allow-Origin` | PHP jalan, tetapi daftar origin kosong | Lihat **8b** |
+
+Cara cepat memeriksanya:
+
+```js
+fetch('https://suwandhih.site.je/index.php/api/category/tree', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+  body: 'token=<TOKEN>'
+}).then(r => console.log(r.headers.get('content-type'),
+                        r.headers.get('access-control-allow-origin')));
+```
+
+### 8a. `text/html` — tantangan JavaScript AES InfinityFree
+
+InfinityFree memasang tantangan anti-bot (`/aes.js` + cookie `__test`) di depan
+**seluruh akun**, termasuk berkas statis. Permintaan lintas-origin dari GitHub
+Pages tidak membawa cookie `__test`, jadi yang diterima selalu halaman
+tantangan — PHP tidak pernah dijalankan, `Api_cors.php` tidak jalan, dan header
+CORS tidak pernah dikirim.
+
+**Ini tidak bisa diperbaiki dari sisi kode.** Tidak ada pengaturan di
+`config.php`, `hooks.php`, `.htaccess`, maupun panel InfinityFree untuk
+mematikannya.
+
+**Bukti bahwa kode CORS-nya sudah benar:** bila cookie `__test` dikirim, API
+membalas `application/json` (68.819 byte) **lengkap dengan**
+`Access-Control-Allow-Origin: https://suwandhih.github.io`.
+
+**Pilihan:** pasang Cloudflare di depan domain, pindah ke host lain, atau pakai
+XAMPP untuk demo lokal. Rincian lengkap: `../TEMUAN-TANTANGAN-AES-INFINITYFREE.md`.
+
+### 8b. `application/json` tanpa ACAO — daftar origin kosong
 
 Hook CORS (`application/hooks/Api_cors.php`) membaca daftar origin dari
 `$config['cors_origins']` di `application/config/config.php`. Bila berkas
@@ -250,9 +297,7 @@ dan `Access-Control-Max-Age` **ada**, tetapi `Access-Control-Allow-Origin`
 5. Pastikan `htdocs/application/hooks/Api_cors.php` ada.
 6. Uji ulang dengan langkah **6b**.
 
-### Cek cepat isi `config.php`
-
-Buka `htdocs/application/config/config.php` di File Manager, cari baris:
+Cek cepat isi `config.php` — cari baris:
 
 ```php
 $config['cors_origins'] = array(
@@ -276,13 +321,13 @@ origin yang benar-benar dipakai di `$config['cors_origins']`.
 | Hal | Keterangan |
 |---|---|
 | Environment | `index.php` memakai `production` secara default (JSON bersih). Set `CI_ENV=development` untuk menampilkan error. |
-| CORS | Hook `post_controller_constructor` → `application/hooks/Api_cors.php`. Daftar origin di `$config['cors_origins']` (`application/config/config.php`). Bila `config.php` masih versi lama, header `Access-Control-Allow-Origin` tidak dikirim — lihat bagian **8. Troubleshooting CORS**. |
+| CORS | Hook `post_controller_constructor` → `application/hooks/Api_cors.php`. Daftar origin di `$config['cors_origins']` (`application/config/config.php`). Bila `config.php` masih versi lama, header `Access-Control-Allow-Origin` tidak dikirim — lihat bagian **8b**. |
 | Kredensial | `application/config/secrets.php` membaca environment variable lebih dulu, lalu `secrets.local.php`. |
 | Charset | `utf8mb4` / `utf8mb4_unicode_ci` agar cocok dengan collation tabel. |
 | Proteksi | `.htaccess` memblokir akses ke `application/`, `system/`, `database/`, `docs/`, serta berkas `.sql`/`.zip`/`.log`. |
 | Stateless | Library `session` tidak di-autoload — API tidak memakainya. |
 | Kompatibilitas | Diuji pada PHP 5.6.40, 8.3.35, dan 8.4.26: 25/25 endpoint status 200. |
-| Tantangan AES | InfinityFree menyajikan halaman tantangan JavaScript (`/aes.js`, cookie `__test`) sebelum permintaan sampai ke PHP. Browser menyelesaikannya otomatis; `curl`/Postman tidak bisa. |
+| Tantangan AES | InfinityFree menyajikan halaman tantangan JavaScript (`/aes.js`, cookie `__test`) sebelum permintaan sampai ke PHP. Berlaku untuk **seluruh akun**, termasuk berkas statis. Browser biasa bisa melewatinya saat membuka halaman, tetapi `fetch()` lintas-origin **tidak** — jadi host ini tidak layak untuk API yang dipanggil dari domain lain. Lihat bagian **8a**. |
 | User-Agent | InfinityFree memblokir User-Agent non-browser. Uji selalu dari browser. |
 | Status HTTP | Selalu `200`. Kode sebenarnya ada di field `status` pada body JSON (200 sukses / 201 validasi / 404 gagal). |
 | Token kosong | Bila `TM_API_TOKEN` kosong, **semua** endpoint menolak dengan `{"status":404,"message":"No Permission"}`. |

@@ -6,9 +6,11 @@ Aplikasi katalog media & Kitab Suci multi-bahasa daerah Nusantara berbasis arsit
 
 📋 **Rencana & Riwayat Kerja:** [rencanakerja.md](./rencanakerja.md) — catatan tunggal semua pekerjaan (selesai maupun baru).
 
-🔧 **Perbaikan CORS di hosting:** [PERBAIKAN-CORS-INFINITYFREE.md](./PERBAIKAN-CORS-INFINITYFREE.md) — panduan bila UI gagal memanggil API karena CORS.
+🔧 **Temuan penting — API tidak bisa dipanggil dari GitHub Pages:** [TEMUAN-TANTANGAN-AES-INFINITYFREE.md](./TEMUAN-TANTANGAN-AES-INFINITYFREE.md) — akar masalahnya bukan CORS, melainkan tantangan JavaScript AES milik InfinityFree.
 
 > **Catatan arsitektur (20 Okt 2026):** aplikasi ini berjalan **self-host** — API dipasang di hosting sendiri (`suwandhih.site.je`), sesuai arahan tim IT client. Live API client di `tokomedia.org:8009` **tidak dipakai** karena tidak menyediakan CORS dan belum memiliki endpoint `category/tree` + `aplikasi/list`. Rincian di [rencanakerja.md](./rencanakerja.md) bagian **H**.
+>
+> ⚠️ **Koreksi (20 Okt 2026):** host `suwandhih.site.je` (InfinityFree) memasang **tantangan JavaScript AES** di depan seluruh akun, sehingga UI di GitHub Pages tidak dapat memanggil API-nya. **Konfigurasi CORS API sudah benar dan terbukti bekerja** — yang perlu diganti adalah host-nya. Rencana: [rencanakerja.md](./rencanakerja.md) bagian **D7**.
 
 ---
 

@@ -49,15 +49,17 @@
 | 14 | Verifikasi API sudah terpasang & jalan di InfinityFree | ✅ SELESAI | 20 Okt 2026 |
 | 15 | Diagnosa penyebab CORS gagal di InfinityFree | ✅ SELESAI | 20 Okt 2026 |
 | 16 | Buat berkas `rencanakerja.md` ini | ✅ SELESAI | 20 Okt 2026 |
-| 17 | **Perbaiki CORS di InfinityFree (unggah ulang `config.php`)** | ✅ SELESAI | 20 Okt 2026 |
+| 17 | ~~Perbaiki CORS di InfinityFree (unggah ulang `config.php`)~~ | ❌ **SALAH** — bukan itu sebabnya | 20 Okt 2026 |
 | 18 | **Arahkan `apiBase` UI ke server InfinityFree** | ✅ SELESAI | 20 Okt 2026 |
 | 19 | **Perbarui `DEPLOY.md` (langkah token & troubleshooting CORS)** | ✅ SELESAI | 20 Okt 2026 |
 | 20 | **Putuskan status folder source code API client di repo publik** | ⬜ BELUM | — |
 | 21 | **Rotasi token API (wajib — token lama masih bisa diakses)** | ⬜ BELUM | — |
 | 22 | **Sambungkan aplikasi Android ke API** | ⬜ BELUM | — |
 | 23 | **Jawab pertanyaan penempatan API client (arsitektur sinkronisasi data)** | ✅ SELESAI | 20 Okt 2026 |
-| 24 | **Buat panduan `PERBAIKAN-CORS-INFINITYFREE.md`** | ✅ SELESAI | 20 Okt 2026 |
+| 24 | **Buat panduan `PERBAIKAN-CORS-INFINITYFREE.md`** | ⚠️ SALAH — sudah dihapus, diganti `TEMUAN-TANTANGAN-AES-INFINITYFREE.md` | 20 Okt 2026 |
 | 25 | **Temukan Live API client di `tokomedia.org:8009` (sebelumnya disangka belum dipasang)** | ✅ SELESAI | 20 Okt 2026 |
+| 26 | **AKAR MASALAH TERBUKTI — tantangan JavaScript AES InfinityFree (bukan CORS)** | ✅ SELESAI | 20 Okt 2026 |
+| 27 | **Ganti host API — tinggalkan InfinityFree** | 🟡 MENUNGGU KEPUTUSAN | — |
 | 26 | **Petakan endpoint Live API client vs salinan sendiri** | ✅ SELESAI | 20 Okt 2026 |
 | 27 | **Catat jawaban IT client: self-host adalah jalur yang dimaksudkan** | ✅ SELESAI | 20 Okt 2026 |
 
@@ -74,10 +76,12 @@ flowchart LR
     F["UI via ?api="] -.->|"uji cepat"| E
     E["Live API Client<br/>tokomedia.org:8009<br/>CodeIgniter 3.1.13<br/>PHP 5.6.29"]
     E --> G[("TM DB<br/>MySQL client<br/>data real-time")]
-    A -.->|"❌ diblokir CORS"| E
+    A -.->|"❌ diblokir tantangan AES"| B
 ```
 
 > **Catatan (20 Okt 2026):** Live API client **ternyata sudah ada** di `tokomedia.org:8009` — sebelumnya disangka belum dipasang. Namun Live API (a) **tidak punya CORS**, dan (b) **belum punya** endpoint `category/tree` + `aplikasi/list` yang wajib dipakai UI. Karena itu server sendiri tetap menjadi pilihan utama. Rincian di bagian **H**.
+>
+> ⚠️ **Koreksi (20 Okt 2026):** panah `A --> B` di atas **tidak jalan**. Bukan karena CORS, tetapi karena InfinityFree memasang tantangan JavaScript AES di depan seluruh akun — lihat **C23**. UI perlu host API pengganti (**D7**).
 
 | Bagian | Tempat | Status |
 |---|---|---|
@@ -223,11 +227,12 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.
 - **Rekomendasi:** **Hibrida** — pakai server sendiri sekarang (sudah jalan, tidak bergantung pihak lain), dan berpindah ke API live client nanti bila mereka memasangnya. Berpindah hanya perlu ubah **1 baris** `apiBase`.
 - Jawaban lengkap + diagram + kalimat siap kirim ke client → bagian **G** berkas ini.
 
-### C18. Perbaiki CORS di InfinityFree (D1) — ✅ SELESAI (20 Okt 2026)
+### C18. Perbaikan CORS di InfinityFree (D1) — ❌ DIKOREKSI (20 Okt 2026) → lihat C23 & D7
 
-- Akar masalah terkonfirmasi dengan membandingkan isi 2 berkas zip.
-- Dibuat panduan langkah-demi-langkah: **`PERBAIKAN-CORS-INFINITYFREE.md`** (4.474 karakter).
-- Tindakan unggah berkas di hosting dilakukan Bapak (saya tidak punya akses InfinityFree).
+- Awalnya disimpulkan akar masalahnya: `config.php` di hosting masih versi lama.
+- Dibuat panduan langkah-demi-langkah: **`PERBAIKAN-CORS-INFINITYFREE.md`** (sudah dihapus).
+- ⚠️ **Ternyata diagnosa ini SALAH** — ketiga berkas di hosting sudah versi baru; penyebab sebenarnya adalah tantangan JavaScript AES InfinityFree. Rincian: **C23**. Berkas `PERBAIKAN-CORS-INFINITYFREE.md` **sudah dihapus** dan diganti **`TEMUAN-TANTANGAN-AES-INFINITYFREE.md`**.
+- Rencana penanganan baru: **D7**.
 
 ### C19. Arahkan `apiBase` UI ke server InfinityFree (D2) — ✅ SELESAI (20 Okt 2026)
 
@@ -244,13 +249,13 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.
 
 - **Bukti D2 sudah live:** Console browser di <https://suwandhih.github.io/TokoMedia/> menampilkan error CORS yang menyebut `https://suwandhih.site.je/index.php/api/category/tree` — artinya UI **sudah** memanggil server InfinityFree, bukan lagi `tokomedia.org`.
 - **UI tetap tampil normal** walau API belum bisa dipanggil — semua panggilan API punya `.catch()` yang jatuh ke data tertanam (`window.TM_PAYLOAD`). Tidak ada halaman kosong.
-- Error CORS tersebut adalah hal yang diperbaiki oleh **D1**.
+- Error CORS tersebut ternyata **bukan** karena konfigurasi API (lihat **C23**) — penyebabnya tantangan JavaScript AES InfinityFree. Penanganannya pindah ke **D7**.
 
 ### C20. Perbarui `DEPLOY.md` (D3) — ✅ SELESAI (20 Okt 2026)
 
 - Bagian 6 "Uji" ditulis ulang → pakai Console browser, bukan `curl`.
 - Bagian 7 "Hubungkan UI" ditulis ulang → pakai `config.local.js`, bukan token di `index.html`.
-- Bagian 8 "Troubleshooting CORS" ditambah (baru).
+- Bagian 8 "Troubleshooting CORS" ditambah (baru) — ⚠️ **isinya perlu ditulis ulang** karena berdasar diagnosa yang salah (lihat **C23**).
 - Tabel "Catatan teknis" ditambah 4 baris.
 
 ### C21. Temukan Live API client di `tokomedia.org:8009` — ✅ SELESAI (20 Okt 2026)
@@ -317,31 +322,87 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.
 
 **Yang masih terbuka:** hanya **E1 — pembaruan data** (apakah client akan mengirim dump baru berkala).
 
+### C23. AKAR MASALAH CORS TERBUKTI — tantangan JavaScript AES InfinityFree — ✅ SELESAI (20 Okt 2026)
+
+**Diagnosa lama (SALAH):** "`config.php` di hosting masih versi lama sehingga daftar `cors_origins` kosong."
+
+**Diagnosa benar:** penyebabnya **bukan** konfigurasi. Ketiga berkas di hosting sudah versi baru. Yang menghalangi adalah **tantangan JavaScript AES** yang dipasang InfinityFree di depan seluruh akun.
+
+**Bukti 1 — berkas di hosting sudah benar.** Daftar isi `/htdocs/application/config/` dan `/htdocs/application/hooks/` diperiksa lewat File Manager InfinityFree:
+
+| Berkas | Ukuran di hosting | Status |
+|---|---|---|
+| `application/config/config.php` | 19,33 KB | ✅ versi baru (ada `cors_origins`) |
+| `application/config/hooks.php` | 772 B | ✅ versi baru (ada hook CORS) |
+| `application/hooks/Api_cors.php` | 1,31 KB | ✅ ada |
+
+**Bukti 2 — respons pertama adalah halaman tantangan, bukan JSON.** Permintaan `POST https://suwandhih.site.je/index.php/api/category/tree` (dengan User-Agent browser + header `Origin`) membalas:
+
+| Yang diperiksa | Hasil |
+|---|---|
+| Status | `200 OK` (menipu — bukan dari API) |
+| `Content-Type` | `text/html` ← **bukan** `application/json` |
+| `Content-Length` | `871` |
+| `Server` | `openresty` |
+
+Isi 871 byte itu:
+
+```html
+<script type="text/javascript" src="/aes.js"></script>
+<script>... a=toNumbers("f655ba9d..."),b=toNumbers("98344c2e..."),c=toNumbers("c77994d5...");
+document.cookie="__test="+toHex(slowAES.decrypt(c,2,a,b))+"; ...;
+location.href="https://suwandhih.site.je/index.php/api/category/tree?i=1";</script>
+```
+
+**Bukti 3 — kalau tantangan diselesaikan, API menjawab SEMPURNA.** Tantangan itu adalah AES-128-CBC (`slowAES.decrypt(c,2,a,b)` = mode CBC, padding nol). Setelah nilai `__test` dihitung dan dikirim sebagai cookie:
+
+| Header balasan | Nilai |
+|---|---|
+| `Content-Type` | `application/json` ✅ |
+| `Access-Control-Allow-Origin` | `https://suwandhih.github.io` ✅ |
+| `Access-Control-Allow-Methods` | `POST, GET, OPTIONS` ✅ |
+| `Access-Control-Allow-Headers` | `Content-Type, X-Requested-With` ✅ |
+| `Access-Control-Max-Age` | `86400` ✅ |
+| `Vary` | `Accept-Encoding, Origin` ✅ |
+| Panjang isi | 68.819 byte JSON asli ✅ |
+
+**Kesimpulan:** `config.php`, `hooks.php`, dan `Api_cors.php` **sudah 100% benar**. CORS gagal **murni** karena browser menembak halaman tantangan.
+
+**Kenapa browser gagal padahal cookie bisa dibuat?** Karena `__test` harus ada pada **permintaan pertama**. Untuk mendapatkannya, browser harus menjalankan `/aes.js` dari halaman HTML — dan itu tidak mungkin dilakukan lintas-origin dari GitHub Pages. Percobaan `credentials: 'include'` tetap gagal: permintaan pertama tidak membawa cookie, dan `Access-Control-Allow-Credentials` memang tidak dikirim (memang tidak diperlukan).
+
+**Tantangan ini berlaku di seluruh akun** — diuji pada HTTP, HTTPS, `?i=1`, bahkan halaman statis `/`:
+
+| Yang diuji | `Content-Type` | Panjang | ACAO |
+|---|---|---|---|
+| `http://suwandhih.site.je/.../category/tree` | `text/html` | 870 | tidak |
+| `https://suwandhih.site.je/.../category/tree` | `text/html` | 871 | tidak |
+| `https://suwandhih.site.je/.../category/tree?i=1` | `text/html` | 871 | tidak |
+| `https://suwandhih.site.je/` (statis) | `text/html` | 844 | tidak |
+| `https://suwandhih.site.je/DEPLOY.md` (statis) | `text/html` | 853 | tidak |
+
+**Server client bersih.** `tokomedia.org` dan `www.tokomedia.org` ada di `103.23.201.26` (Apache/2.2.15 CentOS) — **bukan** InfinityFree. Jadi tantangan ini hanya menimpa host uji `suwandhih.site.je`.
+
+**Konsekuensi:** **InfinityFree tidak bisa dipakai sebagai host API.** Tidak ada pengaturan di panel InfinityFree untuk mematikan tantangan ini — ini memang mekanisme anti-bot mereka. Solusinya ada di **D7**.
+
 ---
 
 ## D. TAHAP BARU
 
 > Bagian ini untuk pekerjaan yang **belum dikerjakan**. Setiap tahap baru langsung dicatat di sini.
 
-### D1. Perbaiki CORS di InfinityFree — ✅ SELESAI (20 Okt 2026)
+### D1. Perbaiki CORS di InfinityFree — ❌ DIKOREKSI (20 Okt 2026) → pindah ke D7
 
-**Tujuan:** agar UI di GitHub Pages bisa memanggil API tanpa diblokir CORS.
+> **PENTING — diagnosa awal SALAH.** Awalnya disimpulkan `config.php` di hosting masih versi lama. Setelah memeriksa langsung isi hosting, **ternyata ketiga berkas sudah versi baru**. Penyebab sebenarnya adalah **tantangan JavaScript AES milik InfinityFree**. Rincian: lihat **C23** dan **D7**.
 
-**Akar masalah (terkonfirmasi):** berkas `application/config/config.php` yang terpasang di hosting masih **versi lama** (tanpa `$config['cors_origins']`), sedangkan `hooks.php` + `Api_cors.php` sudah versi baru. Akibatnya daftar origin kosong → header `Access-Control-Allow-Origin` tidak pernah dikirim.
+**Diagnosa awal (keliru):**
 
-**Bukti perbandingan zip:**
+| Berkas | Zip client asli (14 Okt) | Zip infinityfree (19 Okt) | **Terpasang di hosting** |
+|---|---|---|---|
+| `application/config/config.php` | 19.257 B — tanpa `cors_origins` | 19.797 B — ada `cors_origins` | ✅ **19,33 KB — versi baru** |
+| `application/config/hooks.php` | 430 B — tanpa hook CORS | 772 B — ada hook CORS | ✅ **772 B — versi baru** |
+| `application/hooks/Api_cors.php` | tidak ada | ada (1.341 B) | ✅ **1,31 KB — ada** |
 
-| Berkas | Zip client asli (14 Okt) | Zip infinityfree (19 Okt) |
-|---|---|---|
-| `application/config/config.php` | 19.257 B — tanpa `cors_origins` | 19.797 B — ada `cors_origins` |
-| `application/config/hooks.php` | 430 B — tanpa hook CORS | 772 B — ada hook CORS |
-| `application/hooks/Api_cors.php` | tidak ada | ada (1.341 B) |
-
-**Hasil:** panduan langkah-demi-langkah dibuat di berkas baru **`PERBAIKAN-CORS-INFINITYFREE.md`** (4.474 karakter). Isinya: cadangkan `config.php` lama → unggah `config.php` baru dari `Backup/tokomedia-api-infinityfree.zip` → pastikan `hooks.php` + `Api_cors.php` → verifikasi baris `cors_origins` → uji dari Console browser.
-
-**Catatan:** tindakan unggah berkas di hosting **dilakukan oleh Bapak** (saya tidak punya akses ke InfinityFree). Panduan sudah siap pakai.
-
-**Kriteria selesai:** header `Access-Control-Allow-Origin: https://suwandhih.github.io` muncul pada balasan API. → *menunggu Bapak menjalankan panduan*
+**Kesimpulan:** tidak ada yang perlu diperbaiki pada konfigurasi. Berkas `PERBAIKAN-CORS-INFINITYFREE.md` **sudah dihapus** dan diganti **`TEMUAN-TANTANGAN-AES-INFINITYFREE.md`**.
 
 ---
 
@@ -369,7 +430,7 @@ Token tetap dibaca dari `window.TM_CONFIG` (tidak ditulis di `index.html`).
 
 1. **Bagian 6 "Uji" ditulis ulang** — peringatan tegas bahwa `curl` **tidak bisa** dipakai di InfinityFree (blokir User-Agent non-browser + tantangan JavaScript AES). Diganti 3 perintah `fetch()` yang dijalankan dari Console browser: uji data, uji header CORS, uji token salah.
 2. **Bagian 7 "Hubungkan UI" ditulis ulang** — tidak lagi menyuruh menulis token di `index.html`. Sekarang 3 sub-bagian: 7a ubah `apiBase`, 7b isi token lewat `config.local.js`, 7c pengujian cepat lewat query string `?api=`.
-3. **Bagian 8 "Troubleshooting CORS" ditambah (baru)** — menjelaskan penyebab `config.php` versi lama, ciri khasnya (header methods/headers/max-age ada tapi ACAO tidak ada), langkah perbaikan, cara cek isi `config.php`, dan larangan memakai `Access-Control-Allow-Origin: *`.
+3. **Bagian 8 "Troubleshooting CORS" ditambah (baru)** — menjelaskan penyebab `config.php` versi lama, ciri khasnya (header methods/headers/max-age ada tapi ACAO tidak ada), langkah perbaikan, cara cek isi `config.php`, dan larangan memakai `Access-Control-Allow-Origin: *`. ⚠️ **Bagian ini perlu ditulis ulang** — lihat **C23**: penyebab sebenarnya bukan `config.php` versi lama, melainkan tantangan JavaScript AES InfinityFree.
 4. **Tabel "Catatan teknis" ditambah 4 baris** — Tantangan AES, User-Agent, Status HTTP selalu 200, Token kosong menolak semua.
 
 ---
@@ -420,6 +481,28 @@ Token tetap dibaca dari `window.TM_CONFIG` (tidak ditulis di `index.html`).
 3. Ganti `MockData.kt` dengan data dari API.
 4. Uji di perangkat/emulator.
 
+### D7. Ganti host API — tinggalkan InfinityFree — 🟡 MENUNGGU KEPUTUSAN BAPAK
+
+**Sebab:** InfinityFree memasang tantangan JavaScript AES di depan **seluruh akun** (lihat C23). Tidak ada tombol di panel InfinityFree untuk mematikannya, dan tidak ada satu baris pun di `config.php` / `hooks.php` / `.htaccess` / `Api_cors.php` yang bisa menembusnya. Jadi selama API ada di `suwandhih.site.je`, UI di GitHub Pages **tidak akan bisa** memanggilnya.
+
+**Yang penting:** kode API + CORS-nya **sudah benar dan terbukti bekerja**. Yang salah hanya pilihan host. Jadi pindah host = selesai, tanpa perlu ubah kode.
+
+**Pilihan (silakan Bapak pilih):**
+
+| # | Cara | Untung | Rugi |
+|---|---|---|---|
+| **1** | **Pasang Cloudflare** di depan `suwandhih.site.je` | Gratis, cepat (±15 menit), tetap pakai InfinityFree, paling besar peluang berhasil | Perlu punya domain & ubah nameserver |
+| **2** | **Pindah ke host gratis lain** (mis. Render, Railway, InfinityFree alternatif, atau host lokal Indonesia) | Bersih tanpa tantangan | Perlu ekspor DB (dump ±26 MB) + unggah ulang |
+| **3** | **Demo lewat XAMPP di laptop** | Gratis, langsung jalan, aman | Hanya bisa diakses lokal/LAN — tidak bisa publik |
+| **4** | **Minta client pakai API live mereka** (`tokomedia.org:8009`) + aktifkan CORS | Tanpa hosting sendiri | Endpoint `category/tree` & `aplikasi/list` **tidak ada** di sana (404) |
+| **5** | **Biarkan apa adanya, demo pakai data tertanam** | Nol usaha | API tidak terpakai di GitHub Pages |
+
+**Catatan penting:** UI sudah **tidak rusak** kalau API gagal — tiap panggilan punya penangan `.catch` sehingga halaman tetap tampil memakai data tertanam. Situs GitHub Pages sekarang **tetap bisa dibuka**, hanya tidak menarik data dari API.
+
+**Rekomendasi urutan:** coba **1** dulu (paling ringan); kalau tidak bisa, **3** untuk demo cepat ke client, atau **2** kalau ingin permanen.
+
+**Kriteria selesai:** UI di GitHub Pages berhasil menampilkan data dari API tanpa diblokir. → *menunggu pilihan Bapak*
+
 ---
 
 ## E. Pertanyaan Terbuka untuk Client
@@ -449,7 +532,10 @@ Token tetap dibaca dari `window.TM_CONFIG` (tidak ditulis di `index.html`).
 
 1. Memblokir User-Agent non-browser → `curl` gagal (HTTP 000).
 2. Memakai **tantangan JavaScript AES** (`/aes.js`, cookie `__test`, alih ke `?i=1`) → **`curl` tidak bisa mencapai API sama sekali**; hanya browser asli yang bisa.
-3. Artinya: UI GitHub Pages **akan** jalan setelah CORS diperbaiki (browser menyelesaikan tantangan), tapi pengujian otomatis lewat `curl` tidak bisa.
+3. ⚠️ **Temuan 20 Okt 2026:** tantangan ini juga **memblokir browser lintas-origin**. Sebabnya: untuk dapat cookie `__test`, browser harus **lebih dulu** menjalankan `/aes.js` dari halaman tantangan. Permintaan `fetch()` dari GitHub Pages tidak membawa cookie itu, sehingga yang diterima selalu halaman tantangan (`Content-Type: text/html`, ±871 byte) — **bukan** API. Karena PHP tidak pernah dijalankan, `Api_cors.php` pun tidak jalan, dan header ACAO tidak pernah ada.
+4. Kalau cookie `__test` **sudah** ada, API membalas **sempurna**: `application/json`, 68.819 byte, lengkap dengan `Access-Control-Allow-Origin: https://suwandhih.github.io`. Jadi **implementasi CORS-nya sudah benar** — yang menghalangi adalah tantangan host.
+5. Konsekuensi: **InfinityFree tidak layak dipakai sebagai host API** untuk UI di GitHub Pages. Lihat **C23** dan **D7**.
+6. Palung: halaman statis (`/`, `DEPLOY.md`) juga kena tantangan (844–853 byte) → tantangan menyeluruh satu akun, bukan khusus PHP.
 
 ### F3. Data
 
@@ -539,7 +625,7 @@ Titik putusnya: **tidak ada panah dari database client ke database Bapak.** Meny
 3. **Berpindah nanti sangat mudah** — hanya **1 baris** di `index.html`:
 
 ```js
-// Sekarang (server sendiri) — sesuai anjuran client
+// Sekarang (server sendiri) — sesuai anjuran client, ⚠️ tapi host ini kena tantangan AES → D7
 apiBase: 'https://suwandhih.site.je/index.php/api',
 
 // Nanti (bila client sudah menambah CORS + endpoint yang kurang)
@@ -765,7 +851,7 @@ Live API client **tidak punya CORS**, tetapi **Android tidak terpengaruh CORS**:
 
 | # | Rencana | Status |
 |---|---|---|
-| 1 | Tetap pakai server sendiri untuk UI — jalankan D1 (perbaiki CORS) | ⬜ Menunggu Bapak |
+| 1 | Tetap pakai server sendiri untuk UI — ternyata bukan soal CORS, tapi tantangan AES InfinityFree → **D7** | 🟡 Menunggu pilihan Bapak (Cloudflare / pindah host / XAMPP lokal) |
 | 2 | ~~Tambahkan `?api=https://tokomedia.org:8009/index.php/api` sebagai cara uji cepat live API~~ | ❌ **Dibatalkan** — Live API tidak dimaksudkan dipakai |
 | 3 | Android: buat `BASE_URL` di satu tempat agar bisa diganti tanpa build ulang | ⬜ Belum (bagian D6) |
 | 4 | ~~Tanyakan 5 pertanyaan di H7 ke IT client~~ | ✅ **Selesai** — terjawab lewat pesan 20 Okt 2026 |
