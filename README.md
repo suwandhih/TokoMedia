@@ -8,6 +8,8 @@ Aplikasi katalog media & Kitab Suci multi-bahasa daerah Nusantara berbasis arsit
 
 🔧 **Perbaikan CORS di hosting:** [PERBAIKAN-CORS-INFINITYFREE.md](./PERBAIKAN-CORS-INFINITYFREE.md) — panduan bila UI gagal memanggil API karena CORS.
 
+> **Catatan arsitektur (20 Okt 2026):** aplikasi ini berjalan **self-host** — API dipasang di hosting sendiri (`suwandhih.site.je`), sesuai arahan tim IT client. Live API client di `tokomedia.org:8009` **tidak dipakai** karena tidak menyediakan CORS dan belum memiliki endpoint `category/tree` + `aplikasi/list`. Rincian di [rencanakerja.md](./rencanakerja.md) bagian **H**.
+
 ---
 
 ## ✨ Fitur Utama

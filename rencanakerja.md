@@ -59,6 +59,7 @@
 | 24 | **Buat panduan `PERBAIKAN-CORS-INFINITYFREE.md`** | ✅ SELESAI | 20 Okt 2026 |
 | 25 | **Temukan Live API client di `tokomedia.org:8009` (sebelumnya disangka belum dipasang)** | ✅ SELESAI | 20 Okt 2026 |
 | 26 | **Petakan endpoint Live API client vs salinan sendiri** | ✅ SELESAI | 20 Okt 2026 |
+| 27 | **Catat jawaban IT client: self-host adalah jalur yang dimaksudkan** | ✅ SELESAI | 20 Okt 2026 |
 
 ---
 
@@ -291,6 +292,31 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.
 
 **Tindak lanjut:** seluruh temuan dicatat di bagian **H**; keputusan Bapak dicatat di **H5**; pertanyaan untuk IT client di **H7**.
 
+### C22. Catat jawaban IT client — self-host adalah jalur yang dimaksudkan — ✅ SELESAI (20 Okt 2026)
+
+**Pesan IT client (20 Okt 2026):**
+
+> ini source code API dan database TM. jadi ini bisa diinstal sendiri, boleh di hosting atau localhost (laptop sendiri)
+> Jadi bisa simulasi sendiri API call nya.
+> jadi tidak perlu pakai live API yg ada batasan CORS.
+
+**Pembacaan Bapak:** *"IT client tidak berharap sistem baru live."* — **tepat.**
+
+**Yang terjawab:**
+
+| Pertanyaan | Jawaban |
+|---|---|
+| Apakah Live API ditawarkan untuk aplikasi Bapak? | ❌ **Tidak** — client justru bilang "tidak perlu pakai live API" |
+| Apakah perlu minta CORS ke IT? | ❌ **Tidak perlu** |
+| Apakah perlu minta endpoint baru ke IT? | ❌ **Tidak perlu** |
+| Apakah self-host diizinkan? | ✅ **Ya** — "boleh di hosting atau localhost (laptop sendiri)" |
+
+**Kesimpulan:** self-host **bukan sekadar pilihan yang lebih aman — itu jalur yang memang dimaksudkan client.** Karena itu berkas `PERMINTAAN-IJIN-AKSES-API.md` **tidak diperlukan lagi**.
+
+**Strategi Bapak (dicatat di H7b):** jalan dulu dengan server sendiri sampai **client puas**, baru **minta Live API**. Revisinya kecil — cukup ganti 1 baris `apiBase` di `index.html` dan 1 nilai `BASE_URL` di Android.
+
+**Yang masih terbuka:** hanya **E1 — pembaruan data** (apakah client akan mengirim dump baru berkala).
+
 ---
 
 ## D. TAHAP BARU
@@ -400,11 +426,13 @@ Token tetap dibaca dari `window.TM_CONFIG` (tidak ditulis di `index.html`).
 
 | # | Pertanyaan | Status |
 |---|---|---|
-| 1 | Apakah data akan diperbarui berkala, atau hanya snapshot 14 Okt 2026? | ⬜ Belum ditanya |
-| 2 | Apakah client masih akan menyediakan API live di `tokomedia.org`? | ⬜ Belum ditanya |
+| 1 | Apakah data akan diperbarui berkala, atau hanya snapshot 14 Okt 2026? | ⬜ **Belum ditanya** — satu-satunya yang masih terbuka |
+| 2 | Apakah client masih akan menyediakan API live di `tokomedia.org`? | ✅ **Terjawab (20 Okt 2026)** — ada di port 8009, tetapi **tidak dimaksudkan dipakai**; client menawarkan self-host |
 | 3 | Apakah client tahu source code API mereka bisa diakses publik di GitHub? | ⬜ Belum ditanya |
 | 4 | Apakah client bersedia menerbitkan token baru + mengikatnya ke Origin? | ⬜ Belum ditanya |
-| 5 | Apakah client mengizinkan Bapak self-host permanen, atau hanya untuk uji coba? | ⬜ Belum ditanya |
+| 5 | Apakah client mengizinkan Bapak self-host permanen, atau hanya untuk uji coba? | ✅ **Terjawab (20 Okt 2026)** — **diizinkan**: "boleh di hosting atau localhost (laptop sendiri)" |
+
+> **Catatan (20 Okt 2026):** pesan IT client menutup pertanyaan 2 dan 5. Yang masih perlu ditanyakan hanya **pertanyaan 1 (pembaruan data)**. Pertanyaan 3 dan 4 menyangkut keamanan repositori — bisa ditanyakan menyusul, tidak memblokir pekerjaan.
 
 ---
 
@@ -500,16 +528,18 @@ Titik putusnya: **tidak ada panah dari database client ke database Bapak.** Meny
 | **2** | **Self-host + impor ulang berkala** | ⚠️ Hanya saat impor | Sedang (impor manual tiap kali) | Sedang — client harus mengirim dump baru |
 | **3** | **Hibrida (rekomendasi)** | ⚠️ Sekarang tidak, ✅ nanti bisa | Rendah | Rendah sekarang |
 
-### G4. Rekomendasi: **Pilihan 3 — Hibrida**
+### G4. Rekomendasi: **Pilihan 3 — Hibrida** — ✅ DIKONFIRMASI CLIENT (20 Okt 2026)
+
+> **DIPERBARUI 20 Okt 2026:** IT client menegaskan **"tidak perlu pakai live API yg ada batasan CORS"** dan menawarkan self-host. Jadi **Pilihan 2 (self-host) adalah jalur yang dimaksudkan client**, dan Pilihan 3 (hibrida) tetap berlaku sebagai rencana lanjutan bila client nanti memberikan Live API.
 
 **Alasannya:**
 
 1. **Live API client sudah ada** di `tokomedia.org:8009`, tetapi (a) **tidak punya CORS** sehingga browser diblokir, dan (b) **belum punya** endpoint `category/tree` + `aplikasi/list` yang wajib dipakai UI. Jadi Pilihan 1 belum bisa dijalankan hari ini.
-2. **Server Bapak sudah jalan** dan tidak bergantung pada siapa pun. Ini posisi paling aman.
+2. **Server Bapak sudah jalan** dan tidak bergantung pada siapa pun. Ini posisi paling aman — **dan client sendiri yang menawarkannya**.
 3. **Berpindah nanti sangat mudah** — hanya **1 baris** di `index.html`:
 
 ```js
-// Sekarang (server sendiri)
+// Sekarang (server sendiri) — sesuai anjuran client
 apiBase: 'https://suwandhih.site.je/index.php/api',
 
 // Nanti (bila client sudah menambah CORS + endpoint yang kurang)
@@ -524,33 +554,51 @@ https://suwandhih.github.io/TokoMedia/?api=https://tokomedia.org:8009/index.php/
 
 4. **Aplikasi Android tidak perlu diubah** saat berpindah — cukup ganti nilai `BASE_URL` di satu tempat.
 
-### G5. Yang perlu ditanyakan ke client
+**Urutan yang disepakati (lihat H7b):** jalan dengan server sendiri → tunjukkan ke client sampai **puas** → baru **minta Live API**. Revisinya kecil.
 
-Pertanyaan ini sudah tercatat di bagian **E** dan **H7**:
+### G5. Yang perlu ditanyakan ke client — ✅ SEBAGIAN BESAR TERJAWAB (20 Okt 2026)
 
-| # | Pertanyaan | Kenapa penting |
+| # | Pertanyaan | Status |
 |---|---|---|
-| E1 | Apakah data akan diperbarui berkala, atau hanya snapshot 14 Okt 2026? | Menentukan apakah perlu mekanisme impor ulang |
-| E2 | Apakah client masih akan menyediakan API live di `tokomedia.org`? | **Sudah terjawab: ya, di port 8009** |
-| E5 | Apakah client mengizinkan Bapak self-host permanen? | Menentukan legalitas penempatan |
-| H7-2 | Apakah IT client bersedia menambahkan CORS di Live API? | Menentukan apakah browser bisa memakai Live API |
-| H7-3 | Apakah IT client bersedia menerima endpoint `category/tree` + `aplikasi/list`? | Tanpa ini UI tidak jalan penuh di Live API |
+| E1 | Apakah data akan diperbarui berkala, atau hanya snapshot 14 Okt 2026? | ⬜ **Masih terbuka** — satu-satunya yang perlu ditanya sekarang |
+| E2 | Apakah client masih akan menyediakan API live di `tokomedia.org`? | ✅ Terjawab — ada di port 8009, tapi **tidak dimaksudkan dipakai** |
+| E5 | Apakah client mengizinkan Bapak self-host permanen? | ✅ Terjawab — **diizinkan** |
+| H7-2 | Apakah IT bersedia menambahkan CORS di Live API? | ✅ Terjawab — **tidak perlu** |
+| H7-3 | Apakah IT bersedia menerima endpoint `category/tree` + `aplikasi/list`? | ✅ Terjawab — **tidak perlu** |
 
-**Kalimat siap kirim ke client:**
+> ⚠️ **JANGAN kirim permintaan CORS sekarang.** Client sudah menegaskan "tidak perlu pakai live API". Meminta CORS sekarang akan terkesan tidak menyimak. Permintaan Live API ditunda ke **tahap 2** (setelah client puas) — lihat **H7b**.
+
+**Kalimat siap kirim ke client — HANYA menanyakan pembaruan data (E1):**
 
 > Selamat pagi. Terima kasih atas source code API dan database TM yang sudah dikirim, serta penjelasan mengenai Live mode dan Developer mode.
 >
-> Kami sudah berhasil memasang API salinan di server kami sendiri dan berjalan normal. Kami juga sudah menemukan bahwa Live API Bapak/Ibu aktif di `https://tokomedia.org:8009/index.php/api/` dan token yang kami terima berfungsi di sana.
+> Kami sudah berhasil memasang API tersebut di server kami sendiri dan berjalan normal. Sesuai arahan Bapak/Ibu, kami jalankan sendiri (self-host) dan tidak memakai Live API.
 >
-> Namun ada 2 hal yang perlu kami pastikan:
+> Ada satu hal yang perlu kami pastikan: **apakah data video akan diperbarui secara berkala?**
 >
-> **Pertama, mengenai CORS.** Live API belum mengirimkan header `Access-Control-Allow-Origin`, sehingga aplikasi berbasis browser (seperti versi web kami di GitHub Pages) tidak dapat memanggilnya langsung. Mohon kirimkan ijin akses untuk origin `https://suwandhih.github.io`.
+> Karena yang kami terima adalah salinan database per 14 Oktober 2026, maka data di server kami akan tetap seperti itu dan tidak ikut bertambah bila ada video baru di sisi Bapak/Ibu.
 >
-> **Kedua, mengenai kelengkapan endpoint.** Pada Live API, endpoint `category/tree` dan `aplikasi/list` belum tersedia (mengembalikan 404). Kedua endpoint ini kami perlukan untuk menampilkan menu kategori dan daftar aplikasi. Mohon informasi apakah kedua endpoint tersebut dapat ditambahkan ke Live API.
+> Mohon informasinya:
 >
-> **Ketiga, mengenai pembaruan data.** Karena salinan database yang kami terima adalah per 14 Oktober 2026, data di server kami tidak akan bertambah bila ada video baru. Mohon informasi apakah akan ada pembaruan data berkala, atau apakah kami sebaiknya mengarahkan aplikasi ke Live API Bapak/Ibu.
+> 1. Apakah akan ada **dump database terbaru** yang dikirim berkala (misalnya setiap bulan)? Bila ya, kami akan mengimpor ulang — tidak perlu mengunggah ulang kode API.
+> 2. Atau apakah Bapak/Ibu berkenan **membuka akses Live API** untuk aplikasi kami? Bila ya, kami hanya perlu ijin akses (CORS) untuk origin `https://suwandhih.github.io`, dan endpoint `category/tree` serta `aplikasi/list` yang kami perlukan untuk menu kategori dan daftar aplikasi.
 >
-> Mohon informasinya agar kami dapat menentukan langkah yang tepat. Terima kasih.
+> Kami siap dengan kedua kemungkinan tersebut. Mohon arahannya. Terima kasih.
+
+**Kalimat siap kirim — TAHAP 2 (setelah client puas, sesuai strategi H7b):**
+
+> Selamat pagi. Terima kasih atas masukannya selama ini — kami senang Bapak/Ibu puas dengan hasilnya.
+>
+> Sebagai langkah lanjutan, kami ingin menanyakan kemungkinan **memakai Live API** Bapak/Ibu agar data di aplikasi kami selalu ter-update otomatis tanpa perlu impor manual.
+>
+> Yang kami perlukan hanya 2 hal:
+>
+> 1. **Ijin akses (CORS)** untuk origin `https://suwandhih.github.io` pada Live API di `https://tokomedia.org:8009/index.php/api/`.
+> 2. **Endpoint `category/tree` dan `aplikasi/list`** — saat ini keduanya belum tersedia di Live API (mengembalikan 404), padahal kami perlukan untuk menu kategori dan daftar aplikasi.
+>
+> Perubahan di sisi kami sangat kecil — cukup mengganti satu alamat server. Tidak ada perubahan tampilan maupun fitur.
+>
+> Mohon informasinya apakah hal ini memungkinkan. Terima kasih.
 
 ### G6. Bila client memilih Pilihan 2 (impor ulang berkala)
 
@@ -673,21 +721,54 @@ Live API client **tidak punya CORS**, tetapi **Android tidak terpengaruh CORS**:
 
 > ⚠️ Endpoint `category/tree` dan `aplikasi/list` tetap tidak ada di Live API, jadi Android pun tidak bisa memakai keduanya dari sana.
 
-### H7. Yang perlu ditanyakan ke IT client
+### H7. Yang perlu ditanyakan ke IT client — ✅ TERJAWAB SEBAGIAN (20 Okt 2026)
 
-| # | Pertanyaan |
-|---|---|
-| 1 | Apakah port **8009** (`https://tokomedia.org:8009/index.php`) memang Live API resmi yang boleh dipakai aplikasi? |
-| 2 | Apakah IT client bersedia **menambahkan CORS** di Live API (origin `https://suwandhih.github.io`)? |
-| 3 | Apakah IT client bersedia **menerima endpoint baru** `category/tree` dan `aplikasi/list` (dari pekerjaan "API Prioritas 2")? |
-| 4 | Apakah Live API memakai token yang **sama** dengan salinan yang dikirim ke kami? (Hasil uji: **ya, sama**) |
-| 5 | Mana yang IT client maksud dengan "sama"? Apakah salinan = Live API versi lama, atau ada versi live yang lebih baru? |
+**Pesan IT client (20 Okt 2026):**
+
+> ini source code API dan database TM. jadi ini bisa diinstal sendiri, boleh di hosting atau localhost (laptop sendiri)
+> Jadi bisa simulasi sendiri API call nya.
+> jadi tidak perlu pakai live API yg ada batasan CORS.
+
+**Pembacaan Bapak:** *"IT client tidak berharap sistem baru live."* — **tepat.** Client tidak menawarkan Live API sebagai layanan; yang ditawarkan adalah **source code untuk dipasang sendiri**.
+
+| # | Pertanyaan | Status | Jawaban |
+|---|---|---|---|
+| 1 | Apakah port **8009** Live API resmi yang boleh dipakai aplikasi? | ✅ **Terjawab** | **Tidak ditawarkan.** Client justru menegaskan "tidak perlu pakai live API". Port 8009 adalah sistem produksi milik client sendiri, bukan layanan untuk aplikasi Bapak. |
+| 2 | Apakah IT bersedia menambahkan **CORS** di Live API? | ✅ **Terjawab** | **Tidak perlu** — karena Live API memang tidak dimaksudkan dipakai. |
+| 3 | Apakah IT bersedia menerima endpoint baru `category/tree` + `aplikasi/list`? | ✅ **Terjawab** | **Tidak perlu** — alasan sama. |
+| 4 | Apakah Live API memakai token yang **sama**? | ✅ Terjawab (uji) | **Ya, sama.** |
+| 5 | Mana yang dimaksud "sama"? | ✅ **Terjawab** | Salinan = versi yang sama dengan Live API, hanya bisa dijalankan di lokal/hosting sendiri. |
+| E5 | Apakah client mengizinkan self-host permanen? | ✅ **Terjawab** | **Ya** — "boleh di hosting atau localhost (laptop sendiri)". |
+
+**Kesimpulan:** self-host **bukan sekadar pilihan yang lebih aman — itu jalur yang memang dimaksudkan client.** Karena itu permintaan ijin CORS ke IT client **tidak diperlukan lagi**.
+
+**Yang masih terbuka:** hanya **E1 — pembaruan data**. Salinan yang diterima adalah snapshot beku 14 Okt 2026. Client belum menyebut apakah akan mengirim dump baru berkala.
+
+### H7b. Strategi Bapak (20 Okt 2026)
+
+> *"Jika dia sudah puas, minta live — tidak terlalu jauh untuk revisi."*
+
+| Tahap | Isi | Alasan |
+|---|---|---|
+| **1. Sekarang** | Jalan dengan **server sendiri** (`suwandhih.site.je`). Tunjukkan versi web + Android ke client sampai **client puas**. | Client sudah menyetujui jalur ini. Tidak ada yang perlu diminta ke IT. |
+| **2. Setelah client puas** | Baru **minta Live API** (CORS + endpoint yang kurang). | Posisi tawar lebih kuat: client sudah melihat hasilnya, jadi permintaan terasa wajar. |
+| **3. Revisi kecil** | Bila Live API diberikan, cukup ganti **1 baris** `apiBase` di `index.html` dan **1 nilai** `BASE_URL` di Android. | Tidak ada perubahan arsitektur. Tidak perlu build ulang UI. |
+
+**Kenapa strategi ini tepat:**
+
+1. **Tidak memblokir pekerjaan** — Bapak bisa terus maju tanpa menunggu IT client.
+2. **Risiko rendah** — bila Live API tidak pernah diberikan, sistem tetap jalan penuh.
+3. **Revisi memang kecil** — `apiBase` sudah dirancang bisa diganti lewat `config.local.js` atau `?api=` tanpa menyentuh kode.
+4. **Posisi tawar lebih baik** — meminta setelah client puas jauh lebih mudah daripada meminta di awal.
 
 ### H8. Rencana berikutnya
 
 | # | Rencana | Status |
 |---|---|---|
 | 1 | Tetap pakai server sendiri untuk UI — jalankan D1 (perbaiki CORS) | ⬜ Menunggu Bapak |
-| 2 | Tambahkan `?api=https://tokomedia.org:8009/index.php/api` sebagai cara uji cepat live API | ⬜ Belum |
+| 2 | ~~Tambahkan `?api=https://tokomedia.org:8009/index.php/api` sebagai cara uji cepat live API~~ | ❌ **Dibatalkan** — Live API tidak dimaksudkan dipakai |
 | 3 | Android: buat `BASE_URL` di satu tempat agar bisa diganti tanpa build ulang | ⬜ Belum (bagian D6) |
-| 4 | Tanyakan 5 pertanyaan di H7 ke IT client | ⬜ Belum ditanya |
+| 4 | ~~Tanyakan 5 pertanyaan di H7 ke IT client~~ | ✅ **Selesai** — terjawab lewat pesan 20 Okt 2026 |
+| 5 | **Tunjukkan hasil ke client sampai puas** (versi web + Android) | ⬜ Belum |
+| 6 | **Setelah client puas → minta Live API** (CORS + endpoint kurang) | ⬜ Menunggu tahap 5 |
+| 7 | Tanyakan **E1** saja: apakah ada pembaruan data berkala? | ⬜ Belum ditanya |

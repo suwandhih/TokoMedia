@@ -1,5 +1,19 @@
 # Permintaan Ijin Akses API TokoMedia
 
+> ## ⛔ TIDAK DIPERLUKAN LAGI — 20 Oktober 2026
+>
+> **Berkas ini disimpan hanya sebagai catatan sejarah. JANGAN dikirim ke tim IT client.**
+>
+> **Alasannya:** pada 20 Oktober 2026 tim IT client menegaskan:
+>
+> > *"ini source code API dan database TM. jadi ini bisa diinstal sendiri, boleh di hosting atau localhost (laptop sendiri). Jadi bisa simulasi sendiri API call nya. **jadi tidak perlu pakai live API yg ada batasan CORS.**"*
+>
+> Jadi client **tidak menawarkan Live API** untuk aplikasi ini — yang ditawarkan adalah **source code untuk dipasang sendiri**. Meminta ijin CORS sekarang akan terkesan tidak menyimak arahan mereka.
+>
+> **Yang berlaku sekarang:** self-host di `suwandhih.site.je` (sudah jalan). Lihat `rencanakerja.md` bagian **H7**, **H7b**, dan **G5**.
+>
+> **Bila nanti Live API tetap diperlukan** (setelah client puas dengan hasilnya), permintaan disusun ulang memakai kalimat **"Tahap 2"** di `rencanakerja.md` bagian **G5** — bukan berkas ini.
+
 **Untuk:** Tim IT pengelola server `tokomedia.org`
 **Dari:** Pengelola antarmuka web TokoMedia (`https://suwandhih.github.io/TokoMedia/`)
 **Tanggal:** 20 Oktober 2026
