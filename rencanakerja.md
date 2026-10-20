@@ -11,7 +11,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 
 | # | Tahap Pekerjaan Android | Status | Estimasi | Keterangan |
 |---|---|---|---|---|
-| **A1** | **Setup Network Client (Retrofit & OkHttp)** | ⬜ BELUM | ±3 menit | Tambah dependensi Retrofit 2 + Gson/Moshi di uild.gradle.kts |
+| **A1** | **Setup Network Client (Retrofit & OkHttp)** | ⬜ BELUM | ±3 menit | Tambah dependensi Retrofit 2 + Gson/Moshi di uild.gradle.kts |
 | **A2** | **Konstruksi API Interface & Data Models** | ⬜ BELUM | ±7 menit | Model DTO untuk Region, Bahasa, Video, dan Service interface |
 | **A3** | **Integrasi API ke Layar HomeScreen & VideoList** | ⬜ BELUM | ±10 menit | Ganti MockData.kt dengan data dinamis dari Live API |
 | **A4** | **Build & Verifikasi APK (Debug)** | ⬜ BELUM | ±5 menit | Kompilasi via Gradle dan uji konektivitas data asli |
@@ -556,7 +556,7 @@ Token tetap dibaca dari `window.TM_CONFIG` (tidak ditulis di `index.html`).
 **Jawaban pertanyaan Bapak:** Android **tidak perlu script ijin tambahan**. CORS hanya berlaku di browser; aplikasi Android asli tidak mengirim header `Origin`, jadi tidak akan diblokir. Android memakai endpoint yang sama dengan UI.
 
 **Langkah:**
-1. Tambah Retrofit + OkHttp di `app/build.gradle.kts`.
+1. Tambah Retrofit + OkHttp di `app/build.gradle.kts`.
 2. Buat lapisan API (model + service) memakai envelope `{status, message, data}`.
 3. Ganti `MockData.kt` dengan data dari API.
 4. Uji di perangkat/emulator.
