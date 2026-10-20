@@ -422,6 +422,18 @@ Rentetan ini membuktikan permintaan dari origin yang sama **sungguh sampai ke se
 
 **Kendala:** berkas UI saat ini **208.515 byte** (208 KB, satu berkas mandiri). InfinityFree biasanya membatasi ukuran berkas, jadi perlu diuji. Cara unggah: File Manager → **Upload** (halaman **tidak** kena tantangan, yang kena hanya permintaan `fetch`).
 
+**Catatan tambahan — token di UI live GitHub Pages saat ini KOSONG.** Diperiksa 20 Okt 2026:
+
+| Yang diperiksa | Hasil |
+|---|---|
+| `apiBase` di `index.html` live | `https://suwandhih.site.je/index.php/api` ✅ |
+| `config.local.js` di GitHub Pages | **404** — tidak ada |
+| Token literal di `index.html` | tidak ada ✅ (memang benar, jangan ditulis) |
+
+Artinya UI live **belum punya token**, sehingga `apiPost()` langsung menolak dengan pesan *"Token API belum dikonfigurasi"* — API tidak pernah dipanggil. Jadi ada **2 hal** yang harus beres, bukan 1: (a) origin/CORS, dan (b) token. Bila UI dipindah ke InfinityFree, token bisa ditaruh di `config.local.js` **di server itu** (tidak masuk Git) — satu origin, langsung jalan.
+
+**Saran penempatan:** taruh di `htdocs/ui/index.html` → alamat `https://suwandhih.site.je/ui/`. Ini menghindari benturan dengan `index.php` (CodeIgniter) yang sudah memakai `/`.
+
 ### C25. Cloudflare TIDAK BISA dipakai untuk `suwandhih.site.je` — ✅ TERBUKTI (20 Okt 2026)
 
 **Kesimpulan:** pilihan "pasang Cloudflare" di **D7 nomor 1** **tidak mungkin dijalankan** dan sudah dicoret.
