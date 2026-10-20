@@ -943,6 +943,33 @@ return array(
 > **wajib diganti (rotasi) saat deploy**. Token baru **tidak boleh** ditulis di
 > `index.html`. Simpan di `config.local.js` (tidak ikut Git) atau lewat
 > environment variable `TM_API_TOKEN` di server.
+>
+> **Status pembersihan (20 Okt 2026):** token API dan password SMTP sudah dihapus
+> dari seluruh riwayat Git, lalu riwayat ditulis ulang (`git filter-repo`) dan
+> di-*force-push*. Hasil: tidak ada lagi di riwayat maupun di berkas terlacak.
+>
+> ⚠️ **Catatan penting:** GitHub masih dapat melayani *object* commit lama bila
+> SHA-nya diketahui langsung (`raw.githubusercontent.com/<owner>/<repo>/<SHA>/...`).
+> Karena itu rotasi token tetap **wajib**, bukan opsional. Pembersihan riwayat saja
+> tidak cukup untuk membatalkan token yang sudah bocor.
+
+### 🚫 Jangan pernah tulis token di berkas yang ikut Git
+
+Berkas paling berbahaya: **`index.html`** pada root repositori. Berkas itu ikut
+Git dan dipublikasikan ke GitHub Pages, sehingga token di dalamnya terbaca oleh
+siapa pun — termasuk tersimpan di riwayat Git walaupun nanti dihapus.
+
+Cara yang benar untuk antarmuka web:
+
+| Cara | Berkas | Ikut Git? |
+|---|---|---|
+| Konfigurasi runtime lokal | `config.local.js` | ❌ tidak (di-`.gitignore`) |
+| Variabel lingkungan server | `TM_API_TOKEN` | ❌ tidak |
+| Konfigurasi API server | `secrets.local.php` | ❌ tidak (di-`.gitignore`) |
+
+Salin `config.example.js` menjadi `config.local.js`, lalu isi tokennya.
+`index.html` akan memuat berkas itu otomatis saat halaman dibuka. Bila token belum
+diisi, UI **tetap berjalan** memakai data tertanam di dalam halaman.
 
 ### Prioritas 2 — Agar API bisa menggantikan website ✅ **SELESAI**
 
