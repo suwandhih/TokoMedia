@@ -25,6 +25,7 @@
 | [E](#e-pertanyaan-terbuka-untuk-client) | Pertanyaan Terbuka untuk Client |
 | [F](#f-catatan-penting) | Catatan Penting |
 | [G](#g-penempatan-api-client--sinkronisasi-data) | **Penempatan API Client & Sinkronisasi Data** |
+| [H](#h-temuan-live-api-client-20-okt-2026) | **Temuan: Live API Client (20 Okt 2026)** |
 
 ---
 
@@ -56,6 +57,8 @@
 | 22 | **Sambungkan aplikasi Android ke API** | ⬜ BELUM | — |
 | 23 | **Jawab pertanyaan penempatan API client (arsitektur sinkronisasi data)** | ✅ SELESAI | 20 Okt 2026 |
 | 24 | **Buat panduan `PERBAIKAN-CORS-INFINITYFREE.md`** | ✅ SELESAI | 20 Okt 2026 |
+| 25 | **Temukan Live API client di `tokomedia.org:8009` (sebelumnya disangka belum dipasang)** | ✅ SELESAI | 20 Okt 2026 |
+| 26 | **Petakan endpoint Live API client vs salinan sendiri** | ✅ SELESAI | 20 Okt 2026 |
 
 ---
 
@@ -63,19 +66,29 @@
 
 ```mermaid
 flowchart LR
-    A["UI TokoMedia<br/>GitHub Pages<br/>suwandhih.github.io/TokoMedia"] -->|"POST + token<br/>via internet"| B["API CodeIgniter 3<br/>InfinityFree<br/>suwandhih.site.je"]
-    B --> C[("MySQL<br/>InfinityFree<br/>16.586 video")]
-    D["Aplikasi Android<br/>(belum tersambung)"] -.->|"rencana"| B
+    A["UI TokoMedia<br/>GitHub Pages<br/>suwandhih.github.io/TokoMedia"] -->|"POST + token"| B["API Salinan<br/>InfinityFree<br/>suwandhih.site.je"]
+    B --> C[("MySQL<br/>InfinityFree<br/>16.586 video<br/>snapshot 14 Okt 2026")]
+    D["Aplikasi Android<br/>(rencana: bisa dikonfigurasi)"] -.->|"default"| B
+    D -.->|"alternatif"| E
+    F["UI via ?api="] -.->|"uji cepat"| E
+    E["Live API Client<br/>tokomedia.org:8009<br/>CodeIgniter 3.1.13<br/>PHP 5.6.29"]
+    E --> G[("TM DB<br/>MySQL client<br/>data real-time")]
+    A -.->|"❌ diblokir CORS"| E
 ```
+
+> **Catatan (20 Okt 2026):** Live API client **ternyata sudah ada** di `tokomedia.org:8009` — sebelumnya disangka belum dipasang. Namun Live API (a) **tidak punya CORS**, dan (b) **belum punya** endpoint `category/tree` + `aplikasi/list` yang wajib dipakai UI. Karena itu server sendiri tetap menjadi pilihan utama. Rincian di bagian **H**.
 
 | Bagian | Tempat | Status |
 |---|---|---|
 | Tampilan (`index.html`) | GitHub Pages | ✅ Jalan |
-| API (PHP CodeIgniter 3) | InfinityFree `suwandhih.site.je` | ✅ Terpasang & jalan |
-| Database (16.586 video) | MySQL InfinityFree | ✅ Terisi |
-| Aplikasi Android | Lokal (belum rilis) | ⬜ Masih data statis |
+| API salinan (PHP CodeIgniter 3) | InfinityFree `suwandhih.site.je` | ✅ Terpasang & jalan — **dipakai UI** |
+| Database (16.586 video) | MySQL InfinityFree | ✅ Terisi (snapshot 14 Okt 2026) |
+| Live API client | `tokomedia.org:8009` | ✅ **Jalan** — tapi tanpa CORS & endpoint tidak lengkap |
+| Database live client | MySQL client | ✅ Real-time (data asli) |
+| Aplikasi Android | Lokal (belum rilis) | ⬜ Masih data statis — rencana bisa dikonfigurasi |
 
 **Akun InfinityFree:** `if0_43217990` — domain `suwandhih.site.je` — HTTPS valid.
+**Live API client:** `https://tokomedia.org:8009/index.php/api/` — Apache/2.2.15 (CentOS), PHP 5.6.29, CodeIgniter 3.1.13.
 
 ---
 
@@ -239,6 +252,45 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.
 - Bagian 8 "Troubleshooting CORS" ditambah (baru).
 - Tabel "Catatan teknis" ditambah 4 baris.
 
+### C21. Temukan Live API client di `tokomedia.org:8009` — ✅ SELESAI (20 Okt 2026)
+
+**Latar:** IT client mengirim gambar yang menjelaskan ada 2 mode: **Live mode** (TM App → Live API → TM DB MySQL) dan **Developer mode** (TM web mobile → TM API copy → TM_DB copy). Dari gambar itu terlihat Live API berada di `tokomedia.org:8009`.
+
+**Kesimpulan lama yang SALAH:** sebelumnya disimpulkan "API client belum dipasang di `tokomedia.org`" — itu keliru, karena yang diuji waktu itu adalah `https://www.tokomedia.org/api/index.php/api` (jalur salah, mengembalikan halaman login HTML). Jalur yang benar memakai **port 8009**.
+
+**Hasil uji langsung:**
+
+| Uji | Hasil |
+|---|---|
+| TCP port 8009 | ✅ terbuka |
+| `GET https://tokomedia.org:8009/index.php` | HTTP 200 — halaman selamat datang CodeIgniter 3.1.13 |
+| Server | Apache/2.2.15 (CentOS), PHP/5.6.29 |
+| `POST .../index.php/api/vkitab` + token | ✅ `{"status":200,"message":"Success",...}` |
+| `POST .../index.php/api/other/latestvideo` | ✅ data video nyata |
+| `POST .../index.php/api/category/tree` | ❌ 404 — tidak ada di Live API |
+| `POST .../index.php/api/aplikasi/list` | ❌ 404 — tidak ada di Live API |
+| Header CORS | ❌ **tidak ada `Access-Control-Allow-Origin` sama sekali** |
+| Token yang sama | ✅ berfungsi di Live API **dan** di salinan sendiri |
+
+**Peta endpoint Live API vs salinan sendiri:**
+
+| Endpoint | Live API | Salinan sendiri | Dipakai UI? |
+|---|---|---|---|
+| `vkitab`, `vkitab/detail`, `vkitab/language` | ✅ | ✅ | ✅ |
+| `ckitab`, `ckitab/detail` | ✅ | ✅ | ✅ |
+| `riwayat`, `riwayat/detail` | ✅ | ✅ | ✅ |
+| `ikatan`, `other`, `other/latestvideo`, `contact` | ✅ | ✅ | ✅ |
+| `aplikasi`, `aplikasi/detail` | ✅ | ✅ | ✅ |
+| **`category/tree`** | ❌ 404 | ✅ | ✅ **YA** |
+| **`aplikasi/list`** | ❌ 404 | ✅ | ✅ **YA** |
+| `audio`, `media`, `search`, `other/slideshow`, `other/config`, `contact/send`, `ikatan/detail` | ❌ 404 | ✅ | — |
+
+**Akibat penting:** UI memanggil 3 endpoint saat mulai — `category/tree` (❌ tidak ada di Live), `other/latestvideo` (✅ ada), `aplikasi/list` (❌ tidak ada di Live). Jadi **UI tidak bisa jalan penuh di Live API** walaupun CORS diperbaiki. Ini memperkuat keputusan Bapak untuk tetap memakai server sendiri.
+
+**Catatan:** endpoint yang 404 di Live API itu **persis endpoint yang dibuat pada pekerjaan "API Prioritas 2" (19 Okt 2026)** — hanya ada di salinan Bapak dan belum pernah dikirim ke client.
+
+**Tindak lanjut:** seluruh temuan dicatat di bagian **H**; keputusan Bapak dicatat di **H5**; pertanyaan untuk IT client di **H7**.
+
 ---
 
 ## D. TAHAP BARU
@@ -401,6 +453,8 @@ Token tetap dibaca dari `window.TM_CONFIG` (tidak ditulis di `index.html`).
 
 ### G1. Jawaban singkat
 
+> ⚠️ **DIPERBARUI 20 Okt 2026:** bagian ini awalnya menyimpulkan "API live client belum dipasang". **Kesimpulan itu KELIRU** — Live API ternyata ada di `tokomedia.org:8009`. Lihat bagian **H** untuk temuan lengkap. Inti jawabannya tetap sama: menyalin API **tidak** membuat data ter-update otomatis.
+
 **Menyalin API client ke server sendiri TIDAK membuat data ikut ter-update otomatis.**
 
 Yang Bapak terima dari client adalah **2 hal yang berbeda sifatnya**:
@@ -414,12 +468,14 @@ Jadi kalau client menambah video baru di server mereka, **server Bapak tidak aka
 
 ### G2. Kenapa tidak ada jalur otomatis
 
+> ⚠️ **DIPERBARUI 20 Okt 2026:** diagram di bawah awalnya menandai "API client BELUM dipasang". Ternyata **sudah ada** di `tokomedia.org:8009`. Yang tetap benar: **tidak ada jalur data otomatis** dari database client ke database Bapak.
+
 ```mermaid
 flowchart TB
     subgraph CLIENT["Server Client — tokomedia.org"]
-        CDB[("Database client<br/>data asli & terus berubah")]
-        CAPI["API client<br/>BELUM dipasang<br/>(balas halaman login HTML)"]
-        CDB -.->|"belum ada"| CAPI
+        CDB[("TM DB MySQL<br/>data asli & terus berubah")]
+        CAPI["Live API<br/>tokomedia.org:8009<br/>✅ JALAN"]
+        CDB --> CAPI
     end
 
     subgraph BAPAK["Server Bapak — suwandhih.site.je"]
@@ -428,19 +484,19 @@ flowchart TB
         BAPI --> BDB
     end
 
-    CAPI -.->|"❌ TIDAK ADA jalur data"| BDB
+    CAPI -.->|"❌ TIDAK ADA jalur data otomatis"| BDB
 
     UI["UI GitHub Pages"] --> BAPI
     AND["Aplikasi Android"] -.-> BAPI
 ```
 
-Titik putusnya: **tidak ada panah dari database client ke database Bapak.** Menyalin kode API hanya menyalin "mesin"-nya, bukan "isinya".
+Titik putusnya: **tidak ada panah dari database client ke database Bapak.** Menyalin kode API hanya menyalin "mesin"-nya, bukan "isinya". Live API client memang hidup, tetapi ia membaca **database client**, bukan database Bapak.
 
 ### G3. Tiga pilihan yang realistis
 
 | # | Cara | Data ter-update otomatis? | Usaha Bapak | Ketergantungan client |
 |---|---|---|---|---|
-| **1** | **Arahkan UI ke API live client** | ✅ Ya, real-time | Nol (setelah dipasang) | **Sangat tinggi** — client harus memasang API + menambah origin Bapak ke CORS |
+| **1** | **Arahkan UI ke API live client** | ✅ Ya, real-time | Nol (setelah CORS ditambah) | **Sangat tinggi** — client harus menambah CORS **dan** endpoint `category/tree` + `aplikasi/list` |
 | **2** | **Self-host + impor ulang berkala** | ⚠️ Hanya saat impor | Sedang (impor manual tiap kali) | Sedang — client harus mengirim dump baru |
 | **3** | **Hibrida (rekomendasi)** | ⚠️ Sekarang tidak, ✅ nanti bisa | Rendah | Rendah sekarang |
 
@@ -448,7 +504,7 @@ Titik putusnya: **tidak ada panah dari database client ke database Bapak.** Meny
 
 **Alasannya:**
 
-1. **Sekarang:** API client di `tokomedia.org` **belum dipasang** (balas halaman login HTML, bukan JSON). Jadi Pilihan 1 belum bisa dijalankan hari ini.
+1. **Live API client sudah ada** di `tokomedia.org:8009`, tetapi (a) **tidak punya CORS** sehingga browser diblokir, dan (b) **belum punya** endpoint `category/tree` + `aplikasi/list` yang wajib dipakai UI. Jadi Pilihan 1 belum bisa dijalankan hari ini.
 2. **Server Bapak sudah jalan** dan tidak bergantung pada siapa pun. Ini posisi paling aman.
 3. **Berpindah nanti sangat mudah** — hanya **1 baris** di `index.html`:
 
@@ -456,40 +512,43 @@ Titik putusnya: **tidak ada panah dari database client ke database Bapak.** Meny
 // Sekarang (server sendiri)
 apiBase: 'https://suwandhih.site.je/index.php/api',
 
-// Nanti (bila client sudah memasang API live)
-apiBase: 'https://www.tokomedia.org/api/index.php/api',
+// Nanti (bila client sudah menambah CORS + endpoint yang kurang)
+apiBase: 'https://tokomedia.org:8009/index.php/api',
 ```
 
 Bahkan tanpa mengubah berkas, bisa diuji lewat URL:
 
 ```
-https://suwandhih.github.io/TokoMedia/?api=https://www.tokomedia.org/api/index.php/api
+https://suwandhih.github.io/TokoMedia/?api=https://tokomedia.org:8009/index.php/api
 ```
 
 4. **Aplikasi Android tidak perlu diubah** saat berpindah — cukup ganti nilai `BASE_URL` di satu tempat.
 
 ### G5. Yang perlu ditanyakan ke client
 
-Pertanyaan ini sudah tercatat di bagian **E**:
+Pertanyaan ini sudah tercatat di bagian **E** dan **H7**:
 
 | # | Pertanyaan | Kenapa penting |
 |---|---|---|
 | E1 | Apakah data akan diperbarui berkala, atau hanya snapshot 14 Okt 2026? | Menentukan apakah perlu mekanisme impor ulang |
-| E2 | Apakah client masih akan menyediakan API live di `tokomedia.org`? | Menentukan apakah Pilihan 1 bisa dipakai |
+| E2 | Apakah client masih akan menyediakan API live di `tokomedia.org`? | **Sudah terjawab: ya, di port 8009** |
 | E5 | Apakah client mengizinkan Bapak self-host permanen? | Menentukan legalitas penempatan |
+| H7-2 | Apakah IT client bersedia menambahkan CORS di Live API? | Menentukan apakah browser bisa memakai Live API |
+| H7-3 | Apakah IT client bersedia menerima endpoint `category/tree` + `aplikasi/list`? | Tanpa ini UI tidak jalan penuh di Live API |
 
 **Kalimat siap kirim ke client:**
 
-> Selamat pagi. Terima kasih atas source code API dan database TM yang sudah dikirim.
+> Selamat pagi. Terima kasih atas source code API dan database TM yang sudah dikirim, serta penjelasan mengenai Live mode dan Developer mode.
 >
-> Kami sudah berhasil memasang API tersebut di server kami sendiri dan berjalan normal. Namun ada satu hal yang perlu kami pastikan:
+> Kami sudah berhasil memasang API salinan di server kami sendiri dan berjalan normal. Kami juga sudah menemukan bahwa Live API Bapak/Ibu aktif di `https://tokomedia.org:8009/index.php/api/` dan token yang kami terima berfungsi di sana.
 >
-> **Apakah data video akan diperbarui secara berkala?** Karena yang kami terima adalah salinan database per 14 Oktober 2026, maka data di server kami akan tetap seperti itu dan tidak ikut bertambah bila ada video baru di sisi Bapak/Ibu.
+> Namun ada 2 hal yang perlu kami pastikan:
 >
-> Ada 2 kemungkinan yang kami siapkan:
+> **Pertama, mengenai CORS.** Live API belum mengirimkan header `Access-Control-Allow-Origin`, sehingga aplikasi berbasis browser (seperti versi web kami di GitHub Pages) tidak dapat memanggilnya langsung. Mohon kirimkan ijin akses untuk origin `https://suwandhih.github.io`.
 >
-> 1. **Bila Bapak/Ibu memasang API live** di `tokomedia.org`, kami cukup mengarahkan aplikasi kami ke alamat tersebut. Mohon tambahkan origin `https://suwandhih.github.io` ke daftar ijin CORS di server Bapak/Ibu. Dengan cara ini data kami selalu ter-update otomatis.
-> 2. **Bila API live belum tersedia**, mohon kirimkan dump database terbaru secara berkala (misalnya setiap bulan), agar kami dapat memperbarui data di server kami.
+> **Kedua, mengenai kelengkapan endpoint.** Pada Live API, endpoint `category/tree` dan `aplikasi/list` belum tersedia (mengembalikan 404). Kedua endpoint ini kami perlukan untuk menampilkan menu kategori dan daftar aplikasi. Mohon informasi apakah kedua endpoint tersebut dapat ditambahkan ke Live API.
+>
+> **Ketiga, mengenai pembaruan data.** Karena salinan database yang kami terima adalah per 14 Oktober 2026, data di server kami tidak akan bertambah bila ada video baru. Mohon informasi apakah akan ada pembaruan data berkala, atau apakah kami sebaiknya mengarahkan aplikasi ke Live API Bapak/Ibu.
 >
 > Mohon informasinya agar kami dapat menentukan langkah yang tepat. Terima kasih.
 
@@ -518,3 +577,117 @@ SELECT COUNT(*) FROM category;  -- sebelumnya 321
 | Kalau client update data, server Bapak ikut ter-update? | **Tidak otomatis.** Perlu salah satu: (a) client memasang API live, atau (b) client mengirim dump baru untuk diimpor. |
 | Apakah perlu pindah server nanti? | **Tidak wajib.** Bila client memasang API live, cukup ganti 1 baris `apiBase`. |
 | Apakah Android perlu script ijin tambahan? | **Tidak.** CORS hanya berlaku di browser. Android native tidak mengirim header `Origin`. |
+
+---
+
+## H. Temuan: Live API Client (20 Okt 2026)
+
+> ⚠️ **Bagian ini MEMPERBAIKI kesimpulan bagian G.** Kesimpulan lama "API live belum dipasang" ternyata **KELIRU** — alamatnya saja yang salah.
+
+### H1. Apa yang terjadi
+
+Gambar dari IT client menunjukkan bahwa **Live API ada di port 8009**, bukan di folder `/api/`:
+
+| Mode | Alur |
+|---|---|
+| **Live mode** | TM App → Live API `https://tokomedia.org:8009/index.php` → TM DB MySQL · Live Website `tokomedia.org` → TM DB MySQL |
+| **Developer mode** | TM web mobile → TM API copy (bisa dipasang lokal pakai XAMPP) → TM_DB copy |
+
+**Kesalahan lama:** saya menguji `https://www.tokomedia.org/api/index.php/api` → dapat halaman login HTML → saya simpulkan "API belum dipasang". Padahal API live ada di **port 8009**, bukan di path `/api/`.
+
+### H2. Hasil uji langsung `https://tokomedia.org:8009/`
+
+| Uji | Hasil |
+|---|---|
+| TCP port 8009 terbuka | ✅ Ya |
+| `GET /index.php` | ✅ HTTP 200 — halaman sambutan **CodeIgniter 3.1.13** (PHP 5.6.29, Apache/2.2.15 CentOS) |
+| `POST /index.php/api/vkitab` + token | ✅ `{"status":200,"message":"Success",...}` |
+| `POST /index.php/api/other/latestvideo` + token | ✅ Data video asli (mis. "Ikatan Ilahi 12 - Pembaharuan Ikatan - Indonesia") |
+| Path `/api/index.php/api/...` | ❌ 404 — **bukan** path ini |
+| Header CORS pada balasan | ❌ **Tidak ada** `Access-Control-Allow-Origin` sama sekali |
+
+**Kesimpulan penting:** **token yang sama berfungsi di kedua server.** Live API dan salinan Bapak memakai token yang identik.
+
+### H3. Peta endpoint: Live API vs Salinan Bapak
+
+| Endpoint | Live API `tokomedia.org:8009` | Salinan Bapak `suwandhih.site.je` | Dipakai UI? |
+|---|---|---|---|
+| `vkitab` | ✅ Ada | ✅ Ada | ✅ Ya |
+| `vkitab/detail` | ✅ Ada | ✅ Ada | ✅ Ya |
+| `vkitab/language` | ✅ Ada | ✅ Ada | ✅ Ya |
+| `ckitab` | ✅ Ada | ✅ Ada | ✅ Ya |
+| `ckitab/detail` | ✅ Ada | ✅ Ada | ✅ Ya |
+| `riwayat` | ✅ Ada | ✅ Ada | ✅ Ya |
+| `riwayat/detail` | ✅ Ada | ✅ Ada | ✅ Ya |
+| `ikatan` | ✅ Ada | ✅ Ada | ✅ Ya |
+| `other` | ✅ Ada | ✅ Ada | ✅ Ya |
+| `other/latestvideo` | ✅ Ada | ✅ Ada | ✅ Ya |
+| `contact` | ✅ Ada | ✅ Ada | ✅ Ya |
+| `aplikasi` | ✅ Ada (daftar wilayah) | ✅ Ada | ✅ Ya |
+| **`category/tree`** | ❌ **404 — TIDAK ADA** | ✅ Ada | ✅ **Ya (dipakai UI)** |
+| **`aplikasi/list`** | ❌ **404 — TIDAK ADA** | ✅ Ada | ✅ **Ya (dipakai UI)** |
+| `aplikasi/detail` | ✅ Ada | ✅ Ada | — |
+| `audio` | ❌ 404 | ✅ Ada | — |
+| `media` | ❌ 404 | ✅ Ada | — |
+| `search` | ❌ 404 | ✅ Ada | — |
+| `other/slideshow` | ❌ 404 | ✅ Ada | — |
+| `other/config` | ❌ 404 | ✅ Ada | — |
+| `contact/send` | ❌ 404 | ✅ Ada | — |
+| `ikatan/detail` | ❌ 404 | ✅ Ada | — |
+
+> **Catatan:** endpoint yang 404 di Live API adalah endpoint yang **dibuat pada pekerjaan "API Prioritas 2"** (19 Okt 2026) — jadi memang **hanya ada di salinan Bapak**, belum pernah dikirim ke client.
+
+### H4. Akibatnya bagi UI GitHub Pages
+
+UI Bapak memanggil 3 endpoint saat memuat data awal:
+
+```js
+apiPost('category/tree', {})              // ❌ TIDAK ADA di Live API
+apiPost('other/latestvideo', {per_page:12}) // ✅ ada
+apiPost('aplikasi/list', {page:1,per_page:100}) // ❌ TIDAK ADA di Live API
+```
+
+**Artinya: UI TIDAK AKAN jalan penuh di Live API client**, walaupun CORS diperbaiki. Menu kategori dan daftar aplikasi akan kosong. Karena itu **keputusan Bapak: tetap pakai server sendiri** sudah tepat.
+
+### H5. Keputusan Bapak (20 Okt 2026)
+
+| Pertanyaan | Keputusan |
+|---|---|
+| Target UI GitHub Pages | **A. Tetap server sendiri** (`suwandhih.site.je`) — sudah jalan, tidak bergantung client |
+| Target aplikasi Android | **C. Bisa dikonfigurasi** — default server sendiri, bisa diganti |
+| Perlu pindah server? | Belum perlu. Server sendiri lebih lengkap dan mandiri. |
+
+**Alasan:** Live API client **tidak punya** `category/tree` dan `aplikasi/list` yang wajib dipakai UI, dan **tidak punya CORS** sehingga browser tetap diblokir.
+
+### H6. Peluang untuk Android (penting)
+
+Live API client **tidak punya CORS**, tetapi **Android tidak terpengaruh CORS**:
+
+| | Browser (UI GitHub Pages) | Android native |
+|---|---|---|
+| Kirim header `Origin`? | ✅ Ya | ❌ Tidak |
+| Terkena aturan CORS? | ✅ Ya | ❌ **Tidak** |
+| Bisa pakai Live API tanpa perubahan? | ❌ Tidak | ✅ **Ya** |
+
+**Jadi Android BISA langsung memakai Live API client dan mendapat data real-time** tanpa perlu minta IT client menambahkan apa pun — dengan syarat endpoint yang dibutuhkan Android tersedia di Live API.
+
+> ⚠️ Endpoint `category/tree` dan `aplikasi/list` tetap tidak ada di Live API, jadi Android pun tidak bisa memakai keduanya dari sana.
+
+### H7. Yang perlu ditanyakan ke IT client
+
+| # | Pertanyaan |
+|---|---|
+| 1 | Apakah port **8009** (`https://tokomedia.org:8009/index.php`) memang Live API resmi yang boleh dipakai aplikasi? |
+| 2 | Apakah IT client bersedia **menambahkan CORS** di Live API (origin `https://suwandhih.github.io`)? |
+| 3 | Apakah IT client bersedia **menerima endpoint baru** `category/tree` dan `aplikasi/list` (dari pekerjaan "API Prioritas 2")? |
+| 4 | Apakah Live API memakai token yang **sama** dengan salinan yang dikirim ke kami? (Hasil uji: **ya, sama**) |
+| 5 | Mana yang IT client maksud dengan "sama"? Apakah salinan = Live API versi lama, atau ada versi live yang lebih baru? |
+
+### H8. Rencana berikutnya
+
+| # | Rencana | Status |
+|---|---|---|
+| 1 | Tetap pakai server sendiri untuk UI — jalankan D1 (perbaiki CORS) | ⬜ Menunggu Bapak |
+| 2 | Tambahkan `?api=https://tokomedia.org:8009/index.php/api` sebagai cara uji cepat live API | ⬜ Belum |
+| 3 | Android: buat `BASE_URL` di satu tempat agar bisa diganti tanpa build ulang | ⬜ Belum (bagian D6) |
+| 4 | Tanyakan 5 pertanyaan di H7 ke IT client | ⬜ Belum ditanya |
