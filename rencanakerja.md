@@ -1,16 +1,30 @@
 # 📋 RENCANA KERJA — TokoMedia
 
 > **Berkas ini adalah catatan tunggal semua pekerjaan TokoMedia.**
-> Setiap pekerjaan — selesai maupun belum — **wajib dicatat di sini**.
-> Tujuannya: tidak perlu membaca ulang percakapan chat yang panjang dan sulit dibaca.
->
-> **Aturan pencatatan:**
-> - Pekerjaan **selesai** → tetap dicatat, beri status `✅ SELESAI` + tanggal.
-> - Pekerjaan **baru** → langsung dicatat di bagian **TAHAP BARU** dengan status `⬜ BELUM`.
-> - Pekerjaan **sedang jalan** → status `🔄 PROSES`.
-> - Pekerjaan **tertahan** → status `⛔ TERTAHAN` + alasan.
->
-> **Terakhir diperbarui:** 20 Oktober 2026
+> **Status Terkini (20 Okt 2026):** Jalur web/CORS/hosting dihentikan (ditutup). Fokus penuh beralih ke **Pengembangan Aplikasi Android Native** yang langsung terhubung ke Live API client tanpa batasan CORS.
+
+---
+
+## 🚀 FOKUS UTAMA: BABAK BARU — PENGEMBANGAN ANDROID NATIVE
+
+Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di https://tokomedia.org:8009/index.php/api/ (bebas CORS, data live real-time).
+
+| # | Tahap Pekerjaan Android | Status | Estimasi | Keterangan |
+|---|---|---|---|---|
+| **A1** | **Setup Network Client (Retrofit & OkHttp)** | ⬜ BELUM | ±3 menit | Tambah dependensi Retrofit 2 + Gson/Moshi di uild.gradle.kts |
+| **A2** | **Konstruksi API Interface & Data Models** | ⬜ BELUM | ±7 menit | Model DTO untuk Region, Bahasa, Video, dan Service interface |
+| **A3** | **Integrasi API ke Layar HomeScreen & VideoList** | ⬜ BELUM | ±10 menit | Ganti MockData.kt dengan data dinamis dari Live API |
+| **A4** | **Build & Verifikasi APK (Debug)** | ⬜ BELUM | ±5 menit | Kompilasi via Gradle dan uji konektivitas data asli |
+
+---
+
+## 📌 KEPUTUSAN STRATEGIS (20 OKT 2026)
+1. **Web UI (index.html):** SELESAI & DIBEKUKAN. Berjalan stabil di GitHub Pages dengan data tertanam. Masalah CORS & tantangan anti-bot InfinityFree **resmi dihentikan/tidak dibahas lagi** untuk menghemat waktu.
+2. **Koneksi Android:** Langsung menembak **Live API Client** https://tokomedia.org:8009/index.php/api/. Android native tidak memiliki aturan CORS sehingga tidak ada hambatan browser.
+
+---
+
+## 🗄️ ARSIP CATATAN LAMA & RIWAYAT (DIBEKUKAN)
 
 ---
 
@@ -542,7 +556,7 @@ Token tetap dibaca dari `window.TM_CONFIG` (tidak ditulis di `index.html`).
 **Jawaban pertanyaan Bapak:** Android **tidak perlu script ijin tambahan**. CORS hanya berlaku di browser; aplikasi Android asli tidak mengirim header `Origin`, jadi tidak akan diblokir. Android memakai endpoint yang sama dengan UI.
 
 **Langkah:**
-1. Tambah Retrofit + OkHttp di `app/build.gradle.kts`.
+1. Tambah Retrofit + OkHttp di `app/build.gradle.kts`.
 2. Buat lapisan API (model + service) memakai envelope `{status, message, data}`.
 3. Ganti `MockData.kt` dengan data dari API.
 4. Uji di perangkat/emulator.
