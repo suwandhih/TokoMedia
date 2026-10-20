@@ -6,6 +6,8 @@ Aplikasi katalog media & Kitab Suci multi-bahasa daerah Nusantara berbasis arsit
 
 📋 **Rencana & Riwayat Kerja:** [rencanakerja.md](./rencanakerja.md) — catatan tunggal semua pekerjaan (selesai maupun baru).
 
+🔧 **Perbaikan CORS di hosting:** [PERBAIKAN-CORS-INFINITYFREE.md](./PERBAIKAN-CORS-INFINITYFREE.md) — panduan bila UI gagal memanggil API karena CORS.
+
 ---
 
 ## ✨ Fitur Utama
