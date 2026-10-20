@@ -17,7 +17,8 @@
 > ⚡ **4. ATURAN ANTI-LOOPING & GANTI CARA:**
 >    - Jika ada kendala/error, **DILARANG KERAS mengulangi cara/tindakan yang sama berkali-kali**.
 >    - Segera **ganti pendekatan/metode kerja**, atau **hentikan dan laporkan solusinya kepada Bapak**.
-> ⚡ **5. JANGAN tinggalkan sampah di script.** Kode tak terpakai wajib dihapus bersih.
+> ⚡ **5. JANGAN tinggalkan sampah di script.** Kode tak terpakai wajib dihapus bersih.  
+> ⚡ **6. CATAT SEMUA PEKERJAAN di `rencanakerja.md`** — selesai maupun baru. Jangan andalkan riwayat chat.
 
 ---
 
@@ -32,6 +33,7 @@
 | **A5** | **Perbaikan error = langsung kerjakan**, tetap backup dulu bila diperlukan. |
 | **A6** | **Tiap selesai satu butir → uji & lapor ke Bapak** sebelum melanjutkan hal lain. |
 | **A7** | **WAJIB selalu commit & push ke GitHub** setiap selesai merevisi dan menguji. |
+| **A8** | **WAJIB catat semua pekerjaan di `rencanakerja.md`** — pekerjaan selesai tetap dicatat dengan status `✅ SELESAI` + tanggal; pekerjaan baru langsung dicatat di bagian **TAHAP BARU**. Tujuannya agar tidak perlu membaca ulang percakapan chat. |
 
 ---
 

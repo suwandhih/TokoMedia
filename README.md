@@ -4,6 +4,8 @@ Aplikasi katalog media & Kitab Suci multi-bahasa daerah Nusantara berbasis arsit
 
 🌐 **Live Demo (GitHub Pages):** [https://suwandhih.github.io/TokoMedia/](https://suwandhih.github.io/TokoMedia/)
 
+📋 **Rencana & Riwayat Kerja:** [rencanakerja.md](./rencanakerja.md) — catatan tunggal semua pekerjaan (selesai maupun baru).
+
 ---
 
 ## ✨ Fitur Utama
