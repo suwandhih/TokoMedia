@@ -65,13 +65,25 @@ terpasang. Keduanya perlu dibantu dari sisi server.
 > **URL endpoint API yang benar dan sudah aktif**, beserta contoh satu request yang
 > berhasil.
 >
-> **3. Konfirmasi token**
+> **3. Rotasi token + pengikatan ke origin (WAJIB)**
 >
-> Mohon dipastikan token API yang kami pegang masih berlaku, dan sebaiknya
-> diterbitkan token baru karena token lama pernah tertulis terbuka di repositori
-> publik kami.
+> Mohon **diterbitkan token API yang baru** dan token lama **dinonaktifkan**. Alasannya:
+> token lama pernah tertulis terbuka di repositori publik kami, sehingga harus
+> dianggap sudah bocor.
 >
-> Setelah poin 1–3 selesai, kami akan langsung melakukan pengujian dan melaporkan
+> Sebagai pengaman tambahan, mohon token baru tersebut **hanya berlaku bila request
+> datang dari origin `https://suwandhih.github.io`**. Dengan begitu, kalau token itu
+> suatu saat bocor lagi, token tersebut tidak bisa dipakai dari situs lain.
+> Contoh penerapannya kami lampirkan pada Bagian 2 Varian D.
+>
+> **4. Konfirmasi URL endpoint API**
+>
+> Saat kami uji, alamat `https://www.tokomedia.org/api/index.php/api/category/tree`
+> mengembalikan halaman HTML website, bukan respons JSON. Mohon dibantu konfirmasi
+> **URL endpoint API yang benar dan sudah aktif**, beserta contoh satu request yang
+> berhasil.
+>
+> Setelah poin 1–4 selesai, kami akan langsung melakukan pengujian dan melaporkan
 > hasilnya.
 >
 > Terima kasih atas bantuannya.
@@ -136,6 +148,33 @@ location /api/ {
     add_header Access-Control-Allow-Headers "Content-Type, X-Requested-With" always;
     if ($request_method = OPTIONS) { return 204; }
 }
+```
+
+### Varian D — Pengikatan token ke origin (pengaman tambahan)
+
+Tempel **setelah** ijin akses Varian A/B/C. Fungsinya: token hanya berlaku bila
+request datang dari origin yang diizinkan. Kalau token bocor, tetap tidak berguna
+dari situs lain.
+
+```php
+<?php
+// ===== Token hanya berlaku dari origin resmi =====
+$tm_token_terikat_origin = true;   // set false untuk mematikan pengaman ini
+
+if ($tm_token_terikat_origin) {
+    $tm_origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+    if (!in_array($tm_origin, $tm_allowed_origins, true)) {
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(403);
+        echo json_encode(array(
+            'status'  => 403,
+            'message' => 'No Permission',
+            'data'    => null,
+        ));
+        exit;
+    }
+}
+// ===== akhir pengikatan =====
 ```
 
 ### ⚠️ Yang harus dihindari

@@ -1617,17 +1617,17 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
 
   // ---------------------------------------------------------------------------
   // Konfigurasi API
-  // Ubah `apiBase` bila lokasi API berbeda. Untuk pengujian lokal tambahkan
-  // ?api=http://localhost:8080/api pada URL halaman.
+  // Token API TIDAK disimpan di repositori ini. Nilainya diisi lewat berkas
+  // `config.local.js` (tidak ikut Git) atau lewat window.TM_CONFIG sebelum
+  // skrip ini dimuat. Untuk pengujian lokal tambahkan ?api=http://localhost:8080/api
+  // pada URL halaman.
   // ---------------------------------------------------------------------------
   var TM_CONFIG = {
     apiBase: 'https://www.tokomedia.org/api/index.php/api',
-    token: 'GANTI_DENGAN_TOKEN_API_BARU'
+    token: (window.TM_CONFIG && window.TM_CONFIG.token) || ''
   };
-  (function () {
-    var override = new URLSearchParams(location.search).get('api');
-    if (override) TM_CONFIG.apiBase = override.replace(/\/+$/, '');
-  })();
+  var API_OVERRIDE = new URLSearchParams(location.search).get('api');
+  if (API_OVERRIDE) TM_CONFIG.apiBase = API_OVERRIDE.replace(/\/+$/, '');
 
   var SITE = P.app.siteUrl;
   var CHANNEL = P.app.channel;
@@ -1665,6 +1665,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
   };
 
   function apiPost(path, params) {
+    if (!TM_CONFIG.token) return Promise.reject(new Error('Token API belum dikonfigurasi'));
     var body = new URLSearchParams();
     body.set('token', TM_CONFIG.token);
     Object.keys(params || {}).forEach(function (key) {
@@ -2767,7 +2768,23 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
     }).catch(function () { /* pakai data tertanam */ });
   }
 
-  loadBootstrapData();
+  function loadLocalConfig() {
+    return new Promise(function (resolve) {
+      var script = document.createElement('script');
+      script.src = 'config.local.js';
+      script.onload = function () {
+        if (window.TM_CONFIG) {
+          if (window.TM_CONFIG.token) TM_CONFIG.token = window.TM_CONFIG.token;
+          if (window.TM_CONFIG.apiBase && !API_OVERRIDE) TM_CONFIG.apiBase = window.TM_CONFIG.apiBase;
+        }
+        resolve();
+      };
+      script.onerror = function () { resolve(); };
+      document.head.appendChild(script);
+    });
+  }
+
+  loadLocalConfig().then(loadBootstrapData);
 })();
 </script>
 </body>

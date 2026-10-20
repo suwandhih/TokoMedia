@@ -6,6 +6,9 @@ node_modules/
 # API secrets (kredensial lokal, jangan di-commit)
 20261014 API TM App/application/config/secrets.local.php
 
+# Konfigurasi token UI (index.html memuat berkas ini saat runtime)
+config.local.js
+
 # API runtime cache (rate limit, dsb.)
 20261014 API TM App/application/cache/ratelimit_*.json
 

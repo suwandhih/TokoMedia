@@ -939,8 +939,10 @@ return array(
 );
 ```
 
-> ⚠️ **Token lama** (`TOKEN_LAMA…`) sudah pernah terekspos di source code & riwayat Git.
-> Sebaiknya **ganti dengan token baru** saat deploy.
+> ⚠️ **Token lama sudah pernah terekspos** di source code & riwayat Git, sehingga
+> **wajib diganti (rotasi) saat deploy**. Token baru **tidak boleh** ditulis di
+> `index.html`. Simpan di `config.local.js` (tidak ikut Git) atau lewat
+> environment variable `TM_API_TOKEN` di server.
 
 ### Prioritas 2 — Agar API bisa menggantikan website ✅ **SELESAI**
 
