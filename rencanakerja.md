@@ -80,7 +80,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | 27 | **Catat jawaban IT client: self-host adalah jalur yang dimaksudkan** | ✅ SELESAI | 20 Okt 2026 |
 | 30 | **Pasang API salinan di Rumahweb `suwandhih.my.id`** | ✅ SELESAI | 21 Okt 2026 |
 | 31 | **Arahkan UI GitHub Pages ke API Rumahweb** | ✅ SELESAI | 21 Okt 2026 |
-| 32 | **Uji endpoint dengan token asli** | ⬜ BELUM | — |
+| 32 | **Uji endpoint dengan token asli** | ✅ SELESAI — `status=200`, 7 kategori | 21 Okt 2026 |
 | 33 | **Hapus akun FTP sementara `tmup2`** | ⬜ BELUM | — |
 
 ---
