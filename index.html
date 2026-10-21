@@ -1329,12 +1329,27 @@ html[data-mode="dark"] .lang-mono-badge {
   aspect-ratio: 16 / 9;
   overflow: hidden;
 }
-.watch-player-thumb img {
+.watch-player-thumb img,
+.watch-player-video {
   position: absolute;
   inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  opacity: 0.78;
+  background: #000;
+}
+.watch-player-thumb img { opacity: 0.78; }
+.watch-player-video { opacity: 1; z-index: 2; }
+.watch-player-note {
+  position: absolute;
+  left: 12px; right: 12px; bottom: 12px;
+  z-index: 3;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.82);
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
 }
 .watch-play-btn-big {
   position: relative;
@@ -2251,21 +2266,74 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
     });
   }
 
+  var hlsPlayer = null;
+
+  function stopWatchPlayer() {
+    if (hlsPlayer) {
+      hlsPlayer.destroy();
+      hlsPlayer = null;
+    }
+  }
+
+  function ensureHls(done, fail) {
+    if (window.Hls) {
+      done();
+      return;
+    }
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/hls.js@1.6.16/dist/hls.min.js';
+    script.onload = done;
+    script.onerror = fail;
+    document.head.appendChild(script);
+  }
+
+  function startWatchPlayer(video, source) {
+    stopWatchPlayer();
+    if (!source) return;
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = source;
+      return;
+    }
+    ensureHls(function () {
+      if (!window.Hls || !Hls.isSupported()) return;
+      hlsPlayer = new Hls();
+      hlsPlayer.loadSource(source);
+      hlsPlayer.attachMedia(video);
+      hlsPlayer.on(Hls.Events.ERROR, function (_event, data) {
+        var note = video.parentNode && video.parentNode.querySelector('.watch-player-note');
+        if (!data.fatal) return;
+        var note = video.parentNode && video.parentNode.querySelector('.watch-player-note');
+        if (note) {
+          note.dataset.error = data.type + ':' + data.details;
+          note.hidden = false;
+        }
+      });
+    }, function () {
+      var note = video.parentNode && video.parentNode.querySelector('.watch-player-note');
+      if (note) note.hidden = false;
+    });
+  }
+
   function renderWatch() {
+    stopWatchPlayer();
     var v = watchData || P.watchExample;
     var imgUrl = v.image ? (v.image.indexOf('http') === 0 ? v.image : encodeURI(SITE + v.image)) : '';
-    var webHref = v.href ? (v.href.indexOf('http') === 0 ? v.href : encodeURI(SITE + v.href)) : SITE;
     var tags = v.tags || [];
     var related = (v.related && v.related.length) ? v.related : TM.latestVideos.slice(0, 4);
+    var playerHtml = v.source
+      ? '<video class="watch-player-video" controls playsinline poster="' + esc(imgUrl) + '"></video>' +
+        '<p class="watch-player-note" hidden>Video belum dapat diputar di halaman ini.</p>'
+      : (imgUrl ? '<img src="' + esc(imgUrl) + '" alt="" onerror="this.remove()">' : '') +
+        '<span class="watch-play-btn-big" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>' +
+        '<p class="watch-player-note">Memuat video…</p>';
 
     appMain.innerHTML =
       '<div class="watch-bento-layout">' +
       '<div class="watch-primary-col">' +
       '<div class="watch-player-card">' +
-      '<a class="watch-player-thumb" href="' + esc(webHref) + '" target="_blank" rel="noopener" aria-label="Tonton di website">' +
-      (imgUrl ? '<img src="' + esc(imgUrl) + '" alt="" onerror="this.remove()">' : '') +
-      '<span class="watch-play-btn-big"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>' +
-      '</a></div>' +
+      '<div class="watch-player-thumb">' +
+      playerHtml +
+      '</div></div>' +
 
       '<section class="glass-panel">' +
       '<span class="sec-eyebrow">' + esc(v.category || P.watchExample.category) + '</span>' +
@@ -2309,6 +2377,8 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '</div>';
 
     initCaptchas();
+    var player = appMain.querySelector('.watch-player-video');
+    if (player && v.source) startWatchPlayer(player, v.source);
 
     // Lengkapi detail video dari API (deskripsi, tag, jumlah suka, tayangan terkait).
     // `detailLoaded` mencegah permintaan berulang setiap kali render.
@@ -2324,6 +2394,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
           dateLabel: shortDate(d.dateschedule_iso) || v.dateLabel,
           image: d.thumbnail || v.image,
           href: d.slug ? '/' + d.slug : v.href,
+          source: d.source || '',
           category: languageLabelFromSlug(d.slug) || v.category,
           description: plainText(d.content) || v.description,
           tags: parseTags(d.tag),

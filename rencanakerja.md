@@ -953,3 +953,13 @@ Uji Chrome pada `https://suwandhih.github.io/TokoMedia/#videos/film-riwayat-isa-
 - Tidak ada permintaan token.
 - Tidak ada pesan "Endpoint tidak diizinkan".
 - Halaman Musi memuat 62 video, status API 200.
+
+### H10. Pemutar video di GitHub Pages — ✅ TERUJI (21 Okt 2026)
+
+Tombol play tidak lagi membuka `tokomedia.org`. Halaman `#watch` memutar streaming HLS dari field API `source` memakai `hls.js`.
+
+Uji Chrome pada origin GitHub:
+
+- Elemen video tampil di halaman.
+- Tidak ada tautan pemutar ke `tokomedia.org`.
+- Uji pemutar mandiri menerima potongan video ke buffer, status `buffered`.
