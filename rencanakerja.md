@@ -78,6 +78,10 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | 29 | **Cloudflare terbukti tidak mungkin untuk `suwandhih.site.je`** | ✅ TERBUKTI | 20 Okt 2026 |
 | 26 | **Petakan endpoint Live API client vs salinan sendiri** | ✅ SELESAI | 20 Okt 2026 |
 | 27 | **Catat jawaban IT client: self-host adalah jalur yang dimaksudkan** | ✅ SELESAI | 20 Okt 2026 |
+| 30 | **Pasang API salinan di Rumahweb `suwandhih.my.id`** | ✅ SELESAI | 21 Okt 2026 |
+| 31 | **Arahkan UI GitHub Pages ke API Rumahweb** | ✅ SELESAI | 21 Okt 2026 |
+| 32 | **Uji endpoint dengan token asli** | ⬜ BELUM | — |
+| 33 | **Hapus akun FTP sementara `tmup2`** | ⬜ BELUM | — |
 
 ---
 
