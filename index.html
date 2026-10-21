@@ -2141,7 +2141,8 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
     });
     paint(fallback, '');
 
-    var params = needsLang ? { id: langSlug, per_page: 100 } : { per_page: 100 };
+    var languagePref = String(langSlug || '').split('/').pop();
+    var params = needsLang ? { id: languagePref, per_page: 100 } : { per_page: 100 };
     if (activeSort !== 'trending') params.sort = activeSort === 'unviral' ? 'unseen' : activeSort;
     apiPost(endpoint, params).then(function (json) {
       if (currentRoute() !== 'videos/' + langSlug) return;
