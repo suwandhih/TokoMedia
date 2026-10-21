@@ -1668,14 +1668,14 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
   };
 
   function apiPost(path, params) {
-    if (!TM_CONFIG.token) return Promise.reject(new Error('Token API belum dikonfigurasi'));
     var body = new URLSearchParams();
-    body.set('token', TM_CONFIG.token);
+    body.set('path', path);
+    if (TM_CONFIG.token) body.set('token', TM_CONFIG.token);
     Object.keys(params || {}).forEach(function (key) {
       var value = params[key];
       if (value !== undefined && value !== null) body.set(key, value);
     });
-    return fetch(TM_CONFIG.apiBase + '/' + path, {
+    return fetch('https://suwandhih.my.id/tm-bridge.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
       body: body.toString()
@@ -2800,10 +2800,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
     });
   }
 
-  loadLocalConfig().then(function () {
-    if (!TM_CONFIG.token) askForToken();
-    else loadBootstrapData();
-  });
+  loadLocalConfig().then(loadBootstrapData);
 })();
 </script>
 </body>
