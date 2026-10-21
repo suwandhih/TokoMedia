@@ -943,3 +943,13 @@ Live API client **tidak punya CORS**, tetapi **Android tidak terpengaruh CORS**:
 | 5 | **Tunjukkan hasil ke client sampai puas** (versi web + Android) | ⬜ Belum |
 | 6 | **Setelah client puas → minta Live API** (CORS + endpoint kurang) | ⬜ Menunggu tahap 5 |
 | 7 | Tanyakan **E1** saja: apakah ada pembaruan data berkala? | ⬜ Belum ditanya |
+
+### H9. Rumahweb + jembatan API — ✅ TERUJI (21 Okt 2026)
+
+API dipindah dari InfinityFree ke `https://suwandhih.my.id/index.php/api`. UI GitHub Pages tidak menyimpan token. Permintaan UI masuk ke `tm-bridge.php`, lalu server menambahkan token.
+
+Uji Chrome pada `https://suwandhih.github.io/TokoMedia/#videos/film-riwayat-isa-al-masih/musi-palembang`:
+
+- Tidak ada permintaan token.
+- Tidak ada pesan "Endpoint tidak diizinkan".
+- Halaman Musi memuat 62 video, status API 200.
