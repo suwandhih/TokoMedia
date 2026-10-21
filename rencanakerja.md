@@ -963,3 +963,10 @@ Uji Chrome pada origin GitHub:
 - Elemen video tampil di halaman.
 - Tidak ada tautan pemutar ke `tokomedia.org`.
 - Uji pemutar mandiri menerima potongan video ke buffer, status `buffered`.
+- Bapak mengonfirmasi video berhasil diputar.
+
+### H11. Dokumentasi anti-gagal — ✅ SELESAI (21 Okt 2026)
+
+- `prompt.md` menjelaskan cara membangun ulang UI dan koneksinya.
+- `datapemetaan.md` berisi endpoint, parameter, dan skrip koneksi untuk aplikasi lain.
+- `AGENTS.md` diperbarui dengan API, bridge, dan larangan menyimpan rahasia.

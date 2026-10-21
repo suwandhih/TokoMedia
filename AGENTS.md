@@ -70,3 +70,18 @@
 | **Kategori Bahasa Teratas** | **`Indonesia (Bahasa Nasional)`** selalu tampil di urutan paling atas halaman kategori/wilayah. |
 | **Accordion Kepulauan** | Seluruh accordion kepulauan default-nya **tertutup rapi (collapsed)**. |
 | **GitHub Pages** | Branch `main` dengan root path `/` di [https://suwandhih.github.io/TokoMedia/](https://suwandhih.github.io/TokoMedia/). |
+| **API aktif** | `https://suwandhih.my.id/index.php/api` |
+| **Bridge publik** | `https://suwandhih.my.id/tm-bridge.php`; token tetap di server |
+| **Panduan ulang** | `prompt.md` untuk membangun UI yang sama |
+| **Peta koneksi** | `datapemetaan.md` untuk aplikasi lain |
+
+---
+
+## E. Koneksi yang Sudah Terbukti (21 Okt 2026)
+
+- UI GitHub Pages memanggil bridge, bukan API live `tokomedia.org:8009`.
+- Pengunjung tidak diminta token.
+- Slug bahasa dikirim dalam bentuk segmen terakhir, contoh `musi-palembang`.
+- Video diputar di halaman GitHub dari field `source`, bukan dibuka ke `tokomedia.org`.
+- Jangan ulangi uji lewat `file://`; origin `null` memang ditolak CORS.
+- Jangan tulis token atau password di Git, dokumentasi, atau riwayat pekerjaan.
