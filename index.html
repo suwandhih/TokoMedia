@@ -1622,9 +1622,12 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
   // skrip ini dimuat. Untuk pengujian lokal tambahkan ?api=http://localhost:8080/api
   // pada URL halaman.
   // ---------------------------------------------------------------------------
+  var TOKEN_KEY = 'tm.apiToken';
+  var savedToken = '';
+  try { savedToken = localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { savedToken = ''; }
   var TM_CONFIG = {
     apiBase: 'https://suwandhih.my.id/index.php/api',
-    token: (window.TM_CONFIG && window.TM_CONFIG.token) || ''
+    token: (window.TM_CONFIG && window.TM_CONFIG.token) || savedToken
   };
   var API_OVERRIDE = new URLSearchParams(location.search).get('api');
   if (API_OVERRIDE) TM_CONFIG.apiBase = API_OVERRIDE.replace(/\/+$/, '');
@@ -2768,13 +2771,26 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
     }).catch(function () { /* pakai data tertanam */ });
   }
 
+  function rememberToken(token) {
+    if (!token) return;
+    TM_CONFIG.token = token;
+    try { localStorage.setItem(TOKEN_KEY, token); } catch (e) { /* browser menolak penyimpanan */ }
+  }
+
+  function askForToken() {
+    var entered = window.prompt('Masukkan token API TokoMedia');
+    if (!entered) return;
+    rememberToken(entered.trim());
+    loadBootstrapData();
+  }
+
   function loadLocalConfig() {
     return new Promise(function (resolve) {
       var script = document.createElement('script');
       script.src = 'config.local.js';
       script.onload = function () {
         if (window.TM_CONFIG) {
-          if (window.TM_CONFIG.token) TM_CONFIG.token = window.TM_CONFIG.token;
+          if (window.TM_CONFIG.token) rememberToken(window.TM_CONFIG.token);
           if (window.TM_CONFIG.apiBase && !API_OVERRIDE) TM_CONFIG.apiBase = window.TM_CONFIG.apiBase;
         }
         resolve();
@@ -2784,7 +2800,10 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
     });
   }
 
-  loadLocalConfig().then(loadBootstrapData);
+  loadLocalConfig().then(function () {
+    if (!TM_CONFIG.token) askForToken();
+    else loadBootstrapData();
+  });
 })();
 </script>
 </body>
