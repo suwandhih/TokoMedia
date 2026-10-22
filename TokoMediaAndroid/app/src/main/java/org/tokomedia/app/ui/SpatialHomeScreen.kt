@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -110,13 +111,15 @@ fun SpatialHomeScreen(
         val result = repository.getLatestVideos()
         if (result.isSuccess) {
             val list = result.getOrNull().orEmpty()
-            latestVideos = when (activeSort) {
+            val sortedList = when (activeSort) {
                 HomeVideoSort.TRENDING -> list
                 HomeVideoSort.POPULAR -> list.sortedByDescending { it.watchcounter }
                 HomeVideoSort.UNSEEN -> list.sortedBy { it.watchcounter }
                 HomeVideoSort.NEW -> list.sortedByDescending { it.datescheduleIso ?: it.dateschedule.orEmpty() }
                 HomeVideoSort.OLD -> list.sortedBy { it.datescheduleIso ?: it.dateschedule.orEmpty() }
             }
+            // Sesuai index.html: homeFeaturedVideos = sortedLatest.slice(0, 4)
+            latestVideos = sortedList.take(4)
         }
         isLoadingLatest = false
     }
@@ -128,7 +131,9 @@ fun SpatialHomeScreen(
         contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 90.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        // =====================================================================
         // HERO BENTO CARD
+        // =====================================================================
         item {
             Box(
                 modifier = Modifier
@@ -238,7 +243,9 @@ fun SpatialHomeScreen(
             }
         }
 
+        // =====================================================================
         // 01 • KATEGORI UTAMA: PILIH FORMAT MEDIA
+        // =====================================================================
         item {
             Column(modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) {
                 Text(
@@ -289,7 +296,9 @@ fun SpatialHomeScreen(
             }
         }
 
-        // 02 • EKSPLORASI BAHASA: KATEGORI BAHASA & FORMAT (PERSIS SCREENSHOT)
+        // =====================================================================
+        // 02 • EKSPLORASI BAHASA: KATEGORI BAHASA & FORMAT
+        // =====================================================================
         item {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
@@ -460,7 +469,9 @@ fun SpatialHomeScreen(
             }
         }
 
-        // 03 • STREAMING TERKINI: TAYANGAN PILIHAN TERBARU
+        // =====================================================================
+        // 03 • STREAMING TERKINI: TAYANGAN PILIHAN TERBARU (VERTIKAL 4 VIDEO)
+        // =====================================================================
         item {
             Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
                 Text(
@@ -510,12 +521,147 @@ fun SpatialHomeScreen(
                 }
             }
         } else if (latestVideos.isNotEmpty()) {
+            // 1. & 2. Tampil VERTIKAL sebanyak 4 VIDEO (Persis index.html .video-bento-grid)
+            items(latestVideos) { video ->
+                VerticalVideoBentoCard(
+                    video = video,
+                    onClick = { onVideoClick(video.id) }
+                )
+            }
+
+            // 3. Tombol [Jelajahi Semua Koleksi per Wilayah →] persis index.html
             item {
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    items(latestVideos) { video ->
-                        BentoVideoCard(video = video, onClick = { onVideoClick(video.id) })
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp, bottom = 12.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(999.dp),
+                        color = Color.White,
+                        shadowElevation = 3.dp,
+                        border = BorderStroke(1.dp, Color(0x180F172A)),
+                        modifier = Modifier.clickable {
+                            onTargetClick(Target.Languages("film-riwayat-isa-al-masih"))
+                        }
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Jelajahi Semua Koleksi per Wilayah ",
+                                color = TokoText,
+                                fontSize = 13.5.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = null,
+                                tint = TokoText,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
                     }
                 }
+            }
+        }
+    }
+}
+
+/**
+ * Kartu Video Vertikal persis .vcard di index.html:
+ * Thumbnail 16:9 di atas, Durasi di pojok kanan bawah, Judul tebal di bawah,
+ * dan baris meta: Tokomedia ✔ dan [views] • [tanggal]
+ */
+@Composable
+private fun VerticalVideoBentoCard(
+    video: VideoDto,
+    onClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(20.dp),
+        color = Color.White,
+        shadowElevation = 4.dp,
+        border = BorderStroke(1.dp, Color(0x140F172A))
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(Color(0xFF1E293B))
+            ) {
+                if (!video.thumbnail.isNullOrEmpty()) {
+                    AsyncImage(
+                        model = video.thumbnail,
+                        contentDescription = video.displayTitle,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                if (!video.duration.isNullOrEmpty()) {
+                    Text(
+                        text = video.duration,
+                        color = Color.White,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(8.dp)
+                            .background(Color.Black.copy(alpha = 0.8f), RoundedCornerShape(6.dp))
+                            .padding(horizontal = 7.dp, vertical = 3.dp)
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(10.dp))
+
+            Text(
+                text = video.displayTitle,
+                color = TokoText,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                lineHeight = 20.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Spacer(Modifier.height(6.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Tokomedia",
+                        color = TokoGreen,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.width(3.dp))
+                    Text(
+                        text = "✔",
+                        color = TokoGreen,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Text(
+                    text = "${video.watchcounter} views • ${video.dateschedule.orEmpty()}",
+                    color = TokoMuted,
+                    fontSize = 11.sp
+                )
             }
         }
     }
@@ -741,64 +887,6 @@ private fun MiniBentoCard(category: BentoCategory, modifier: Modifier, onClick: 
                 Text(text = "›", color = TokoText, fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
         }
-    }
-}
-
-@Composable
-private fun BentoVideoCard(video: VideoDto, onClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .width(190.dp)
-            .shadow(4.dp, RoundedCornerShape(16.dp), spotColor = Color(0x100F172A))
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
-            .clickable(onClick = onClick)
-            .padding(10.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(16f / 9f)
-                .clip(RoundedCornerShape(10.dp))
-                .background(Color(0xFF1E293B))
-        ) {
-            if (!video.thumbnail.isNullOrEmpty()) {
-                AsyncImage(
-                    model = video.thumbnail,
-                    contentDescription = video.displayTitle,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            if (!video.duration.isNullOrEmpty()) {
-                Text(
-                    text = video.duration,
-                    color = Color.White,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(4.dp)
-                        .background(Color.Black.copy(alpha = 0.75f), RoundedCornerShape(4.dp))
-                        .padding(horizontal = 4.dp, vertical = 2.dp)
-                )
-            }
-        }
-        Spacer(Modifier.height(8.dp))
-        Text(
-            text = video.displayTitle,
-            color = TokoText,
-            fontSize = 12.5.sp,
-            fontWeight = FontWeight.Bold,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-        Spacer(Modifier.height(3.dp))
-        Text(
-            text = "${video.watchcounter} views • ${video.dateschedule.orEmpty()}",
-            color = TokoMuted,
-            fontSize = 10.5.sp
-        )
     }
 }
 

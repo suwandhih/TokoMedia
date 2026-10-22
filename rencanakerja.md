@@ -22,6 +22,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | **A9** | **Perbaikan Crash Parsing JSON 'Expected BEGIN_OBJECT but was BEGIN_ARRAY'** | ✅ SELESAI | 22 Okt 2026 | Tambahkan `VideoDetailDeserializer` pada Gson untuk menangani `data: []` saat API mengembalikan array kosong, sambungkan ke `tm-bridge.php` resmi |
 | **A10** | **Implementasi Breadcrumb Navigasi Dinamis & Responsif** | ✅ SELESAI | 22 Okt 2026 | Breadcrumb TopBar dinamis mengikuti rute (`Beranda › Detail Video`, `Beranda › Film Isa Al-Masih › Daftar Bahasa`, dsb.) dengan pemisah chevron dan kotak sorot aktif persis index.html |
 | **A11** | **Integrasi Formulir Tanggapan Anda & Tayangan Lainnya** | ✅ SELESAI | 22 Okt 2026 | Form Tanggapan Anda di VideoDetailScreen terhubung ke endpoint `other/commentvideo` Rumahweb (tersimpan di DB `videocomment`), dan daftar Tayangan Lainnya yang dapat diklik |
+| **A12** | **Presisi Section Tayangan Pilihan Terbaru Beranda (4 Video Vertikal + Tombol CTA)** | ✅ SELESAI | 22 Okt 2026 | Tayangan Pilihan Terbaru dibatasi 4 video teratas, disusun secara vertikal 1 kolom penuh (.vcard), dan dilengkapi tombol pill 'Jelajahi Semua Koleksi per Wilayah →' persis index.html |
 
 ---
 
