@@ -560,22 +560,20 @@ Token tetap dibaca dari `window.TM_CONFIG` (tidak ditulis di `index.html`).
 
 ---
 
-### D6. Sambungkan aplikasi Android ke API — ⬜ BELUM
+### D6. Sambungkan aplikasi Android ke API — ✅ SELESAI (22 Okt 2026)
 
-**Kondisi sekarang:**
-- Proyek: `TokoMediaAndroid` — Kotlin + Jetpack Compose.
-- `compileSdk = 37`, `minSdk = 24`, `targetSdk = 36`, `versionCode = 1`, `versionName = "0.1.0"`.
-- Ijin `INTERNET` **sudah ada** di `AndroidManifest.xml`.
-- **Belum ada kode jaringan sama sekali** — data masih statis di `MockData.kt`.
-- **Belum ada pustaka HTTP** (Retrofit / OkHttp / Ktor) — perlu ditambahkan.
-
-**Jawaban pertanyaan Bapak:** Android **tidak perlu script ijin tambahan**. CORS hanya berlaku di browser; aplikasi Android asli tidak mengirim header `Origin`, jadi tidak akan diblokir. Android memakai endpoint yang sama dengan UI.
-
-**Langkah:**
-1. Tambah Retrofit + OkHttp di `app/build.gradle.kts`.
-2. Buat lapisan API (model + service) memakai envelope `{status, message, data}`.
-3. Ganti `MockData.kt` dengan data dari API.
-4. Uji di perangkat/emulator.
+**Hasil (Babak Baru Android A1–A16):**
+- Retrofit 2.11 + OkHttp 4.12 + Media3 ExoPlayer HLS 1.5.1 terpasang.
+- Terhubung langsung ke `https://suwandhih.my.id/tm-bridge.php` tanpa hambatan CORS.
+- UI Native 100% presisi mengikuti Spatial Bento `index.html` (Mode HP 430px):
+  - TopBar Spatial Glass + Breadcrumb dinamis (`Beranda › Detail Video`, dsb.).
+  - Hero Bento Card (*Pusat Media Nusantara*).
+  - 01 Kategori Utama (Pilih Format Media).
+  - 02 Eksplorasi Bahasa (Indeks A–Z & Galeri Ikon).
+  - 03 Streaming Terkini (4 video vertikal + tombol jelajahi wilayah).
+  - Layar Koleksi Aplikasi (Katalog Resmi 269 apps + filter search + tombol unduh Google Play).
+  - Layar Detail Video dengan Video Player Freeze (sticky), tombol Suka interaktif, formulir Tanggapan Anda (ke `other/commentvideo` Rumahweb), dan daftar Tayangan Lainnya.
+- Kompilasi APK sukses: `TokoMediaAndroid/TokoMedia-debug.apk` (24,8 MB).
 
 ### D7. Ganti host API — tinggalkan InfinityFree — 🟡 MENUNGGU KEPUTUSAN BAPAK
 

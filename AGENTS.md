@@ -77,11 +77,13 @@
 
 ---
 
-## E. Koneksi yang Sudah Terbukti (21 Okt 2026)
+## E. Koneksi yang Sudah Terbukti (21–22 Okt 2026)
 
-- UI GitHub Pages memanggil bridge, bukan API live `tokomedia.org:8009`.
-- Pengunjung tidak diminta token.
+- UI GitHub Pages & Aplikasi Android memanggil bridge `https://suwandhih.my.id/tm-bridge.php`, bukan API live `tokomedia.org:8009`.
+- Pengunjung tidak diminta token; token diinjeksi aman di sisi server bridge.
 - Slug bahasa dikirim dalam bentuk segmen terakhir, contoh `musi-palembang`.
-- Video diputar di halaman GitHub dari field `source`, bukan dibuka ke `tokomedia.org`.
+- Video diputar langsung dari playlist streaming HLS (.m3u8 Wowza) dari field `source`, baik di web maupun di Android (ExoPlayer).
+- Tampilan Android Native 100% presisi mengikuti Spatial Bento `index.html` (Mode HP 430px) sesuai persetujuan client.
+- Layar detail video di Android menerapkan pemutar video freeze (sticky) di posisi atas, sehingga area deskripsi, form tanggapan, dan tayangan lainnya dapat di-scroll bebas di bawahnya.
 - Jangan ulangi uji lewat `file://`; origin `null` memang ditolak CORS.
 - Jangan tulis token atau password di Git, dokumentasi, atau riwayat pekerjaan.
