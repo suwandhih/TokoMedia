@@ -82,16 +82,16 @@ fun SpatialHomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(TokoBg),
-        contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 90.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 75.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         // 1. HERO BENTO CARD (Spatial Glass Card)
         item {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(12.dp, RoundedCornerShape(26.dp), spotColor = Color(0x140F172A))
-                    .clip(RoundedCornerShape(26.dp))
+                    .shadow(8.dp, RoundedCornerShape(22.dp), spotColor = Color(0x140F172A))
+                    .clip(RoundedCornerShape(22.dp))
                     .background(
                         Brush.linearGradient(
                             listOf(
@@ -101,7 +101,7 @@ fun SpatialHomeScreen(
                             )
                         )
                     )
-                    .padding(22.dp)
+                    .padding(16.dp)
             ) {
                 Column {
                     // Pill: PUSAT MEDIA NUSANTARA
@@ -128,69 +128,69 @@ fun SpatialHomeScreen(
                         )
                     }
 
-                    Spacer(Modifier.height(14.dp))
+                    Spacer(Modifier.height(10.dp))
 
                     Text(
-                        text = "Film, Video &\nAplikasi Kitab Suci\nNusantara.",
+                        text = "Film, Video &\nAplikasi Kitab Suci Nusantara.",
                         color = TokoText,
-                        fontSize = 28.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        lineHeight = 34.sp
+                        lineHeight = 28.sp
                     )
 
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(8.dp))
 
                     Text(
                         text = "Nikmati ribuan tayangan rohani bermakna, kisah para nabi, serta aplikasi Kitab Suci Android dalam bahasa ibu dari Sabang sampai Merauke.",
                         color = TokoTextSecondary,
-                        fontSize = 13.5.sp,
-                        lineHeight = 20.sp
+                        fontSize = 12.5.sp,
+                        lineHeight = 18.sp
                     )
 
-                    Spacer(Modifier.height(18.dp))
+                    Spacer(Modifier.height(14.dp))
 
                     // Tombol Aksi Hero
                     Button(
                         onClick = onWatchHeroClick,
                         colors = ButtonDefaults.buttonColors(containerColor = TokoGreen),
-                        shape = RoundedCornerShape(14.dp),
+                        shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp)
+                            .height(42.dp)
                     ) {
-                        Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White)
+                        Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(6.dp))
                         Text(
                             text = "Tonton Tayangan Sorotan",
                             color = Color.White,
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
 
-                    Spacer(Modifier.height(10.dp))
+                    Spacer(Modifier.height(8.dp))
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(14.dp))
+                            .clip(RoundedCornerShape(12.dp))
                             .background(Color.White)
                             .clickable { onTargetClick(Target.Languages("film-riwayat-isa-al-masih")) }
-                            .padding(vertical = 12.dp, horizontal = 16.dp),
+                            .padding(vertical = 10.dp, horizontal = 14.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
                             text = "Jelajahi Wilayah ",
                             color = TokoText,
-                            fontSize = 13.5.sp,
+                            fontSize = 12.5.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = null,
                             tint = TokoText,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(15.dp)
                         )
                     }
                 }
