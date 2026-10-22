@@ -68,4 +68,31 @@ class TokoMediaRepository {
             Result.failure(e)
         }
     }
+
+    suspend fun sendComment(
+        name: String,
+        email: String,
+        phone: String,
+        message: String,
+        videoId: Int,
+        videoTitle: String
+    ): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            val response = api.sendComment(
+                name = name,
+                email = email,
+                phone = phone,
+                message = message,
+                videoId = videoId,
+                videoTitle = videoTitle
+            )
+            if (response.status == 200) {
+                Result.success(response.message ?: "Terima kasih telah meninggalkan komentar")
+            } else {
+                Result.failure(Exception(response.message ?: "Gagal mengirim tanggapan"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

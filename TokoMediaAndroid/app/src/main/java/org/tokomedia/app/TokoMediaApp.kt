@@ -205,7 +205,10 @@ fun TokoMediaApp() {
                     val videoId = entry.arguments?.getInt("videoId") ?: 0
                     VideoDetailScreen(
                         videoId = videoId,
-                        onBackClick = { navController.popBackStack() }
+                        onBackClick = { navController.popBackStack() },
+                        onVideoClick = { nextId ->
+                            navController.navigate(Routes.videoDetail(nextId))
+                        }
                     )
                 }
             }

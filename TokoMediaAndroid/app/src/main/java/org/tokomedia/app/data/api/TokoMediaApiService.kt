@@ -4,11 +4,6 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
-/**
- * Interface API TokoMedia yang memanggil tm-bridge.php
- * Sesuai arsitektur resmi di prompt.md dan index.html:
- * POST https://suwandhih.my.id/tm-bridge.php dengan parameter 'path' + parameter endpoint
- */
 interface TokoMediaApiService {
 
     @FormUrlEncoded
@@ -78,6 +73,18 @@ interface TokoMediaApiService {
         @Field("path") path: String = "other/detailvideo_readonly",
         @Field("id") videoId: Int
     ): ApiResponse<VideoDetailDto>
+
+    @FormUrlEncoded
+    @POST("tm-bridge.php")
+    suspend fun sendComment(
+        @Field("path") path: String = "other/commentvideo",
+        @Field("contactname") name: String,
+        @Field("emailaddress") email: String,
+        @Field("phonenumber") phone: String,
+        @Field("messagecontent") message: String,
+        @Field("videoid") videoId: Int,
+        @Field("videotitle") videoTitle: String
+    ): ApiResponse<Any>
 
     @FormUrlEncoded
     @POST("tm-bridge.php")
