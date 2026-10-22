@@ -16,6 +16,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | **A3** | **Integrasi API ke Layar HomeScreen & VideoList** | ✅ SELESAI | 22 Okt 2026 | Tayangan terbaru dinamis + thumbnail Coil + VideoList terhubung ke endpoint API |
 | **A4** | **Integrasi Pemutar Video HLS (ExoPlayer)** | ✅ SELESAI | 22 Okt 2026 | `VideoDetailScreen.kt` dengan Media3 PlayerView streaming playlist `.m3u8` |
 | **A5** | **Build & Verifikasi APK Debug** | ✅ SELESAI | 22 Okt 2026 | Kompilasi sukses, berkas `TokoMedia-debug.apk` (24,8 MB) siap diuji |
+| **A6** | **Penyelarasan UI Android ke Versi HP 430px (Spatial Bento)** | ✅ SELESAI | 22 Okt 2026 | Header Spatial Glass, Logo resmi + ribbon Mode HP, Hero Bento Card, Kategori Bento 01, dan Floating Bottom Dock |
 
 ---
 

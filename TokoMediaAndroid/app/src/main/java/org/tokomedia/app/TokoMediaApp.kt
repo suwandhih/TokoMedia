@@ -22,11 +22,13 @@ import androidx.navigation.navArgument
 import kotlinx.coroutines.launch
 import org.tokomedia.app.data.MESSENGER_URL
 import org.tokomedia.app.data.Target
-import org.tokomedia.app.ui.HomeScreen
+import org.tokomedia.app.ui.DockTab
 import org.tokomedia.app.ui.LanguageScreen
 import org.tokomedia.app.ui.SideMenu
 import org.tokomedia.app.ui.SideMenuItems
-import org.tokomedia.app.ui.TokoTopBar
+import org.tokomedia.app.ui.SpatialBottomDock
+import org.tokomedia.app.ui.SpatialHomeScreen
+import org.tokomedia.app.ui.SpatialTopBar
 import org.tokomedia.app.ui.VideoDetailScreen
 import org.tokomedia.app.ui.VideoListScreen
 
@@ -77,11 +79,34 @@ fun TokoMediaApp() {
     ) {
         Scaffold(
             topBar = {
-                TokoTopBar(
+                SpatialTopBar(
                     canGoBack = canGoBack,
                     onMenuClick = { scope.launch { drawerState.open() } },
                     onBackClick = { navController.popBackStack() },
-                    onMessengerClick = { openUrl(MESSENGER_URL) }
+                    onSearchClick = { /* Buka pencarian */ }
+                )
+            },
+            bottomBar = {
+                val currentRoute = backStackEntry?.destination?.route
+                val currentTab = when {
+                    currentRoute == Routes.HOME -> DockTab.HOME
+                    currentRoute?.startsWith("languages/app") == true -> DockTab.APPS
+                    currentRoute?.startsWith("languages") == true -> DockTab.LANGUAGES
+                    currentRoute?.startsWith("video_detail") == true -> DockTab.WATCH
+                    else -> DockTab.HOME
+                }
+                SpatialBottomDock(
+                    currentTab = currentTab,
+                    onTabSelected = { tab ->
+                        when (tab) {
+                            DockTab.HOME -> navController.navigate(Routes.HOME) {
+                                popUpTo(Routes.HOME) { inclusive = true }
+                            }
+                            DockTab.LANGUAGES -> navController.navigate(Routes.languages("film-riwayat-isa-al-masih"))
+                            DockTab.WATCH -> navController.navigate(Routes.videoDetail(17000))
+                            DockTab.APPS -> navController.navigate(Routes.languages("app"))
+                        }
+                    }
                 )
             }
         ) { innerPadding ->
@@ -91,8 +116,11 @@ fun TokoMediaApp() {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(Routes.HOME) {
-                    HomeScreen(
+                    SpatialHomeScreen(
                         onTargetClick = { handleTarget(it) },
+                        onWatchHeroClick = {
+                            navController.navigate(Routes.videoDetail(17000))
+                        },
                         onVideoClick = { videoId -> navController.navigate(Routes.videoDetail(videoId)) }
                     )
                 }
