@@ -10,11 +10,10 @@ import org.tokomedia.app.data.api.VideoDto
 class TokoMediaRepository {
 
     private val api = ApiClient.apiService
-    private val token = ApiClient.API_TOKEN
 
     suspend fun getCategoryTree(): Result<List<CategoryDto>> = withContext(Dispatchers.IO) {
         try {
-            val response = api.getCategoryTree(token)
+            val response = api.getCategoryTree()
             if (response.status == 200 && response.data != null) {
                 Result.success(response.data)
             } else {
@@ -27,7 +26,7 @@ class TokoMediaRepository {
 
     suspend fun getLatestVideos(): Result<List<VideoDto>> = withContext(Dispatchers.IO) {
         try {
-            val response = api.getLatestVideos(token, page = 1, perPage = 20)
+            val response = api.getLatestVideos(page = 1, perPage = 20)
             if (response.status == 200 && response.data != null) {
                 Result.success(response.data)
             } else {
@@ -41,11 +40,11 @@ class TokoMediaRepository {
     suspend fun getVideosByCategory(categorySlug: String, languageSlug: String): Result<List<VideoDto>> = withContext(Dispatchers.IO) {
         try {
             val response = when (categorySlug) {
-                "film-riwayat-isa-al-masih" -> api.getRiwayatVideosBySlug(token, languageSlug)
-                "video", "film-kitab-suci-injil" -> api.getVkitabVideosBySlug(token, languageSlug)
-                "film-ikatan-ilahi" -> api.getIkatanVideosBySlug(token, languageSlug)
-                "clip" -> api.getClipVideos(token)
-                else -> api.getRiwayatVideosBySlug(token, languageSlug)
+                "film-riwayat-isa-al-masih" -> api.getRiwayatVideosBySlug(slug = languageSlug)
+                "video", "film-kitab-suci-injil" -> api.getVkitabVideosBySlug(slug = languageSlug)
+                "film-ikatan-ilahi" -> api.getIkatanVideosBySlug(slug = languageSlug)
+                "clip" -> api.getClipVideos()
+                else -> api.getRiwayatVideosBySlug(slug = languageSlug)
             }
             if (response.status == 200 && response.data != null) {
                 Result.success(response.data)
@@ -57,13 +56,13 @@ class TokoMediaRepository {
         }
     }
 
-    suspend fun getVideoDetail(videoId: Int): Result<VideoDetailDto> = withContext(Dispatchers.IO) {
+    suspend fun getVideoDetail(videoId: Int): Result<VideoDetailDto?> = withContext(Dispatchers.IO) {
         try {
-            val response = api.getVideoDetail(token, videoId)
-            if (response.status == 200 && response.data != null) {
+            val response = api.getVideoDetail(videoId = videoId)
+            if (response.status == 200) {
                 Result.success(response.data)
             } else {
-                Result.failure(Exception(response.message ?: "Gagal memuat detail video"))
+                Result.failure(Exception(response.message ?: "Video tidak ditemukan"))
             }
         } catch (e: Exception) {
             Result.failure(e)
