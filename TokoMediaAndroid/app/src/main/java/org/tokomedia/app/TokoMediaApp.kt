@@ -39,11 +39,12 @@ import org.tokomedia.app.ui.VideoListScreen
 
 private object Routes {
     const val HOME = "home"
+    const val APPS = "apps"
     const val LANGUAGES = "languages/{category}"
     const val VIDEOS = "videos/{category}/{language}"
     const val VIDEO_DETAIL = "video_detail/{videoId}"
 
-    fun languages(category: String) = "languages/$category"
+    fun languages(category: String) = if (category == "app") APPS else "languages/$category"
     fun videos(category: String, language: String) = "videos/$category/$language"
     fun videoDetail(videoId: Int) = "video_detail/$videoId"
 }
@@ -65,7 +66,13 @@ fun TokoMediaApp() {
 
     fun handleTarget(target: Target) {
         when (target) {
-            is Target.Languages -> navController.navigate(Routes.languages(target.category))
+            is Target.Languages -> {
+                if (target.category == "app") {
+                    navController.navigate(Routes.APPS)
+                } else {
+                    navController.navigate(Routes.languages(target.category))
+                }
+            }
             is Target.Videos -> navController.navigate(Routes.videos("film-riwayat-isa-al-masih", target.language))
             is Target.Url -> openUrl(target.url)
         }
@@ -75,24 +82,22 @@ fun TokoMediaApp() {
         currentRoute == Routes.HOME -> listOf(
             BreadcrumbItem("Beranda")
         )
+        currentRoute == Routes.APPS -> listOf(
+            BreadcrumbItem("Beranda") { navController.navigate(Routes.HOME) { popUpTo(Routes.HOME) { inclusive = true } } },
+            BreadcrumbItem("Koleksi Aplikasi")
+        )
         currentRoute.startsWith("languages/") -> {
             val catSlug = backStackEntry?.arguments?.getString("category").orEmpty()
-            if (catSlug == "app") {
-                listOf(
-                    BreadcrumbItem("Beranda") { navController.navigate(Routes.HOME) { popUpTo(Routes.HOME) { inclusive = true } } },
-                    BreadcrumbItem("Koleksi Aplikasi")
-                )
-            } else {
-                val catTitle = BentoCategories.firstOrNull { it.id == catSlug }?.title
-                    ?: categoryTitle(catSlug)
-                listOf(
-                    BreadcrumbItem("Beranda") { navController.navigate(Routes.HOME) { popUpTo(Routes.HOME) { inclusive = true } } },
-                    BreadcrumbItem(catTitle) { navController.navigate(Routes.languages(catSlug)) },
-                    BreadcrumbItem("Daftar Bahasa")
-                )
-            }
+            val catTitle = BentoCategories.firstOrNull { it.id == catSlug }?.title
+                ?: categoryTitle(catSlug)
+            listOf(
+                BreadcrumbItem("Beranda") { navController.navigate(Routes.HOME) { popUpTo(Routes.HOME) { inclusive = true } } },
+                BreadcrumbItem(catTitle) { navController.navigate(Routes.languages(catSlug)) },
+                BreadcrumbItem("Daftar Bahasa")
+            )
         }
         currentRoute.startsWith("videos/") -> {
+            val catSlug = backStackEntry?.arguments?.getString("category").orEmpty()
             val langSlug = backStackEntry?.arguments?.getString("language").orEmpty()
             val langName = languageName(langSlug)
             listOf(
@@ -140,10 +145,11 @@ fun TokoMediaApp() {
                 )
             },
             bottomBar = {
+                // Penentuan tab aktif secara presisi (tidak akan salah sorot lagi)
                 val currentTab = when {
                     currentRoute == Routes.HOME -> DockTab.HOME
-                    currentRoute.startsWith("languages/app") -> DockTab.APPS
-                    currentRoute.startsWith("languages") -> DockTab.LANGUAGES
+                    currentRoute == Routes.APPS -> DockTab.APPS
+                    currentRoute.startsWith("languages") || currentRoute.startsWith("videos") -> DockTab.LANGUAGES
                     currentRoute.startsWith("video_detail") -> DockTab.WATCH
                     else -> DockTab.HOME
                 }
@@ -156,7 +162,7 @@ fun TokoMediaApp() {
                             }
                             DockTab.LANGUAGES -> navController.navigate(Routes.languages("film-riwayat-isa-al-masih"))
                             DockTab.WATCH -> navController.navigate(Routes.videoDetail(17000))
-                            DockTab.APPS -> navController.navigate(Routes.languages("app"))
+                            DockTab.APPS -> navController.navigate(Routes.APPS)
                         }
                     }
                 )
@@ -175,6 +181,9 @@ fun TokoMediaApp() {
                         },
                         onVideoClick = { videoId -> navController.navigate(Routes.videoDetail(videoId)) }
                     )
+                }
+                composable(Routes.APPS) {
+                    AppListScreen()
                 }
                 composable(
                     route = Routes.LANGUAGES,
