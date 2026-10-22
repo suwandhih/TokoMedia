@@ -3,6 +3,7 @@ package org.tokomedia.app.ui
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.OptIn
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -78,6 +79,9 @@ fun VideoDetailScreen(
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
+    var isLiked by remember { mutableStateOf(false) }
+    var likeCount by remember { mutableStateOf(0L) }
+
     // Form Tanggapan Anda
     var formName by remember { mutableStateOf("") }
     var formEmail by remember { mutableStateOf("") }
@@ -105,6 +109,7 @@ fun VideoDetailScreen(
             val data = result.getOrNull()
             if (data != null && data.id != 0) {
                 detail = data
+                likeCount = data.favcounter
                 relatedVideos = data.recomended.orEmpty()
                 if (data.source.isNotEmpty()) {
                     val mediaItem = MediaItem.fromUri(data.source)
@@ -122,6 +127,7 @@ fun VideoDetailScreen(
                     favcounter = 693,
                     dateschedule = "01 Aug 24"
                 )
+                likeCount = 693L
                 val mediaItem = MediaItem.fromUri("https://61146e7ab7a66.streamlock.net:8089/tokomedia/definst/mp4:1. RIA/RIA Indonesia/01 Pada Mulanya Saat Penciptaan - Indonesia.mp4/playlist.m3u8")
                 exoPlayer.setMediaItem(mediaItem)
                 exoPlayer.prepare()
@@ -255,16 +261,42 @@ fun VideoDetailScreen(
                                 }
                             }
 
-                            Row(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(99.dp))
-                                    .background(Color(0xFFF1F5F9))
-                                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                            Surface(
+                                shape = RoundedCornerShape(99.dp),
+                                color = if (isLiked) Color(0xFFE11D48) else Color.White,
+                                border = BorderStroke(1.dp, Color(0xFFE11D48)),
+                                shadowElevation = 1.dp,
+                                modifier = Modifier.clickable {
+                                    if (!isLiked) {
+                                        isLiked = true
+                                        likeCount += 1
+                                        scope.launch {
+                                            val likeRes = repository.likeVideo(item.id)
+                                            if (likeRes.isSuccess && (likeRes.getOrNull() ?: 0L) > 0L) {
+                                                likeCount = likeRes.getOrNull()!!
+                                            }
+                                        }
+                                    }
+                                }
                             ) {
-                                Icon(Icons.Filled.Favorite, contentDescription = null, tint = Color(0xFFE11D48), modifier = Modifier.size(15.dp))
-                                Spacer(Modifier.width(4.dp))
-                                Text("Suka · ${item.favcounter}", color = TokoText, fontSize = 11.5.sp, fontWeight = FontWeight.Bold)
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Favorite,
+                                        contentDescription = "Suka",
+                                        tint = if (isLiked) Color.White else Color(0xFFE11D48),
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(Modifier.width(6.dp))
+                                    Text(
+                                        text = if (likeCount > 0) "Suka · $likeCount" else "Suka",
+                                        color = if (isLiked) Color.White else Color(0xFFE11D48),
+                                        fontSize = 12.5.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             }
                         }
                     }

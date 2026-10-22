@@ -69,6 +69,19 @@ class TokoMediaRepository {
         }
     }
 
+    suspend fun likeVideo(videoId: Int): Result<Long> = withContext(Dispatchers.IO) {
+        try {
+            val response = api.likeVideo(videoId = videoId)
+            if (response.status == 200) {
+                Result.success(response.data?.totallike ?: 0)
+            } else {
+                Result.failure(Exception(response.message ?: "Gagal menyukai video"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun sendComment(
         name: String,
         email: String,

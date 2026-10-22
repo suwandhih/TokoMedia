@@ -76,6 +76,13 @@ interface TokoMediaApiService {
 
     @FormUrlEncoded
     @POST("tm-bridge.php")
+    suspend fun likeVideo(
+        @Field("path") path: String = "other/likevideo",
+        @Field("id") videoId: Int
+    ): ApiResponse<LikeResultDto>
+
+    @FormUrlEncoded
+    @POST("tm-bridge.php")
     suspend fun sendComment(
         @Field("path") path: String = "other/commentvideo",
         @Field("contactname") name: String,

@@ -25,6 +25,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | **A12** | **Presisi Section Tayangan Pilihan Terbaru Beranda (4 Video Vertikal + Tombol CTA)** | ✅ SELESAI | 22 Okt 2026 | Tayangan Pilihan Terbaru dibatasi 4 video teratas, disusun secara vertikal 1 kolom penuh (.vcard), dan dilengkapi tombol pill 'Jelajahi Semua Koleksi per Wilayah →' persis index.html |
 | **A13** | **Implementasi Layar Koleksi Aplikasi (Katalog Resmi Google Play 269 Apps)** | ✅ SELESAI | 22 Okt 2026 | Menu Aplikasi di bottom dock & kartu Aplikasi Kitab Suci diarahkan ke AppListScreen (pencarian filter bahasa, daftar 269 apps dengan logo + nama ✔ + tombol hijau [Unduh] ke Google Play Store persis Pasted Image 2) |
 | **A14** | **Perbaikan Indikator Tab Aktif 'Aplikasi' di Bottom Dock** | ✅ SELESAI | 22 Okt 2026 | Pisahkan rute aplikasi menjadi rute unik `apps` agar tab 'Aplikasi' aktif berwarna hijau dan tidak salah menyorot tab 'Bahasa' |
+| **A15** | **Implementasi Tombol Interaktif Suka / Favorite Video** | ✅ SELESAI | 22 Okt 2026 | Tombol 'Suka' berbingkai merah oval interaktif sesuai Pasted Image & index.html. Saat diklik seluruh tombol merespons, angka like bertambah langsung, berubah merah solid, dan terupdate ke endpoint `other/likevideo` Rumahweb |
 
 ---
 

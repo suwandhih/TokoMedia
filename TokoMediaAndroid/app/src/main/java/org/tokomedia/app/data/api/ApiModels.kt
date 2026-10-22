@@ -88,6 +88,10 @@ class VideoDetailDeserializer : JsonDeserializer<VideoDetailDto?> {
     }
 }
 
+data class LikeResultDto(
+    @SerializedName("totallike") val totallike: Long? = 0
+)
+
 data class AppDto(
     @SerializedName("id") val id: Any?,
     @SerializedName("name") val name: String,
