@@ -18,6 +18,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | **A5** | **Build & Verifikasi APK Debug** | ✅ SELESAI | 22 Okt 2026 | Kompilasi sukses, berkas `TokoMedia-debug.apk` (24,8 MB) siap diuji |
 | **A6** | **Penyelarasan UI Android ke Versi HP 430px (Spatial Bento)** | ✅ SELESAI | 22 Okt 2026 | Header Spatial Glass, Logo resmi + ribbon Mode HP, Hero Bento Card, Kategori Bento 01, dan Floating Bottom Dock |
 | **A7** | **Penyempurnaan Proporsi Floating Dock & Hero Card** | ✅ SELESAI | 22 Okt 2026 | Tata letak dock vertikal (ikon atas, teks bawah 10.5sp, 4 kolom rapi sesuai index.html), hero bento lebih ringkas proporsional |
+| **A8** | **Presisi UI Indeks A-Z & Streaming Terkini (100% Identik Screenshot)** | ✅ SELESAI | 22 Okt 2026 | Sesuai Screenshot Chrome HP: Toggle [Indeks A-Z] & [Galeri Ikon], badge huruf besar 'A' 8 Bahasa, filter rail alfabet A-Y, grid 2 kolom kartu bahasa dengan badge ungu + chevron hijau, urutan section 01, 02, 03 lengkap |
 
 ---
 

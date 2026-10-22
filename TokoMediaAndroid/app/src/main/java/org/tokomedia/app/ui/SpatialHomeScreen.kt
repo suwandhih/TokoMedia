@@ -1,10 +1,13 @@
 package org.tokomedia.app.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +25,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.PlayArrow
@@ -31,8 +34,10 @@ import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,6 +57,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import org.tokomedia.app.data.AllLanguagesList
 import org.tokomedia.app.data.BentoCategories
 import org.tokomedia.app.data.BentoCategory
 import org.tokomedia.app.data.HomeLanguages
@@ -60,6 +66,19 @@ import org.tokomedia.app.data.Target
 import org.tokomedia.app.data.api.VideoDto
 import org.tokomedia.app.data.repository.TokoMediaRepository
 
+enum class LangViewMode {
+    AZ, BUBBLES
+}
+
+enum class HomeVideoSort(val label: String, val apiValue: String) {
+    TRENDING("Tren", "trending"),
+    POPULAR("Populer", "popular"),
+    UNSEEN("Unseen", "unseen"),
+    NEW("New", "newest"),
+    OLD("Old", "oldest")
+}
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SpatialHomeScreen(
     onTargetClick: (Target) -> Unit,
@@ -70,10 +89,34 @@ fun SpatialHomeScreen(
     var latestVideos by remember { mutableStateOf<List<VideoDto>>(emptyList()) }
     var isLoadingLatest by remember { mutableStateOf(true) }
 
-    LaunchedEffect(Unit) {
+    var langMode by remember { mutableStateOf(LangViewMode.AZ) }
+    var selectedLetter by remember { mutableStateOf("A") }
+    var activeSort by remember { mutableStateOf(HomeVideoSort.TRENDING) }
+
+    val alphabetLetters = remember {
+        AllLanguagesList.map { it.name.trim().take(1).uppercase() }
+            .distinct()
+            .sorted()
+    }
+
+    val filteredLanguages = remember(selectedLetter) {
+        AllLanguagesList.filter {
+            it.name.trim().startsWith(selectedLetter, ignoreCase = true)
+        }
+    }
+
+    LaunchedEffect(activeSort) {
+        isLoadingLatest = true
         val result = repository.getLatestVideos()
         if (result.isSuccess) {
-            latestVideos = result.getOrNull().orEmpty()
+            val list = result.getOrNull().orEmpty()
+            latestVideos = when (activeSort) {
+                HomeVideoSort.TRENDING -> list
+                HomeVideoSort.POPULAR -> list.sortedByDescending { it.watchcounter }
+                HomeVideoSort.UNSEEN -> list.sortedBy { it.watchcounter }
+                HomeVideoSort.NEW -> list.sortedByDescending { it.datescheduleIso ?: it.dateschedule.orEmpty() }
+                HomeVideoSort.OLD -> list.sortedBy { it.datescheduleIso ?: it.dateschedule.orEmpty() }
+            }
         }
         isLoadingLatest = false
     }
@@ -82,16 +125,16 @@ fun SpatialHomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(TokoBg),
-        contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 75.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 90.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // 1. HERO BENTO CARD (Spatial Glass Card)
+        // HERO BENTO CARD
         item {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(8.dp, RoundedCornerShape(22.dp), spotColor = Color(0x140F172A))
-                    .clip(RoundedCornerShape(22.dp))
+                    .shadow(8.dp, RoundedCornerShape(26.dp), spotColor = Color(0x140F172A))
+                    .clip(RoundedCornerShape(26.dp))
                     .background(
                         Brush.linearGradient(
                             listOf(
@@ -101,10 +144,9 @@ fun SpatialHomeScreen(
                             )
                         )
                     )
-                    .padding(16.dp)
+                    .padding(20.dp)
             ) {
                 Column {
-                    // Pill: PUSAT MEDIA NUSANTARA
                     Row(
                         modifier = Modifier
                             .clip(RoundedCornerShape(99.dp))
@@ -128,42 +170,41 @@ fun SpatialHomeScreen(
                         )
                     }
 
-                    Spacer(Modifier.height(10.dp))
+                    Spacer(Modifier.height(14.dp))
 
                     Text(
-                        text = "Film, Video &\nAplikasi Kitab Suci Nusantara.",
+                        text = "Film, Video &\nAplikasi Kitab Suci\nNusantara.",
                         color = TokoText,
-                        fontSize = 22.sp,
+                        fontSize = 26.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        lineHeight = 28.sp
+                        lineHeight = 32.sp
                     )
 
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(10.dp))
 
                     Text(
                         text = "Nikmati ribuan tayangan rohani bermakna, kisah para nabi, serta aplikasi Kitab Suci Android dalam bahasa ibu dari Sabang sampai Merauke.",
                         color = TokoTextSecondary,
-                        fontSize = 12.5.sp,
-                        lineHeight = 18.sp
+                        fontSize = 13.sp,
+                        lineHeight = 19.sp
                     )
 
-                    Spacer(Modifier.height(14.dp))
+                    Spacer(Modifier.height(16.dp))
 
-                    // Tombol Aksi Hero
                     Button(
                         onClick = onWatchHeroClick,
                         colors = ButtonDefaults.buttonColors(containerColor = TokoGreen),
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(42.dp)
+                            .height(46.dp)
                     ) {
-                        Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
+                        Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(6.dp))
                         Text(
                             text = "Tonton Tayangan Sorotan",
                             color = Color.White,
-                            fontSize = 13.sp,
+                            fontSize = 13.5.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -176,14 +217,14 @@ fun SpatialHomeScreen(
                             .clip(RoundedCornerShape(12.dp))
                             .background(Color.White)
                             .clickable { onTargetClick(Target.Languages("film-riwayat-isa-al-masih")) }
-                            .padding(vertical = 10.dp, horizontal = 14.dp),
+                            .padding(vertical = 11.dp, horizontal = 14.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
                             text = "Jelajahi Wilayah ",
                             color = TokoText,
-                            fontSize = 12.5.sp,
+                            fontSize = 13.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Icon(
@@ -197,7 +238,7 @@ fun SpatialHomeScreen(
             }
         }
 
-        // 2. SECTION 01: PILIH FORMAT MEDIA (Bento Grid)
+        // 01 • KATEGORI UTAMA: PILIH FORMAT MEDIA
         item {
             Column(modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) {
                 Text(
@@ -223,13 +264,11 @@ fun SpatialHomeScreen(
             }
         }
 
-        // Kartu Utama 1 (Full Width: Film Isa Al-Masih)
         item {
             val firstCat = BentoCategories[0]
             FullWidthBentoCard(category = firstCat) { onTargetClick(firstCat.target) }
         }
 
-        // 4 Kartu Bento Berikutnya (Grid 2 kolom)
         item {
             val rest = BentoCategories.drop(1)
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -250,11 +289,182 @@ fun SpatialHomeScreen(
             }
         }
 
-        // 3. SECTION TAYANGAN TERBARU (Live API)
+        // 02 • EKSPLORASI BAHASA: KATEGORI BAHASA & FORMAT (PERSIS SCREENSHOT)
+        item {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(26.dp),
+                color = Color.White,
+                shadowElevation = 6.dp,
+                border = BorderStroke(1.dp, Color(0x140F172A))
+            ) {
+                Column(modifier = Modifier.padding(18.dp)) {
+                    Text(
+                        text = "02 • EKSPLORASI BAHASA",
+                        color = TokoGreen,
+                        fontSize = 10.5.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        letterSpacing = 1.2.sp
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = "Kategori Bahasa & Format",
+                        color = TokoText,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+
+                    Spacer(Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(999.dp))
+                            .background(Color(0xFFF1F5F9))
+                            .padding(3.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(999.dp))
+                                .background(if (langMode == LangViewMode.AZ) TokoGreen else Color.Transparent)
+                                .clickable { langMode = LangViewMode.AZ }
+                                .padding(horizontal = 14.dp, vertical = 6.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Indeks A–Z",
+                                color = if (langMode == LangViewMode.AZ) Color.White else TokoMuted,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(999.dp))
+                                .background(if (langMode == LangViewMode.BUBBLES) TokoGreen else Color.Transparent)
+                                .clickable { langMode = LangViewMode.BUBBLES }
+                                .padding(horizontal = 14.dp, vertical = 6.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Galeri Ikon",
+                                color = if (langMode == LangViewMode.BUBBLES) Color.White else TokoMuted,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    if (langMode == LangViewMode.AZ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(54.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(
+                                        Brush.linearGradient(
+                                            listOf(Color(0xFF059669), Color(0xFF4F46E5))
+                                        )
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = selectedLetter,
+                                    color = Color.White,
+                                    fontSize = 26.sp,
+                                    fontWeight = FontWeight.ExtraBold
+                                )
+                            }
+                            Spacer(Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    text = "BAHASA BERAWALAN HURUF $selectedLetter",
+                                    color = TokoGreen,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    letterSpacing = 1.sp
+                                )
+                                Spacer(Modifier.height(2.dp))
+                                Text(
+                                    text = "${filteredLanguages.size} Bahasa Tersedia",
+                                    color = TokoText,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.ExtraBold
+                                )
+                            }
+                        }
+
+                        Spacer(Modifier.height(14.dp))
+
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            alphabetLetters.forEach { letter ->
+                                val isSelected = letter == selectedLetter
+                                Box(
+                                    modifier = Modifier
+                                        .size(34.dp)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(if (isSelected) TokoGreen else Color(0xFFF8FAFC))
+                                        .clickable { selectedLetter = letter },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = letter,
+                                        color = if (isSelected) Color.White else TokoTextSecondary,
+                                        fontSize = 12.5.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(Modifier.height(16.dp))
+
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            filteredLanguages.chunked(2).forEach { pair ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                                ) {
+                                    pair.forEach { lang ->
+                                        AzLanguageCard(
+                                            language = lang,
+                                            modifier = Modifier.weight(1f)
+                                        ) {
+                                            onTargetClick(Target.Videos(lang.slug))
+                                        }
+                                    }
+                                    if (pair.size < 2) Spacer(Modifier.weight(1f))
+                                }
+                            }
+                        }
+                    } else {
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            items(HomeLanguages) { lang ->
+                                BentoLanguageBubble(language = lang) {
+                                    onTargetClick(Target.Videos(lang.slug))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 03 • STREAMING TERKINI: TAYANGAN PILIHAN TERBARU
         item {
             Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
                 Text(
-                    text = "02 • TAYANGAN TERBARU",
+                    text = "03 • STREAMING TERKINI",
                     color = TokoGreen,
                     fontSize = 10.5.sp,
                     fontWeight = FontWeight.ExtraBold,
@@ -262,11 +472,29 @@ fun SpatialHomeScreen(
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
-                    text = "Sorotan Media Nusantara",
+                    text = "Tayangan Pilihan Terbaru",
                     color = TokoText,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
+
+                Spacer(Modifier.height(8.dp))
+
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(HomeVideoSort.entries) { sortOpt ->
+                        val isSelected = sortOpt == activeSort
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = { activeSort = sortOpt },
+                            label = { Text(sortOpt.label, fontSize = 11.5.sp, fontWeight = FontWeight.Bold) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = TokoGreen,
+                                selectedLabelColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(999.dp)
+                        )
+                    }
+                }
             }
         }
 
@@ -290,35 +518,64 @@ fun SpatialHomeScreen(
                 }
             }
         }
+    }
+}
 
-        // 4. SECTION EKSPLORASI BAHASA (Bubbles/Squircles)
-        item {
-            Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
-                Text(
-                    text = "03 • EKSPLORASI BAHASA",
-                    color = TokoGreen,
-                    fontSize = 10.5.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    letterSpacing = 1.2.sp
-                )
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = "Kategori Bahasa & Format",
-                    color = TokoText,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-            }
-        }
-
-        item {
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(HomeLanguages) { lang ->
-                    BentoLanguageBubble(language = lang) {
-                        onTargetClick(Target.Videos(lang.slug))
-                    }
+@Composable
+private fun AzLanguageCard(
+    language: Language,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Surface(
+        modifier = modifier
+            .height(58.dp)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(14.dp),
+        color = Color(0xFFF8FAFC),
+        border = BorderStroke(1.dp, Color(0x140F172A))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 10.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(34.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(Color(0xFFEDE9FE)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = language.name.take(1).uppercase(),
+                        color = Color(0xFF6D28D9),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
                 }
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = language.name,
+                    color = TokoText,
+                    fontSize = 12.5.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
+            Icon(
+                imageVector = Icons.Filled.ChevronRight,
+                contentDescription = null,
+                tint = TokoGreen,
+                modifier = Modifier.size(16.dp)
+            )
         }
     }
 }
