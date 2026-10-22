@@ -25,6 +25,7 @@ import org.tokomedia.app.data.MESSENGER_URL
 import org.tokomedia.app.data.Target
 import org.tokomedia.app.data.categoryTitle
 import org.tokomedia.app.data.languageName
+import org.tokomedia.app.ui.AppListScreen
 import org.tokomedia.app.ui.BreadcrumbItem
 import org.tokomedia.app.ui.DockTab
 import org.tokomedia.app.ui.LanguageScreen
@@ -70,24 +71,28 @@ fun TokoMediaApp() {
         }
     }
 
-    // Bangun Breadcrumbs dinamis sesuai rute aktif (identik dengan index.html)
     val breadcrumbs: List<BreadcrumbItem> = when {
         currentRoute == Routes.HOME -> listOf(
             BreadcrumbItem("Beranda")
         )
         currentRoute.startsWith("languages/") -> {
             val catSlug = backStackEntry?.arguments?.getString("category").orEmpty()
-            val catTitle = BentoCategories.firstOrNull { it.id == catSlug }?.title
-                ?: categoryTitle(catSlug)
-            val subLabel = if (catSlug == "app") "Daftar Aplikasi" else "Daftar Bahasa"
-            listOf(
-                BreadcrumbItem("Beranda") { navController.navigate(Routes.HOME) { popUpTo(Routes.HOME) { inclusive = true } } },
-                BreadcrumbItem(catTitle) { navController.navigate(Routes.languages(catSlug)) },
-                BreadcrumbItem(subLabel)
-            )
+            if (catSlug == "app") {
+                listOf(
+                    BreadcrumbItem("Beranda") { navController.navigate(Routes.HOME) { popUpTo(Routes.HOME) { inclusive = true } } },
+                    BreadcrumbItem("Koleksi Aplikasi")
+                )
+            } else {
+                val catTitle = BentoCategories.firstOrNull { it.id == catSlug }?.title
+                    ?: categoryTitle(catSlug)
+                listOf(
+                    BreadcrumbItem("Beranda") { navController.navigate(Routes.HOME) { popUpTo(Routes.HOME) { inclusive = true } } },
+                    BreadcrumbItem(catTitle) { navController.navigate(Routes.languages(catSlug)) },
+                    BreadcrumbItem("Daftar Bahasa")
+                )
+            }
         }
         currentRoute.startsWith("videos/") -> {
-            val catSlug = backStackEntry?.arguments?.getString("category").orEmpty()
             val langSlug = backStackEntry?.arguments?.getString("language").orEmpty()
             val langName = languageName(langSlug)
             listOf(
@@ -176,12 +181,16 @@ fun TokoMediaApp() {
                     arguments = listOf(navArgument("category") { type = NavType.StringType })
                 ) { entry ->
                     val category = entry.arguments?.getString("category").orEmpty()
-                    LanguageScreen(
-                        categoryId = category,
-                        onLanguageClick = { language ->
-                            navController.navigate(Routes.videos(category, language.slug))
-                        }
-                    )
+                    if (category == "app") {
+                        AppListScreen()
+                    } else {
+                        LanguageScreen(
+                            categoryId = category,
+                            onLanguageClick = { language ->
+                                navController.navigate(Routes.videos(category, language.slug))
+                            }
+                        )
+                    }
                 }
                 composable(
                     route = Routes.VIDEOS,

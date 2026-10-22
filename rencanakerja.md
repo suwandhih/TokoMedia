@@ -23,6 +23,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | **A10** | **Implementasi Breadcrumb Navigasi Dinamis & Responsif** | ✅ SELESAI | 22 Okt 2026 | Breadcrumb TopBar dinamis mengikuti rute (`Beranda › Detail Video`, `Beranda › Film Isa Al-Masih › Daftar Bahasa`, dsb.) dengan pemisah chevron dan kotak sorot aktif persis index.html |
 | **A11** | **Integrasi Formulir Tanggapan Anda & Tayangan Lainnya** | ✅ SELESAI | 22 Okt 2026 | Form Tanggapan Anda di VideoDetailScreen terhubung ke endpoint `other/commentvideo` Rumahweb (tersimpan di DB `videocomment`), dan daftar Tayangan Lainnya yang dapat diklik |
 | **A12** | **Presisi Section Tayangan Pilihan Terbaru Beranda (4 Video Vertikal + Tombol CTA)** | ✅ SELESAI | 22 Okt 2026 | Tayangan Pilihan Terbaru dibatasi 4 video teratas, disusun secara vertikal 1 kolom penuh (.vcard), dan dilengkapi tombol pill 'Jelajahi Semua Koleksi per Wilayah →' persis index.html |
+| **A13** | **Implementasi Layar Koleksi Aplikasi (Katalog Resmi Google Play 269 Apps)** | ✅ SELESAI | 22 Okt 2026 | Menu Aplikasi di bottom dock & kartu Aplikasi Kitab Suci diarahkan ke AppListScreen (pencarian filter bahasa, daftar 269 apps dengan logo + nama ✔ + tombol hijau [Unduh] ke Google Play Store persis Pasted Image 2) |
 
 ---
 
