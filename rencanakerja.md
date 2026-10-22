@@ -20,6 +20,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | **A7** | **Penyempurnaan Proporsi Floating Dock & Hero Card** | ✅ SELESAI | 22 Okt 2026 | Tata letak dock vertikal (ikon atas, teks bawah 10.5sp, 4 kolom rapi sesuai index.html), hero bento lebih ringkas proporsional |
 | **A8** | **Presisi UI Indeks A-Z & Streaming Terkini (100% Identik Screenshot)** | ✅ SELESAI | 22 Okt 2026 | Sesuai Screenshot Chrome HP: Toggle [Indeks A-Z] & [Galeri Ikon], badge huruf besar 'A' 8 Bahasa, filter rail alfabet A-Y, grid 2 kolom kartu bahasa dengan badge ungu + chevron hijau, urutan section 01, 02, 03 lengkap |
 | **A9** | **Perbaikan Crash Parsing JSON 'Expected BEGIN_OBJECT but was BEGIN_ARRAY'** | ✅ SELESAI | 22 Okt 2026 | Tambahkan `VideoDetailDeserializer` pada Gson untuk menangani `data: []` saat API mengembalikan array kosong, sambungkan ke `tm-bridge.php` resmi |
+| **A10** | **Implementasi Breadcrumb Navigasi Dinamis & Responsif** | ✅ SELESAI | 22 Okt 2026 | Breadcrumb TopBar dinamis mengikuti rute (`Beranda › Detail Video`, `Beranda › Film Isa Al-Masih › Daftar Bahasa`, dsb.) dengan pemisah chevron dan kotak sorot aktif persis index.html |
 
 ---
 

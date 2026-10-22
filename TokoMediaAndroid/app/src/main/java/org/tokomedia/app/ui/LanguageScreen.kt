@@ -27,13 +27,11 @@ import org.tokomedia.app.data.categoryTitle
 @Composable
 fun LanguageScreen(categoryId: String, onLanguageClick: (Language) -> Unit) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(TokoBg),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 90.dp)
     ) {
-        item {
-            Breadcrumb(parent = categoryTitle(categoryId), current = "Daftar Bahasa")
-            Spacer(Modifier.height(4.dp))
-        }
         REGIONS.forEach { region ->
             item {
                 Text(

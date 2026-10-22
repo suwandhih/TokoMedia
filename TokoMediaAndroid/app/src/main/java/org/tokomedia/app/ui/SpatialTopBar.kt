@@ -1,6 +1,8 @@
 package org.tokomedia.app.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -35,6 +38,8 @@ fun SpatialTopBar(
     canGoBack: Boolean,
     onMenuClick: () -> Unit,
     onBackClick: () -> Unit,
+    onHomeClick: () -> Unit = {},
+    breadcrumbs: List<BreadcrumbItem> = listOf(BreadcrumbItem("Beranda")),
     onSearchClick: () -> Unit = {}
 ) {
     Column(
@@ -48,26 +53,49 @@ fun SpatialTopBar(
                 .padding(horizontal = 14.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Tombol Menu / Back
+            // Tombol Menu
             IconButton(
-                onClick = if (canGoBack) onBackClick else onMenuClick,
+                onClick = onMenuClick,
                 modifier = Modifier
                     .size(42.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.White)
             ) {
                 Icon(
-                    imageVector = if (canGoBack) Icons.AutoMirrored.Filled.ArrowBack else Icons.Filled.Menu,
-                    contentDescription = if (canGoBack) "Kembali" else "Menu",
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Menu",
                     tint = TokoText,
                     modifier = Modifier.size(20.dp)
                 )
             }
 
+            // Tombol Back (muncul jika canGoBack true, sama seperti screenshot)
+            if (canGoBack) {
+                Spacer(Modifier.width(8.dp))
+                IconButton(
+                    onClick = onBackClick,
+                    modifier = Modifier
+                        .size(42.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.White)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Kembali",
+                        tint = TokoText,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+
             Spacer(Modifier.width(10.dp))
 
             // Logo TokoMedia Resmi + Tagline MEDIA NUSANTARA
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onHomeClick() }
+            ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     // Ikon Toko Miniatur Hijau
                     Box(
@@ -152,27 +180,60 @@ fun SpatialTopBar(
             }
         }
 
-        // Ribbon Status Breadcrumb
+        // Ribbon Status Breadcrumbs Dinamis (Identik index.html & Screenshot)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 14.dp, vertical = 2.dp),
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 14.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(Color.White)
-                    .padding(horizontal = 10.dp, vertical = 3.dp)
-            ) {
-                Text(
-                    text = "Beranda",
-                    color = TokoText,
-                    fontSize = 11.5.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            breadcrumbs.forEachIndexed { index, crumb ->
+                val isLast = index == breadcrumbs.size - 1
+
+                if (index > 0) {
+                    Text(
+                        text = " › ",
+                        color = TokoMuted.copy(alpha = 0.6f),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 2.dp)
+                    )
+                }
+
+                if (isLast) {
+                    // Item aktif sekarang (dengan border box putih rapi)
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color.White)
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = crumb.label,
+                            color = TokoText,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                } else {
+                    // Item link sebelumnya (dapat diklik kembali)
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .clickable(enabled = crumb.onClick != null) { crumb.onClick?.invoke() }
+                            .padding(horizontal = 6.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = crumb.label,
+                            color = TokoMuted,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
             }
         }
-        Spacer(Modifier.height(2.dp))
+        Spacer(Modifier.height(4.dp))
     }
 }
