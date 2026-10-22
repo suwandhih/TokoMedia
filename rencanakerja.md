@@ -11,10 +11,11 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 
 | # | Tahap Pekerjaan Android | Status | Estimasi | Keterangan |
 |---|---|---|---|---|
-| **A1** | **Setup Network Client (Retrofit & OkHttp)** | ⬜ BELUM | ±3 menit | Tambah dependensi Retrofit 2 + Gson/Moshi di uild.gradle.kts |
-| **A2** | **Konstruksi API Interface & Data Models** | ⬜ BELUM | ±7 menit | Model DTO untuk Region, Bahasa, Video, dan Service interface |
-| **A3** | **Integrasi API ke Layar HomeScreen & VideoList** | ⬜ BELUM | ±10 menit | Ganti MockData.kt dengan data dinamis dari Live API |
-| **A4** | **Build & Verifikasi APK (Debug)** | ⬜ BELUM | ±5 menit | Kompilasi via Gradle dan uji konektivitas data asli |
+| **A1** | **Setup Network Client (Retrofit, OkHttp, Coil, Media3)** | ✅ SELESAI | 22 Okt 2026 | Retrofit 2.11, OkHttp 4.12, Gson, Coil 2.7, Media3 ExoPlayer HLS 1.5.1 |
+| **A2** | **Konstruksi API Interface & Data Models (DTO)** | ✅ SELESAI | 22 Okt 2026 | `ApiModels.kt`, `TokoMediaApiService.kt`, `ApiClient.kt`, `TokoMediaRepository.kt` |
+| **A3** | **Integrasi API ke Layar HomeScreen & VideoList** | ✅ SELESAI | 22 Okt 2026 | Tayangan terbaru dinamis + thumbnail Coil + VideoList terhubung ke endpoint API |
+| **A4** | **Integrasi Pemutar Video HLS (ExoPlayer)** | ✅ SELESAI | 22 Okt 2026 | `VideoDetailScreen.kt` dengan Media3 PlayerView streaming playlist `.m3u8` |
+| **A5** | **Build & Verifikasi APK Debug** | ✅ SELESAI | 22 Okt 2026 | Kompilasi sukses, berkas `TokoMedia-debug.apk` (24,8 MB) siap diuji |
 
 ---
 

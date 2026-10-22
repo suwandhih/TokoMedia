@@ -27,15 +27,18 @@ import org.tokomedia.app.ui.LanguageScreen
 import org.tokomedia.app.ui.SideMenu
 import org.tokomedia.app.ui.SideMenuItems
 import org.tokomedia.app.ui.TokoTopBar
+import org.tokomedia.app.ui.VideoDetailScreen
 import org.tokomedia.app.ui.VideoListScreen
 
 private object Routes {
     const val HOME = "home"
     const val LANGUAGES = "languages/{category}"
-    const val VIDEOS = "videos/{language}"
+    const val VIDEOS = "videos/{category}/{language}"
+    const val VIDEO_DETAIL = "video_detail/{videoId}"
 
     fun languages(category: String) = "languages/$category"
-    fun videos(language: String) = "videos/$language"
+    fun videos(category: String, language: String) = "videos/$category/$language"
+    fun videoDetail(videoId: Int) = "video_detail/$videoId"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +58,7 @@ fun TokoMediaApp() {
     fun handleTarget(target: Target) {
         when (target) {
             is Target.Languages -> navController.navigate(Routes.languages(target.category))
-            is Target.Videos -> navController.navigate(Routes.videos(target.language))
+            is Target.Videos -> navController.navigate(Routes.videos("film-riwayat-isa-al-masih", target.language))
             is Target.Url -> openUrl(target.url)
         }
     }
@@ -88,7 +91,10 @@ fun TokoMediaApp() {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(Routes.HOME) {
-                    HomeScreen(onTargetClick = { handleTarget(it) })
+                    HomeScreen(
+                        onTargetClick = { handleTarget(it) },
+                        onVideoClick = { videoId -> navController.navigate(Routes.videoDetail(videoId)) }
+                    )
                 }
                 composable(
                     route = Routes.LANGUAGES,
@@ -97,14 +103,35 @@ fun TokoMediaApp() {
                     val category = entry.arguments?.getString("category").orEmpty()
                     LanguageScreen(
                         categoryId = category,
-                        onLanguageClick = { language -> handleTarget(Target.Videos(language.slug)) }
+                        onLanguageClick = { language ->
+                            navController.navigate(Routes.videos(category, language.slug))
+                        }
                     )
                 }
                 composable(
                     route = Routes.VIDEOS,
-                    arguments = listOf(navArgument("language") { type = NavType.StringType })
+                    arguments = listOf(
+                        navArgument("category") { type = NavType.StringType },
+                        navArgument("language") { type = NavType.StringType }
+                    )
                 ) { entry ->
-                    VideoListScreen(languageSlug = entry.arguments?.getString("language").orEmpty())
+                    val category = entry.arguments?.getString("category").orEmpty()
+                    val language = entry.arguments?.getString("language").orEmpty()
+                    VideoListScreen(
+                        categorySlug = category,
+                        languageSlug = language,
+                        onVideoClick = { videoId -> navController.navigate(Routes.videoDetail(videoId)) }
+                    )
+                }
+                composable(
+                    route = Routes.VIDEO_DETAIL,
+                    arguments = listOf(navArgument("videoId") { type = NavType.IntType })
+                ) { entry ->
+                    val videoId = entry.arguments?.getInt("videoId") ?: 0
+                    VideoDetailScreen(
+                        videoId = videoId,
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
             }
         }
