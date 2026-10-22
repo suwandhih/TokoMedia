@@ -26,6 +26,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | **A13** | **Implementasi Layar Koleksi Aplikasi (Katalog Resmi Google Play 269 Apps)** | ✅ SELESAI | 22 Okt 2026 | Menu Aplikasi di bottom dock & kartu Aplikasi Kitab Suci diarahkan ke AppListScreen (pencarian filter bahasa, daftar 269 apps dengan logo + nama ✔ + tombol hijau [Unduh] ke Google Play Store persis Pasted Image 2) |
 | **A14** | **Perbaikan Indikator Tab Aktif 'Aplikasi' di Bottom Dock** | ✅ SELESAI | 22 Okt 2026 | Pisahkan rute aplikasi menjadi rute unik `apps` agar tab 'Aplikasi' aktif berwarna hijau dan tidak salah menyorot tab 'Bahasa' |
 | **A15** | **Implementasi Tombol Interaktif Suka / Favorite Video** | ✅ SELESAI | 22 Okt 2026 | Tombol 'Suka' berbingkai merah oval interaktif sesuai Pasted Image & index.html. Saat diklik seluruh tombol merespons, angka like bertambah langsung, berubah merah solid, dan terupdate ke endpoint `other/likevideo` Rumahweb |
+| **A16** | **Sticky / Freeze Pemutar Video Saat Scroll Layar Detail** | ✅ SELESAI | 22 Okt 2026 | Pemutar video ExoPlayer 16:9 di-freeze tetap berada di atas layar. Area informasi, tombol Suka, form Tanggapan Anda, dan Tayangan Lainnya dapat di-scroll bebas di bawahnya tanpa memutus tayangan |
 
 ---
 

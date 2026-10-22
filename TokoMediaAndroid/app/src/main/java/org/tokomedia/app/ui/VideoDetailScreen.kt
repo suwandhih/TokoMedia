@@ -151,10 +151,8 @@ fun VideoDetailScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(TokoBg)
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = 90.dp)
     ) {
-        // Player Video Box (16:9)
+        // Player Video Box (16:9) FREEZE / TETAP DI ATAS
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -188,7 +186,15 @@ fun VideoDetailScreen(
             }
         }
 
-        Spacer(Modifier.height(14.dp))
+        // Bagian di bawah video yang bisa di-scroll bebas
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 90.dp)
+        ) {
+            Spacer(Modifier.height(14.dp))
 
         // Info Card Identik dengan index.html #watch
         detail?.let { item ->
@@ -516,6 +522,7 @@ fun VideoDetailScreen(
                     }
                 }
             }
+        }
         }
     }
 }
