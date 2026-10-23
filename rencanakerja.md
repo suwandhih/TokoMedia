@@ -28,6 +28,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | **A15** | **Implementasi Tombol Interaktif Suka / Favorite Video** | ✅ SELESAI | 22 Okt 2026 | Tombol 'Suka' berbingkai merah oval interaktif sesuai Pasted Image & index.html. Saat diklik seluruh tombol merespons, angka like bertambah langsung, berubah merah solid, dan terupdate ke endpoint `other/likevideo` Rumahweb |
 | **A16** | **Sticky / Freeze Pemutar Video Saat Scroll Layar Detail** | ✅ SELESAI | 22 Okt 2026 | Pemutar video ExoPlayer 16:9 di-freeze tetap berada di atas layar. Area informasi, tombol Suka, form Tanggapan Anda, dan Tayangan Lainnya dapat di-scroll bebas di bawahnya tanpa memutus tayangan |
 | **A17** | **Penyempurnaan Teks & Responsivitas 4 Kartu Bento Kategori Media** | ✅ SELESAI | 23 Okt 2026 | Judul kartu MiniBentoCard diatur 2 baris (`maxLines = 2`, `softWrap = true`, `fontSize = 13.sp`, `lineHeight = 16.5.sp`), subtitle `9.5.sp`, badge atas diringkas proporsional (`VIDEO SERI`, `SHORT CLIP`, `269 APPS`, `12 EPISODE`), tinggi kartu fleksibel `IntrinsicSize.Max` & `minHeight = 180.dp`. Build APK v0.1.1 (23,6 MB) bersih dan commit ke main. |
+| **A18** | **Memperbaiki judul lengkap kartu Pilih Format Media agar responsif** | ✅ SELESAI | 23 Okt 2026 | Judul `Video Kitab Suci`, `Clip Kitab Suci`, `Aplikasi Kitab Suci`, dan `Film Ikatan Ilahi` dibuat memenuhi lebar kartu, maksimal 2 baris, tanpa ellipsis, dengan ukuran 14sp dan line height 17sp mengikuti contoh Pasted Image 2. Build APK debug berhasil. |
 
 ---
 

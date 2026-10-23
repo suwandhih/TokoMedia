@@ -868,11 +868,13 @@ private fun MiniBentoCard(category: BentoCategory, modifier: Modifier, onClick: 
                 Text(
                     text = category.title,
                     color = TokoText,
-                    fontSize = 13.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    lineHeight = 16.5.sp,
+                    lineHeight = 17.sp,
                     maxLines = 2,
-                    softWrap = true
+                    softWrap = true,
+                    overflow = TextOverflow.Clip,
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(Modifier.height(3.dp))
                 Text(
