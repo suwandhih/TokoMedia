@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.ui.text.input.ImeAction
@@ -27,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,9 +66,9 @@ fun SearchScreen(onVideoClick: (Int) -> Unit) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(TokoBg).padding(horizontal = 16.dp)
+        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(horizontal = 16.dp)
     ) {
-        Text("Cari Tayangan", color = TokoText, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+        Text("Cari Tayangan", color = MaterialTheme.colorScheme.onBackground, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
         OutlinedTextField(
             value = query,
             onValueChange = { query = it },
@@ -86,24 +86,34 @@ fun SearchScreen(onVideoClick: (Int) -> Unit) {
                 CircularProgressIndicator(color = TokoGreen)
             }
         } else if (message.isNotEmpty()) {
-            Text(message, color = TokoMuted, modifier = Modifier.padding(top = 24.dp))
+            Text(message, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 24.dp))
         } else {
             LazyColumn(
                 contentPadding = PaddingValues(vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(results) { video ->
-                    Text(
-                        text = video.displayTitle,
-                        color = TokoText,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(Color.White, RoundedCornerShape(12.dp))
+                            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
                             .clickable { onVideoClick(video.id) }
                             .padding(14.dp)
-                    )
+                    ) {
+                        Text(
+                            text = video.displayTitle,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = query.trim().replaceFirstChar { it.uppercase() },
+                            color = TokoGreen,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
+                    }
                 }
             }
         }

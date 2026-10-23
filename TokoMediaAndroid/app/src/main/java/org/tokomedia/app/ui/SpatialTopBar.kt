@@ -24,6 +24,7 @@ import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -48,7 +49,7 @@ fun SpatialTopBar(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xF2FFFFFF))
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.95f))
     ) {
         Row(
             modifier = Modifier
@@ -62,7 +63,7 @@ fun SpatialTopBar(
                 modifier = Modifier
                     .size(42.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surface)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
@@ -80,7 +81,7 @@ fun SpatialTopBar(
                     modifier = Modifier
                         .size(42.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color.White)
+                        .background(MaterialTheme.colorScheme.surface)
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -154,7 +155,7 @@ fun SpatialTopBar(
                 modifier = Modifier
                     .size(42.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surface)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Search,
@@ -172,7 +173,7 @@ fun SpatialTopBar(
                 modifier = Modifier
                     .size(42.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surface)
             ) {
                 Icon(
                     imageVector = if (isDarkTheme) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,

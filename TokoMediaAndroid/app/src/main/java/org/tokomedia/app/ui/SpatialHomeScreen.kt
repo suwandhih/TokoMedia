@@ -40,6 +40,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -136,7 +137,7 @@ fun SpatialHomeScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(TokoBg),
+            .background(MaterialTheme.colorScheme.background),
         contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 90.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {

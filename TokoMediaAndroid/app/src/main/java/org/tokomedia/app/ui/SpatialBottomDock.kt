@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,7 +69,7 @@ fun SpatialBottomDock(
                 .fillMaxWidth()
                 .height(56.dp),
             shape = RoundedCornerShape(999.dp),
-            color = Color(0xF7FFFFFF),
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.97f),
             shadowElevation = 10.dp,
             border = BorderStroke(1.dp, Color(0x140F172A))
         ) {
