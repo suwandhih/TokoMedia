@@ -1,7 +1,7 @@
 # 📋 RENCANA KERJA — TokoMedia
 
 > **Berkas ini adalah catatan tunggal semua pekerjaan TokoMedia.**
-> **Status Terkini (20 Okt 2026):** Jalur web/CORS/hosting dihentikan (ditutup). Fokus penuh beralih ke **Pengembangan Aplikasi Android Native** yang langsung terhubung ke Live API client tanpa batasan CORS.
+> **Status Terkini (23 Okt 2026):** Aplikasi Android Native terhubung ke Live API client dan CMS hero online Rumahweb. Web UI tetap dibekukan; CMS demo terpisah dipakai untuk mengubah isi Pusat Media Nusantara.
 
 ---
 
@@ -36,7 +36,8 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 
 ## 📌 KEPUTUSAN STRATEGIS (20 OKT 2026)
 1. **Web UI (index.html):** SELESAI & DIBEKUKAN. Berjalan stabil di GitHub Pages dengan data tertanam. Masalah CORS & tantangan anti-bot InfinityFree **resmi dihentikan/tidak dibahas lagi** untuk menghemat waktu.
-2. **Koneksi Android:** Langsung menembak **Live API Client** https://tokomedia.org:8009/index.php/api/. Android native tidak memiliki aturan CORS sehingga tidak ada hambatan browser.
+2. **Koneksi Android:** API video tetap melalui bridge `https://suwandhih.my.id/tm-bridge.php`; Android native tidak memiliki aturan CORS.
+3. **CMS hero:** `https://suwandhih.my.id/cms_tokomedia.html` menyimpan isi hero melalui `cms_tokomedia_api.php` dan `cms_tokomedia_data.json`. Konfigurasi tanpa login hanya untuk demo client.
 
 ---
 

@@ -90,6 +90,12 @@ function apiPost(path, params) {
 
 Jangan mengirim token dari browser pada jalur publik.
 
+## CMS demo Pusat Media Nusantara
+
+Panel editor tersedia di `https://suwandhih.my.id/cms_tokomedia.html`. Panel ini hanya mengelola label, judul, deskripsi, dan dua teks tombol pada hero beranda. Data disimpan oleh `cms_tokomedia_api.php` ke `cms_tokomedia_data.json` di Rumahweb. APK Android membaca endpoint tersebut saat beranda dibuka dan memakai teks bawaan sebagai fallback jika endpoint gagal.
+
+CMS ini sengaja tanpa login untuk demo client. Jangan gunakan konfigurasi tanpa autentikasi untuk produksi.
+
 ## Peta halaman
 
 | UI | Endpoint | Parameter penting |

@@ -74,6 +74,7 @@
 | **Bridge publik** | `https://suwandhih.my.id/tm-bridge.php`; token tetap di server |
 | **Panduan ulang** | `prompt.md` untuk membangun UI yang sama |
 | **Peta koneksi** | `datapemetaan.md` untuk aplikasi lain |
+| **CMS demo hero** | `https://suwandhih.my.id/cms_tokomedia.html` mengelola isi Pusat Media Nusantara; endpoint data `https://suwandhih.my.id/cms_tokomedia_api.php` |
 
 ---
 
@@ -87,3 +88,5 @@
 - Layar detail video di Android menerapkan pemutar video freeze (sticky) di posisi atas, sehingga area deskripsi, form tanggapan, dan tayangan lainnya dapat di-scroll bebas di bawahnya.
 - Jangan ulangi uji lewat `file://`; origin `null` memang ditolak CORS.
 - Jangan tulis token atau password di Git, dokumentasi, atau riwayat pekerjaan.
+- CMS demo saat ini tanpa login sesuai persetujuan client; jangan menambahkan kredensial ke repository. Jika dipakai produksi, wajib tambahkan autentikasi server-side.
+- File CMS yang berjalan di Rumahweb berada berdampingan dengan API di `/home/suwj4466/public_html/`: `cms_tokomedia.html`, `cms_tokomedia_api.php`, dan `cms_tokomedia_data.json`.
