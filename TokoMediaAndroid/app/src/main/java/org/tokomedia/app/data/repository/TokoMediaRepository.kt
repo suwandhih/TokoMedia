@@ -46,6 +46,19 @@ class TokoMediaRepository {
         }
     }
 
+    suspend fun searchVideos(query: String): Result<List<VideoDto>> = withContext(Dispatchers.IO) {
+        try {
+            val response = api.searchVideos(query = query)
+            if (response.status == 200 && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message ?: "Gagal mencari tayangan"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun getVideosByCategory(categorySlug: String, languageSlug: String): Result<List<VideoDto>> = withContext(Dispatchers.IO) {
         try {
             val response = when (categorySlug) {

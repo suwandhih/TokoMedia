@@ -31,6 +31,7 @@ import org.tokomedia.app.ui.DockTab
 import org.tokomedia.app.ui.LanguageScreen
 import org.tokomedia.app.ui.SideMenu
 import org.tokomedia.app.ui.SideMenuItems
+import org.tokomedia.app.ui.SearchScreen
 import org.tokomedia.app.ui.SpatialBottomDock
 import org.tokomedia.app.ui.SpatialHomeScreen
 import org.tokomedia.app.ui.SpatialTopBar
@@ -43,6 +44,7 @@ private object Routes {
     const val LANGUAGES = "languages/{category}"
     const val VIDEOS = "videos/{category}/{language}"
     const val VIDEO_DETAIL = "video_detail/{videoId}"
+    const val SEARCH = "search"
 
     fun languages(category: String) = if (category == "app") APPS else "languages/$category"
     fun videos(category: String, language: String) = "videos/$category/$language"
@@ -141,7 +143,7 @@ fun TokoMediaApp() {
                         }
                     },
                     breadcrumbs = breadcrumbs,
-                    onSearchClick = { /* Buka pencarian */ }
+                    onSearchClick = { navController.navigate(Routes.SEARCH) }
                 )
             },
             bottomBar = {
@@ -149,6 +151,7 @@ fun TokoMediaApp() {
                 val currentTab = when {
                     currentRoute == Routes.HOME -> DockTab.HOME
                     currentRoute == Routes.APPS -> DockTab.APPS
+                    currentRoute == Routes.SEARCH -> DockTab.HOME
                     currentRoute.startsWith("languages") || currentRoute.startsWith("videos") -> DockTab.LANGUAGES
                     currentRoute.startsWith("video_detail") -> DockTab.WATCH
                     else -> DockTab.HOME
@@ -161,7 +164,7 @@ fun TokoMediaApp() {
                                 popUpTo(Routes.HOME) { inclusive = true }
                             }
                             DockTab.LANGUAGES -> navController.navigate(Routes.languages("film-riwayat-isa-al-masih"))
-                            DockTab.WATCH -> navController.navigate(Routes.videoDetail(17000))
+                            DockTab.WATCH -> navController.navigate(Routes.videos("film-riwayat-isa-al-masih", "indonesia"))
                             DockTab.APPS -> navController.navigate(Routes.APPS)
                         }
                     }
@@ -177,13 +180,16 @@ fun TokoMediaApp() {
                     SpatialHomeScreen(
                         onTargetClick = { handleTarget(it) },
                         onWatchHeroClick = {
-                            navController.navigate(Routes.videoDetail(17000))
+                            navController.navigate(Routes.videos("film-riwayat-isa-al-masih", "indonesia"))
                         },
                         onVideoClick = { videoId -> navController.navigate(Routes.videoDetail(videoId)) }
                     )
                 }
                 composable(Routes.APPS) {
                     AppListScreen()
+                }
+                composable(Routes.SEARCH) {
+                    SearchScreen(onVideoClick = { videoId -> navController.navigate(Routes.videoDetail(videoId)) })
                 }
                 composable(
                     route = Routes.LANGUAGES,

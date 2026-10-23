@@ -118,20 +118,7 @@ fun VideoDetailScreen(
                     exoPlayer.playWhenReady = true
                 }
             } else {
-                detail = VideoDetailDto(
-                    id = videoId,
-                    title = "Tayangan Media TokoMedia",
-                    content = "Koleksi tayangan rohani dan kisah para nabi dalam bahasa daerah Nusantara.",
-                    source = "https://61146e7ab7a66.streamlock.net:8089/tokomedia/definst/mp4:1. RIA/RIA Indonesia/01 Pada Mulanya Saat Penciptaan - Indonesia.mp4/playlist.m3u8",
-                    watchcounter = 10222,
-                    favcounter = 693,
-                    dateschedule = "01 Aug 24"
-                )
-                likeCount = 693L
-                val mediaItem = MediaItem.fromUri("https://61146e7ab7a66.streamlock.net:8089/tokomedia/definst/mp4:1. RIA/RIA Indonesia/01 Pada Mulanya Saat Penciptaan - Indonesia.mp4/playlist.m3u8")
-                exoPlayer.setMediaItem(mediaItem)
-                exoPlayer.prepare()
-                exoPlayer.playWhenReady = true
+                errorMessage = "Detail tayangan tidak tersedia. Silakan kembali dan coba lagi."
             }
         } else {
             errorMessage = result.exceptionOrNull()?.message ?: "Gagal memuat video"
@@ -163,12 +150,16 @@ fun VideoDetailScreen(
             if (isLoading) {
                 CircularProgressIndicator(color = TokoGreen)
             } else if (errorMessage != null) {
-                Text(
-                    text = errorMessage.orEmpty(),
-                    color = Color.White,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(16.dp)
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = errorMessage.orEmpty(),
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Button(onClick = onBackClick, modifier = Modifier.padding(top = 12.dp)) {
+                        Text("Kembali")
+                    }
+                }
             } else {
                 AndroidView(
                     factory = { ctx ->
