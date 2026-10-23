@@ -27,6 +27,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | **A14** | **Perbaikan Indikator Tab Aktif 'Aplikasi' di Bottom Dock** | ✅ SELESAI | 22 Okt 2026 | Pisahkan rute aplikasi menjadi rute unik `apps` agar tab 'Aplikasi' aktif berwarna hijau dan tidak salah menyorot tab 'Bahasa' |
 | **A15** | **Implementasi Tombol Interaktif Suka / Favorite Video** | ✅ SELESAI | 22 Okt 2026 | Tombol 'Suka' berbingkai merah oval interaktif sesuai Pasted Image & index.html. Saat diklik seluruh tombol merespons, angka like bertambah langsung, berubah merah solid, dan terupdate ke endpoint `other/likevideo` Rumahweb |
 | **A16** | **Sticky / Freeze Pemutar Video Saat Scroll Layar Detail** | ✅ SELESAI | 22 Okt 2026 | Pemutar video ExoPlayer 16:9 di-freeze tetap berada di atas layar. Area informasi, tombol Suka, form Tanggapan Anda, dan Tayangan Lainnya dapat di-scroll bebas di bawahnya tanpa memutus tayangan |
+| **A17** | **Penyempurnaan Teks & Responsivitas 4 Kartu Bento Kategori Media** | ✅ SELESAI | 23 Okt 2026 | Judul kartu MiniBentoCard diatur 2 baris (`maxLines = 2`, `lineHeight = 17.sp`, `13.5.sp`), subtitle rapi, badge atas tidak terpotong (`VIDEO SERI`, `SHORT CLIP`, `269 APPS`, `12 EPISODE`), tinggi kartu fleksibel `IntrinsicSize.Max` & `minHeight = 180.dp`. Seluruh kalimat terbaca utuh di HP dan web tanpa terpotong titik-titik `...` |
 
 ---
 

@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -281,13 +284,17 @@ fun SpatialHomeScreen(
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 rest.chunked(2).forEach { pair ->
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(IntrinsicSize.Max),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         pair.forEach { cat ->
                             MiniBentoCard(
                                 category = cat,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight()
                             ) { onTargetClick(cat.target) }
                         }
                         if (pair.size < 2) Spacer(Modifier.weight(1f))
@@ -811,12 +818,12 @@ private fun FullWidthBentoCard(category: BentoCategory, onClick: () -> Unit) {
 private fun MiniBentoCard(category: BentoCategory, modifier: Modifier, onClick: () -> Unit) {
     Box(
         modifier = modifier
-            .height(175.dp)
+            .defaultMinSize(minHeight = 180.dp)
             .shadow(6.dp, RoundedCornerShape(20.dp), spotColor = Color(0x100F172A))
             .clip(RoundedCornerShape(20.dp))
             .background(Brush.linearGradient(category.bgGrad))
             .clickable(onClick = onClick)
-            .padding(14.dp)
+            .padding(13.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
             Row(
@@ -843,35 +850,42 @@ private fun MiniBentoCard(category: BentoCategory, modifier: Modifier, onClick: 
                     modifier = Modifier
                         .clip(RoundedCornerShape(99.dp))
                         .background(Color.White)
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                        .padding(horizontal = 7.dp, vertical = 3.dp)
                 ) {
                     Text(
-                        text = category.badge.take(10),
+                        text = category.badge,
                         color = TokoText,
                         fontSize = 8.5.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
                     )
                 }
             }
+
+            Spacer(Modifier.height(10.dp))
 
             Column {
                 Text(
                     text = category.title,
                     color = TokoText,
-                    fontSize = 14.5.sp,
+                    fontSize = 13.5.sp,
                     fontWeight = FontWeight.Bold,
-                    maxLines = 1,
+                    lineHeight = 17.sp,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                Spacer(Modifier.height(2.dp))
+                Spacer(Modifier.height(3.dp))
                 Text(
                     text = category.subtitle,
                     color = TokoTextSecondary,
-                    fontSize = 10.5.sp,
+                    fontSize = 10.sp,
+                    lineHeight = 13.5.sp,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }
+
+            Spacer(Modifier.height(10.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

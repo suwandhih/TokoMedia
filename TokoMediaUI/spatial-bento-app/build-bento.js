@@ -877,9 +877,17 @@ main {
 .cat-bento-card__mid { margin: 14px 0; }
 .cat-bento-card__title {
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 16.5px;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.25;
+}
+.stage-wrapper.mobile-frame .cat-bento-card__title {
+  font-size: 15px;
+  line-height: 1.25;
+}
+.stage-wrapper.mobile-frame .cat-bento-card__sub {
+  font-size: 11px;
+  line-height: 1.35;
 }
 .cat-bento-card__sub {
   font-size: 12.5px;
