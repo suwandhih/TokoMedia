@@ -1,6 +1,7 @@
 package org.tokomedia.app.ui
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -21,7 +22,7 @@ val TokoHeader = Color(0xFFFFFFFF)
 val TokoSidebar = Color(0xFF0F172A)
 val TokoLinkBlue = Color(0xFF1E5AA8)
 
-private val TokoColorScheme = lightColorScheme(
+private val TokoLightColorScheme = lightColorScheme(
     primary = TokoGreen,
     onPrimary = Color.White,
     background = TokoBg,
@@ -30,7 +31,22 @@ private val TokoColorScheme = lightColorScheme(
     onBackground = TokoText
 )
 
+private val TokoDarkColorScheme = darkColorScheme(
+    primary = TokoGreenLight,
+    onPrimary = Color(0xFF003827),
+    background = Color(0xFF0F172A),
+    surface = Color(0xFF1E293B),
+    onSurface = Color(0xFFE2E8F0),
+    onBackground = Color(0xFFE2E8F0)
+)
+
 @Composable
-fun TokoMediaTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = TokoColorScheme, content = content)
+fun TokoMediaTheme(
+    darkTheme: Boolean = false,
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colorScheme = if (darkTheme) TokoDarkColorScheme else TokoLightColorScheme,
+        content = content
+    )
 }

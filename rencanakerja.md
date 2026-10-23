@@ -32,6 +32,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | **A19** | **Membuat CMS demo Pusat Media Nusantara tanpa login** | ✅ SELESAI | 23 Okt 2026 | Menambahkan `cms_tokomedia.html`, endpoint `cms_tokomedia_api.php`, dan data awal `cms_tokomedia_data.json`. CMS mengubah label, judul, deskripsi, serta dua teks tombol; penyimpanan menggunakan JSON di hosting. Sesuai permintaan demo, endpoint tidak memakai password. |
 | **A20** | **Menghubungkan hero beranda APK ke CMS online** | ✅ SELESAI | 23 Okt 2026 | APK membaca `https://suwandhih.my.id/cms_tokomedia_api.php` saat beranda dibuka, dengan fallback teks bawaan jika endpoint gagal. Label, judul, deskripsi, dan dua teks tombol kini dapat diubah dari CMS. Endpoint teruji HTTP 200, build APK debug berhasil. |
 | **A21** | **Memperbaiki pencarian, tab Tonton, dan fallback detail video** | ✅ SELESAI | 23 Okt 2026 | Tombol pencarian kini membuka `SearchScreen` dan memakai endpoint `search`. Tab Tonton serta tombol Tonton Tayangan Sorotan kini membuka daftar video Indonesia, bukan ID video tetap. Detail video gagal tidak lagi memutar video hardcoded; pengguna mendapat pesan jelas dan tombol Kembali. Build APK debug berhasil. |
+| **A22** | **Mengaktifkan pencarian dan mode terang/gelap** | ✅ SELESAI | 23 Okt 2026 | Pencarian diperkuat dengan tombol dan tombol keyboard Search, hasil dapat dibuka ke detail, serta endpoint teruji mengembalikan 30 hasil. Ikon tema kini benar-benar mengganti Material light/dark color scheme melalui state aplikasi. Build APK debug berhasil. |
 
 ---
 

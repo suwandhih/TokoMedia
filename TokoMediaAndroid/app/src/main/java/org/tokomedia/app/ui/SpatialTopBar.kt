@@ -20,6 +20,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,7 +41,9 @@ fun SpatialTopBar(
     onBackClick: () -> Unit,
     onHomeClick: () -> Unit = {},
     breadcrumbs: List<BreadcrumbItem> = listOf(BreadcrumbItem("Beranda")),
-    onSearchClick: () -> Unit = {}
+    onSearchClick: () -> Unit = {},
+    isDarkTheme: Boolean = false,
+    onThemeToggle: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -164,16 +167,16 @@ fun SpatialTopBar(
             Spacer(Modifier.width(6.dp))
 
             // Tombol Tema Light
-            Box(
+            IconButton(
+                onClick = onThemeToggle,
                 modifier = Modifier
                     .size(42.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color.White),
-                contentAlignment = Alignment.Center
+                    .background(Color.White)
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.LightMode,
-                    contentDescription = "Tema",
+                    imageVector = if (isDarkTheme) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
+                    contentDescription = if (isDarkTheme) "Mode terang" else "Mode gelap",
                     tint = TokoMuted,
                     modifier = Modifier.size(18.dp)
                 )
