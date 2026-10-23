@@ -4,12 +4,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.tokomedia.app.data.api.ApiClient
 import org.tokomedia.app.data.api.CategoryDto
+import org.tokomedia.app.data.api.CmsHomeContentDto
 import org.tokomedia.app.data.api.VideoDetailDto
 import org.tokomedia.app.data.api.VideoDto
 
 class TokoMediaRepository {
 
     private val api = ApiClient.apiService
+
+    suspend fun getCmsHomeContent(): Result<CmsHomeContentDto> = withContext(Dispatchers.IO) {
+        try {
+            Result.success(api.getCmsHomeContent())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     suspend fun getCategoryTree(): Result<List<CategoryDto>> = withContext(Dispatchers.IO) {
         try {

@@ -2,9 +2,13 @@ package org.tokomedia.app.data.api
 
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface TokoMediaApiService {
+
+    @GET("cms_tokomedia_api.php")
+    suspend fun getCmsHomeContent(): CmsHomeContentDto
 
     @FormUrlEncoded
     @POST("tm-bridge.php")

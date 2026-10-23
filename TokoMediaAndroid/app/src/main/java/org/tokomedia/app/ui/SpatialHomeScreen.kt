@@ -67,6 +67,7 @@ import org.tokomedia.app.data.BentoCategory
 import org.tokomedia.app.data.HomeLanguages
 import org.tokomedia.app.data.Language
 import org.tokomedia.app.data.Target
+import org.tokomedia.app.data.api.CmsHomeContentDto
 import org.tokomedia.app.data.api.VideoDto
 import org.tokomedia.app.data.repository.TokoMediaRepository
 
@@ -92,6 +93,7 @@ fun SpatialHomeScreen(
     val repository = remember { TokoMediaRepository() }
     var latestVideos by remember { mutableStateOf<List<VideoDto>>(emptyList()) }
     var isLoadingLatest by remember { mutableStateOf(true) }
+    var cmsContent by remember { mutableStateOf(CmsHomeContentDto()) }
 
     var langMode by remember { mutableStateOf(LangViewMode.AZ) }
     var selectedLetter by remember { mutableStateOf("A") }
@@ -107,6 +109,10 @@ fun SpatialHomeScreen(
         AllLanguagesList.filter {
             it.name.trim().startsWith(selectedLetter, ignoreCase = true)
         }
+    }
+
+    LaunchedEffect(Unit) {
+        repository.getCmsHomeContent().onSuccess { cmsContent = it }
     }
 
     LaunchedEffect(activeSort) {
@@ -170,7 +176,7 @@ fun SpatialHomeScreen(
                         )
                         Spacer(Modifier.width(6.dp))
                         Text(
-                            text = "PUSAT MEDIA NUSANTARA",
+                            text = cmsContent.label,
                             color = TokoGreen,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.ExtraBold,
@@ -181,7 +187,7 @@ fun SpatialHomeScreen(
                     Spacer(Modifier.height(14.dp))
 
                     Text(
-                        text = "Film, Video &\nAplikasi Kitab Suci\nNusantara.",
+                        text = cmsContent.title,
                         color = TokoText,
                         fontSize = 26.sp,
                         fontWeight = FontWeight.ExtraBold,
@@ -191,7 +197,7 @@ fun SpatialHomeScreen(
                     Spacer(Modifier.height(10.dp))
 
                     Text(
-                        text = "Nikmati ribuan tayangan rohani bermakna, kisah para nabi, serta aplikasi Kitab Suci Android dalam bahasa ibu dari Sabang sampai Merauke.",
+                        text = cmsContent.description,
                         color = TokoTextSecondary,
                         fontSize = 13.sp,
                         lineHeight = 19.sp
@@ -210,7 +216,7 @@ fun SpatialHomeScreen(
                         Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(6.dp))
                         Text(
-                            text = "Tonton Tayangan Sorotan",
+                            text = cmsContent.primaryButton,
                             color = Color.White,
                             fontSize = 13.5.sp,
                             fontWeight = FontWeight.Bold
@@ -230,7 +236,7 @@ fun SpatialHomeScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Jelajahi Wilayah ",
+                            text = "${cmsContent.secondaryButton} ",
                             color = TokoText,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold
