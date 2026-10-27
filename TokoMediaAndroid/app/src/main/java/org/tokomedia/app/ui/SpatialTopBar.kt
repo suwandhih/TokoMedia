@@ -32,7 +32,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -110,10 +112,18 @@ fun SpatialTopBar(
                     .clickable { onHomeClick() }
             ) {
                 BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-                    val logoFont = ((maxWidth.value - 58f) / 6.9f).coerceIn(9f, 16f)
+                    // Lebar teks ikut skala font HP, sedangkan ikon & spasi tetap dalam dp.
+                    // 66dp = ikon logo + spasi + tombol play + pause bar.
+                    // 5.6 = 7 huruf kapital (TOK MED A) x faktor lebar 0.8 per em.
+                    val fontScale = LocalDensity.current.fontScale
+                    val logoFont = ((maxWidth.value - 66f) / (5.6f * fontScale))
+                        .coerceIn(9f, 16f)
                     val markSize = (logoFont * 1.75f).dp
                     Column {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clipToBounds()
+                    ) {
                         // Logo resmi TokoMedia (ikon toko hijau + pin lokasi merah)
                         Image(
                             painter = painterResource(R.drawable.ic_tm_logo),
