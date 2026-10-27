@@ -20,6 +20,9 @@ TokoMediaAndroid/app/build/
 TokoMediaAndroid/local.properties
 TokoMediaAndroid/*.apk
 
+# Paket kirim ke client (berisi APK biner besar, jangan di-commit)
+kirim-client/
+
 # Large database dumps & zip backups (>10MB / sensitive)
 Backup/
 20261014 API TM App/*.sql
