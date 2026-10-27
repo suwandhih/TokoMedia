@@ -119,7 +119,6 @@ fun SpatialTopBar(
                     val logoFont = ((maxWidth.value - 66f) / (5.6f * fontScale))
                         .coerceIn(9f, 16f)
                     val markSize = (logoFont * 1.75f).dp
-                    Column {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.clipToBounds()
@@ -131,39 +130,43 @@ fun SpatialTopBar(
                             modifier = Modifier.size(markSize)
                         )
                         Spacer(Modifier.width(5.dp))
-                        Text("TOK", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = logoFont.sp, maxLines = 1, softWrap = false)
-                        Spacer(Modifier.width(2.dp))
-                        // Tombol Play Hijau
-                        Box(
-                            modifier = Modifier
-                                .size((logoFont * 0.95f).dp)
-                                .clip(CircleShape)
-                                .background(TokoGreen),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size((logoFont * 0.62f).dp))
+                        // Wordmark + tagline sejajar: tagline tepat di bawah TOK▶MED‖A
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("TOK", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = logoFont.sp, maxLines = 1, softWrap = false)
+                                Spacer(Modifier.width(2.dp))
+                                // Tombol Play Hijau
+                                Box(
+                                    modifier = Modifier
+                                        .size((logoFont * 0.95f).dp)
+                                        .clip(CircleShape)
+                                        .background(TokoGreen),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size((logoFont * 0.62f).dp))
+                                }
+                                Spacer(Modifier.width(2.dp))
+                                Text("MED", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = logoFont.sp, maxLines = 1, softWrap = false)
+                                Spacer(Modifier.width(2.dp))
+                                // Pause Bar Hijau
+                                Row {
+                                    Box(modifier = Modifier.width(3.dp).height((logoFont * 0.75f).dp).background(TokoGreen, RoundedCornerShape(1.dp)))
+                                    Spacer(Modifier.width(2.dp))
+                                    Box(modifier = Modifier.width(3.dp).height((logoFont * 0.75f).dp).background(TokoGreen, RoundedCornerShape(1.dp)))
+                                }
+                                Spacer(Modifier.width(2.dp))
+                                Text("A", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = logoFont.sp, maxLines = 1, softWrap = false)
+                            }
+                            Text(
+                                text = "MEDIA NUSANTARA",
+                                color = TokoMuted,
+                                fontSize = (logoFont * 0.47f).coerceAtLeast(6f).sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = (logoFont * 0.1f).sp,
+                                maxLines = 1,
+                                softWrap = false
+                            )
                         }
-                        Spacer(Modifier.width(2.dp))
-                        Text("MED", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = logoFont.sp, maxLines = 1, softWrap = false)
-                        Spacer(Modifier.width(2.dp))
-                        // Pause Bar Hijau
-                        Row {
-                            Box(modifier = Modifier.width(3.dp).height((logoFont * 0.75f).dp).background(TokoGreen, RoundedCornerShape(1.dp)))
-                            Spacer(Modifier.width(2.dp))
-                            Box(modifier = Modifier.width(3.dp).height((logoFont * 0.75f).dp).background(TokoGreen, RoundedCornerShape(1.dp)))
-                        }
-                        Spacer(Modifier.width(2.dp))
-                        Text("A", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = logoFont.sp, maxLines = 1, softWrap = false)
-                    }
-                    Text(
-                        text = "MEDIA NUSANTARA",
-                        color = TokoMuted,
-                        fontSize = (logoFont * 0.47f).coerceAtLeast(6f).sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = (logoFont * 0.1f).sp,
-                        maxLines = 1,
-                        softWrap = false
-                    )
                     }
                 }
             }
