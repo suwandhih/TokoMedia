@@ -3,12 +3,18 @@ package org.tokomedia.app.data.api
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface TokoMediaApiService {
 
+    // cacheBuster mencegah APK memakai respons lama dari cache HTTP.
+    @Headers("Cache-Control: no-cache", "Pragma: no-cache")
     @GET("cms_tokomedia_api.php")
-    suspend fun getCmsHomeContent(): CmsHomeContentDto
+    suspend fun getCmsHomeContent(
+        @Query("_") cacheBuster: Long
+    ): CmsHomeContentDto
 
     @FormUrlEncoded
     @POST("tm-bridge.php")

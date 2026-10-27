@@ -14,7 +14,7 @@ class TokoMediaRepository {
 
     suspend fun getCmsHomeContent(): Result<CmsHomeContentDto> = withContext(Dispatchers.IO) {
         try {
-            Result.success(api.getCmsHomeContent())
+            Result.success(api.getCmsHomeContent(cacheBuster = System.currentTimeMillis()))
         } catch (e: Exception) {
             Result.failure(e)
         }

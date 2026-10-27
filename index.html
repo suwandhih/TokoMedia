@@ -1678,9 +1678,45 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
     homeLanguages: P.homeLanguages,
     latestVideos: P.latestVideos,
     apps: P.apps,
+    cms: null,
     watch: null,
     loaded: {}
   };
+
+  // Isi hero Pusat Media Nusantara dikelola lewat CMS di hosting.
+  var CMS_ENDPOINT = 'https://suwandhih.my.id/cms_tokomedia_api.php';
+  var CMS_DEFAULT = {
+    label: 'PUSAT MEDIA NUSANTARA',
+    title: 'Film, Video &\nAplikasi Kitab Suci\nNusantara.',
+    description: 'Nikmati ribuan tayangan rohani bermakna, kisah para nabi, serta aplikasi Kitab Suci Android dalam bahasa ibu dari Sabang sampai Merauke.',
+    primaryButton: 'Tonton Tayangan Sorotan',
+    secondaryButton: 'Jelajahi Wilayah'
+  };
+
+  function cmsValue(key) {
+    var source = TM.cms || {};
+    var value = source[key];
+    return (typeof value === 'string' && value.trim()) ? value : CMS_DEFAULT[key];
+  }
+
+  // Baris baru dari CMS ditampilkan sebagai pemisah baris pada HTML.
+  function cmsHtml(key) {
+    return esc(cmsValue(key)).replace(/\n/g, '<br>');
+  }
+
+  function loadCmsContent() {
+    return fetch(CMS_ENDPOINT + '?_=' + Date.now(), { cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (json) {
+        if (!json || typeof json !== 'object') throw new Error('Respons CMS tidak valid');
+        TM.cms = json;
+        rerenderIf(function (route) { return route === 'home'; });
+      })
+      .catch(function () { /* pakai teks bawaan bila CMS tidak terjangkau */ });
+  }
 
   // Root kategori di database untuk setiap slug kategori pada UI.
   var CATEGORY_ROOT = {
@@ -1989,12 +2025,12 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '<div class="hero-main-card">' +
       '<div class="hero-main-card__bg"></div>' +
       '<div class="hero-main-card__content">' +
-      '<span class="spatial-pill"><span class="spatial-pill__dot"></span>PUSAT MEDIA NUSANTARA</span>' +
-      '<h1 class="hero-title">Film, Video &amp; Aplikasi Kitab Suci Nusantara.</h1>' +
-      '<p class="hero-desc">Nikmati ribuan tayangan rohani bermakna, kisah para nabi, serta aplikasi Kitab Suci Android dalam bahasa ibu dari Sabang sampai Merauke.</p>' +
+      '<span class="spatial-pill"><span class="spatial-pill__dot"></span>' + cmsHtml('label') + '</span>' +
+      '<h1 class="hero-title">' + cmsHtml('title') + '</h1>' +
+      '<p class="hero-desc">' + cmsHtml('description') + '</p>' +
       '<div class="hero-cta-row">' +
-      '<a href="#watch" class="btn-primary" data-watch="1" data-id="' + esc(heroVideo.id || '') + '" data-title="' + esc(heroVideo.title) + '" data-views="' + esc(heroVideo.views) + '" data-date-label="' + esc(heroVideo.dateLabel) + '" data-image="' + esc(heroImg) + '" data-href="' + esc(heroHref) + '">&#9654; Tonton Tayangan Sorotan</a>' +
-      '<a href="#languages/film-riwayat-isa-al-masih" class="btn-glass">Jelajahi Wilayah &rarr;</a>' +
+      '<a href="#watch" class="btn-primary" data-watch="1" data-id="' + esc(heroVideo.id || '') + '" data-title="' + esc(heroVideo.title) + '" data-views="' + esc(heroVideo.views) + '" data-date-label="' + esc(heroVideo.dateLabel) + '" data-image="' + esc(heroImg) + '" data-href="' + esc(heroHref) + '">&#9654; ' + cmsHtml('primaryButton') + '</a>' +
+      '<a href="#languages/film-riwayat-isa-al-masih" class="btn-glass">' + cmsHtml('secondaryButton') + ' &rarr;</a>' +
       '</div></div></div>' +
       '</section>' +
 
@@ -2818,6 +2854,12 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
   });
 
   window.addEventListener('hashchange', showRoute);
+
+  // Saat tab kembali aktif, ambil ulang isi CMS agar perubahan langsung terlihat.
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') loadCmsContent();
+  });
+
   showRoute();
 
   // ---------------------------------------------------------------------------
@@ -2825,6 +2867,8 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
   // kegagalan API tidak membuat UI kosong — hanya tetap memakai data luring.
   // ---------------------------------------------------------------------------
   function loadBootstrapData() {
+    loadCmsContent();
+
     apiPost('category/tree', {}).then(function (json) {
       if (!json.data || !json.data.length) return;
       TM.tree = json.data;

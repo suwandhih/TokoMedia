@@ -8,7 +8,7 @@ import java.lang.reflect.Type
 
 data class CmsHomeContentDto(
     @SerializedName("label") val label: String = "PUSAT MEDIA NUSANTARA",
-    @SerializedName("title") val title: String = "Film, Video &\\nAplikasi Kitab Suci\\nNusantara.",
+    @SerializedName("title") val title: String = "Film, Video &\nAplikasi Kitab Suci\nNusantara.",
     @SerializedName("description") val description: String = "Nikmati ribuan tayangan rohani bermakna, kisah para nabi, serta aplikasi Kitab Suci Android dalam bahasa ibu dari Sabang sampai Merauke.",
     @SerializedName("primaryButton") val primaryButton: String = "Tonton Tayangan Sorotan",
     @SerializedName("secondaryButton") val secondaryButton: String = "Jelajahi Wilayah"

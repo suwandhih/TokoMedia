@@ -39,18 +39,24 @@ import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -86,7 +92,7 @@ enum class HomeVideoSort(val label: String, val apiValue: String) {
     OLD("Old", "oldest")
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SpatialHomeScreen(
     onTargetClick: (Target) -> Unit,
@@ -97,6 +103,21 @@ fun SpatialHomeScreen(
     var latestVideos by remember { mutableStateOf<List<VideoDto>>(emptyList()) }
     var isLoadingLatest by remember { mutableStateOf(true) }
     var cmsContent by remember { mutableStateOf(CmsHomeContentDto()) }
+    var cmsError by remember { mutableStateOf<String?>(null) }
+    var isRefreshing by remember { mutableStateOf(false) }
+    var initialCmsLoadDone by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
+    suspend fun loadCmsContent() {
+        repository.getCmsHomeContent()
+            .onSuccess {
+                cmsContent = it
+                cmsError = null
+            }
+            .onFailure {
+                cmsError = "Isi Pusat Media belum dapat dimuat. Tarik ke bawah untuk mencoba lagi."
+            }
+    }
 
     var langMode by remember { mutableStateOf(LangViewMode.AZ) }
     var selectedLetter by remember { mutableStateOf("A") }
@@ -115,7 +136,14 @@ fun SpatialHomeScreen(
     }
 
     LaunchedEffect(Unit) {
-        repository.getCmsHomeContent().onSuccess { cmsContent = it }
+        loadCmsContent()
+        initialCmsLoadDone = true
+    }
+
+    // Ambil ulang isi CMS setiap aplikasi kembali aktif, agar perubahan dari CMS
+    // langsung terlihat tanpa perlu menutup aplikasi.
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        if (initialCmsLoadDone) scope.launch { loadCmsContent() }
     }
 
     LaunchedEffect(activeSort) {
@@ -136,203 +164,160 @@ fun SpatialHomeScreen(
         isLoadingLatest = false
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 90.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = {
+            scope.launch {
+                isRefreshing = true
+                loadCmsContent()
+                isRefreshing = false
+            }
+        },
+        modifier = Modifier.fillMaxSize()
     ) {
-        // =====================================================================
-        // HERO BENTO CARD
-        // =====================================================================
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(8.dp, RoundedCornerShape(26.dp), spotColor = Color(0x140F172A))
-                    .clip(RoundedCornerShape(26.dp))
-                    .background(
-                        Brush.linearGradient(
-                            listOf(
-                                Color(0xFFFFFFFF),
-                                Color(0xFFEDF8F2),
-                                Color(0xFFD7F0E3)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 90.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // =====================================================================
+            // HERO BENTO CARD
+            // =====================================================================
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(8.dp, RoundedCornerShape(26.dp), spotColor = Color(0x140F172A))
+                        .clip(RoundedCornerShape(26.dp))
+                        .background(
+                            Brush.linearGradient(
+                                listOf(
+                                    Color(0xFFFFFFFF),
+                                    Color(0xFFEDF8F2),
+                                    Color(0xFFD7F0E3)
+                                )
                             )
                         )
-                    )
-                    .padding(20.dp)
-            ) {
-                Column {
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(99.dp))
-                            .background(Color(0xFFE2F4EB))
-                            .padding(horizontal = 10.dp, vertical = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
+                        .padding(20.dp)
+                ) {
+                    Column {
+                        Row(
                             modifier = Modifier
-                                .size(7.dp)
-                                .clip(CircleShape)
-                                .background(TokoGreen)
-                        )
-                        Spacer(Modifier.width(6.dp))
-                        Text(
-                            text = cmsContent.label,
-                            color = TokoGreen,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            letterSpacing = 1.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-
-                    Spacer(Modifier.height(14.dp))
-
-                    Text(
-                        text = cmsContent.title,
-                        color = TokoText,
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        lineHeight = 32.sp
-                    )
-
-                    Spacer(Modifier.height(10.dp))
-
-                    Text(
-                        text = cmsContent.description,
-                        color = TokoTextSecondary,
-                        fontSize = 13.sp,
-                        lineHeight = 19.sp
-                    )
-
-                    Spacer(Modifier.height(16.dp))
-
-                    Button(
-                        onClick = onWatchHeroClick,
-                        colors = ButtonDefaults.buttonColors(containerColor = TokoGreen),
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 46.dp)
-                    ) {
-                        Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(6.dp))
-                        Text(
-                            text = cmsContent.primaryButton,
-                            color = Color.White,
-                            fontSize = 13.5.sp,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color.White)
-                            .clickable { onTargetClick(Target.Languages("film-riwayat-isa-al-masih")) }
-                            .padding(vertical = 11.dp, horizontal = 14.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "${cmsContent.secondaryButton} ",
-                            color = TokoText,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f, fill = false)
-                        )
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = null,
-                            tint = TokoText,
-                            modifier = Modifier.size(15.dp)
-                        )
-                    }
-                }
-            }
-        }
-
-        // =====================================================================
-        // 01 • KATEGORI UTAMA: PILIH FORMAT MEDIA
-        // =====================================================================
-        item {
-            Column(modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) {
-                Text(
-                    text = "01 • KATEGORI UTAMA",
-                    color = TokoGreen,
-                    fontSize = 10.5.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    letterSpacing = 1.2.sp
-                )
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = "Pilih Format Media",
-                    color = TokoText,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = "Ketuk kartu untuk melihat daftar bahasa per wilayah",
-                    color = TokoMuted,
-                    fontSize = 12.5.sp
-                )
-            }
-        }
-
-        item {
-            val firstCat = BentoCategories[0]
-            FullWidthBentoCard(category = firstCat) { onTargetClick(firstCat.target) }
-        }
-
-        item {
-            val rest = BentoCategories.drop(1)
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                rest.chunked(2).forEach { pair ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(IntrinsicSize.Max),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        pair.forEach { cat ->
-                            MiniBentoCard(
-                                category = cat,
+                                .clip(RoundedCornerShape(99.dp))
+                                .background(Color(0xFFE2F4EB))
+                                .padding(horizontal = 10.dp, vertical = 5.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
                                 modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight()
-                            ) { onTargetClick(cat.target) }
+                                    .size(7.dp)
+                                    .clip(CircleShape)
+                                    .background(TokoGreen)
+                            )
+                            Spacer(Modifier.width(6.dp))
+                            Text(
+                                text = cmsContent.label,
+                                color = TokoGreen,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                letterSpacing = 1.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
-                        if (pair.size < 2) Spacer(Modifier.weight(1f))
+
+                        Spacer(Modifier.height(14.dp))
+
+                        Text(
+                            text = cmsContent.title,
+                            color = TokoText,
+                            fontSize = 26.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            lineHeight = 32.sp
+                        )
+
+                        Spacer(Modifier.height(10.dp))
+
+                        Text(
+                            text = cmsContent.description,
+                            color = TokoTextSecondary,
+                            fontSize = 13.sp,
+                            lineHeight = 19.sp
+                        )
+
+                        cmsError?.let { message ->
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                text = message,
+                                color = Color(0xFFB91C1C),
+                                fontSize = 11.5.sp,
+                                lineHeight = 16.sp
+                            )
+                        }
+
+                        Spacer(Modifier.height(16.dp))
+
+                        Button(
+                            onClick = onWatchHeroClick,
+                            colors = ButtonDefaults.buttonColors(containerColor = TokoGreen),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = 46.dp)
+                        ) {
+                            Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
+                            Spacer(Modifier.width(6.dp))
+                            Text(
+                                text = cmsContent.primaryButton,
+                                color = Color.White,
+                                fontSize = 13.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+
+                        Spacer(Modifier.height(8.dp))
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(Color.White)
+                                .clickable { onTargetClick(Target.Languages("film-riwayat-isa-al-masih")) }
+                                .padding(vertical = 11.dp, horizontal = 14.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "${cmsContent.secondaryButton} ",
+                                color = TokoText,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f, fill = false)
+                            )
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = null,
+                                tint = TokoText,
+                                modifier = Modifier.size(15.dp)
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        // =====================================================================
-        // 02 • EKSPLORASI BAHASA: KATEGORI BAHASA & FORMAT
-        // =====================================================================
-        item {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(26.dp),
-                color = Color.White,
-                shadowElevation = 6.dp,
-                border = BorderStroke(1.dp, Color(0x140F172A))
-            ) {
-                Column(modifier = Modifier.padding(18.dp)) {
+            // =====================================================================
+            // 01 • KATEGORI UTAMA: PILIH FORMAT MEDIA
+            // =====================================================================
+            item {
+                Column(modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) {
                     Text(
-                        text = "02 • EKSPLORASI BAHASA",
+                        text = "01 • KATEGORI UTAMA",
                         color = TokoGreen,
                         fontSize = 10.5.sp,
                         fontWeight = FontWeight.ExtraBold,
@@ -340,267 +325,332 @@ fun SpatialHomeScreen(
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        text = "Kategori Bahasa & Format",
+                        text = "Pilih Format Media",
                         color = TokoText,
-                        fontSize = 20.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.ExtraBold
                     )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = "Ketuk kartu untuk melihat daftar bahasa per wilayah",
+                        color = TokoMuted,
+                        fontSize = 12.5.sp
+                    )
+                }
+            }
 
-                    Spacer(Modifier.height(12.dp))
+            item {
+                val firstCat = BentoCategories[0]
+                FullWidthBentoCard(category = firstCat) { onTargetClick(firstCat.target) }
+            }
 
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(999.dp))
-                            .background(Color(0xFFF1F5F9))
-                            .padding(3.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
+            item {
+                val rest = BentoCategories.drop(1)
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    rest.chunked(2).forEach { pair ->
+                        Row(
                             modifier = Modifier
-                                .clip(RoundedCornerShape(999.dp))
-                                .background(if (langMode == LangViewMode.AZ) TokoGreen else Color.Transparent)
-                                .clickable { langMode = LangViewMode.AZ }
-                                .padding(horizontal = 12.dp, vertical = 6.dp),
-                            contentAlignment = Alignment.Center
+                                .fillMaxWidth()
+                                .height(IntrinsicSize.Max),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            Text(
-                                text = "Indeks A–Z",
-                                color = if (langMode == LangViewMode.AZ) Color.White else TokoMuted,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1,
-                                softWrap = false
-                            )
-                        }
-
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(999.dp))
-                                .background(if (langMode == LangViewMode.BUBBLES) TokoGreen else Color.Transparent)
-                                .clickable { langMode = LangViewMode.BUBBLES }
-                                .padding(horizontal = 12.dp, vertical = 6.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "Galeri Ikon",
-                                color = if (langMode == LangViewMode.BUBBLES) Color.White else TokoMuted,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1,
-                                softWrap = false
-                            )
+                            pair.forEach { cat ->
+                                MiniBentoCard(
+                                    category = cat,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .fillMaxHeight()
+                                ) { onTargetClick(cat.target) }
+                            }
+                            if (pair.size < 2) Spacer(Modifier.weight(1f))
                         }
                     }
+                }
+            }
 
-                    Spacer(Modifier.height(16.dp))
+            // =====================================================================
+            // 02 • EKSPLORASI BAHASA: KATEGORI BAHASA & FORMAT
+            // =====================================================================
+            item {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(26.dp),
+                    color = Color.White,
+                    shadowElevation = 6.dp,
+                    border = BorderStroke(1.dp, Color(0x140F172A))
+                ) {
+                    Column(modifier = Modifier.padding(18.dp)) {
+                        Text(
+                            text = "02 • EKSPLORASI BAHASA",
+                            color = TokoGreen,
+                            fontSize = 10.5.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            letterSpacing = 1.2.sp
+                        )
+                        Spacer(Modifier.height(2.dp))
+                        Text(
+                            text = "Kategori Bahasa & Format",
+                            color = TokoText,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
 
-                    if (langMode == LangViewMode.AZ) {
+                        Spacer(Modifier.height(12.dp))
+
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(999.dp))
+                                .background(Color(0xFFF1F5F9))
+                                .padding(3.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(54.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(
-                                        Brush.linearGradient(
-                                            listOf(Color(0xFF059669), Color(0xFF4F46E5))
-                                        )
-                                    ),
+                                    .clip(RoundedCornerShape(999.dp))
+                                    .background(if (langMode == LangViewMode.AZ) TokoGreen else Color.Transparent)
+                                    .clickable { langMode = LangViewMode.AZ }
+                                    .padding(horizontal = 12.dp, vertical = 6.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = selectedLetter,
-                                    color = Color.White,
-                                    fontSize = 26.sp,
-                                    fontWeight = FontWeight.ExtraBold
+                                    text = "Indeks A–Z",
+                                    color = if (langMode == LangViewMode.AZ) Color.White else TokoMuted,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    softWrap = false
                                 )
                             }
-                            Spacer(Modifier.width(12.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "BAHASA BERAWALAN HURUF $selectedLetter",
-                                    color = TokoGreen,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    letterSpacing = 1.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Spacer(Modifier.height(2.dp))
-                                Text(
-                                    text = "${filteredLanguages.size} Bahasa Tersedia",
-                                    color = TokoText,
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                        }
 
-                        Spacer(Modifier.height(14.dp))
-
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            alphabetLetters.forEach { letter ->
-                                val isSelected = letter == selectedLetter
-                                Box(
-                                    modifier = Modifier
-                                        .size(34.dp)
-                                        .clip(RoundedCornerShape(10.dp))
-                                        .background(if (isSelected) TokoGreen else Color(0xFFF8FAFC))
-                                        .clickable { selectedLetter = letter },
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = letter,
-                                        color = if (isSelected) Color.White else TokoTextSecondary,
-                                        fontSize = 12.5.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(999.dp))
+                                    .background(if (langMode == LangViewMode.BUBBLES) TokoGreen else Color.Transparent)
+                                    .clickable { langMode = LangViewMode.BUBBLES }
+                                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Galeri Ikon",
+                                    color = if (langMode == LangViewMode.BUBBLES) Color.White else TokoMuted,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    softWrap = false
+                                )
                             }
                         }
 
                         Spacer(Modifier.height(16.dp))
 
-                        // Di layar sempit nama bahasa panjang tidak muat 2 kolom,
-                        // jadi grid turun menjadi 1 kolom agar nama tetap utuh.
-                        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-                            val columns = if (maxWidth < 340.dp) 1 else 2
-                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                                filteredLanguages.chunked(columns).forEach { group ->
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        if (langMode == LangViewMode.AZ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(54.dp)
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .background(
+                                            Brush.linearGradient(
+                                                listOf(Color(0xFF059669), Color(0xFF4F46E5))
+                                            )
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = selectedLetter,
+                                        color = Color.White,
+                                        fontSize = 26.sp,
+                                        fontWeight = FontWeight.ExtraBold
+                                    )
+                                }
+                                Spacer(Modifier.width(12.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = "BAHASA BERAWALAN HURUF $selectedLetter",
+                                        color = TokoGreen,
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        letterSpacing = 1.sp,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Spacer(Modifier.height(2.dp))
+                                    Text(
+                                        text = "${filteredLanguages.size} Bahasa Tersedia",
+                                        color = TokoText,
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
+
+                            Spacer(Modifier.height(14.dp))
+
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                alphabetLetters.forEach { letter ->
+                                    val isSelected = letter == selectedLetter
+                                    Box(
+                                        modifier = Modifier
+                                            .size(34.dp)
+                                            .clip(RoundedCornerShape(10.dp))
+                                            .background(if (isSelected) TokoGreen else Color(0xFFF8FAFC))
+                                            .clickable { selectedLetter = letter },
+                                        contentAlignment = Alignment.Center
                                     ) {
-                                        group.forEach { lang ->
-                                            AzLanguageCard(
-                                                language = lang,
-                                                modifier = Modifier.weight(1f)
-                                            ) {
-                                                onTargetClick(Target.Videos(lang.slug))
+                                        Text(
+                                            text = letter,
+                                            color = if (isSelected) Color.White else TokoTextSecondary,
+                                            fontSize = 12.5.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            }
+
+                            Spacer(Modifier.height(16.dp))
+
+                            // Di layar sempit nama bahasa panjang tidak muat 2 kolom,
+                            // jadi grid turun menjadi 1 kolom agar nama tetap utuh.
+                            BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                                val columns = if (maxWidth < 340.dp) 1 else 2
+                                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    filteredLanguages.chunked(columns).forEach { group ->
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                                        ) {
+                                            group.forEach { lang ->
+                                                AzLanguageCard(
+                                                    language = lang,
+                                                    modifier = Modifier.weight(1f)
+                                                ) {
+                                                    onTargetClick(Target.Videos(lang.slug))
+                                                }
                                             }
+                                            repeat(columns - group.size) { Spacer(Modifier.weight(1f)) }
                                         }
-                                        repeat(columns - group.size) { Spacer(Modifier.weight(1f)) }
+                                    }
+                                }
+                            }
+                        } else {
+                            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                items(HomeLanguages) { lang ->
+                                    BentoLanguageBubble(language = lang) {
+                                        onTargetClick(Target.Videos(lang.slug))
                                     }
                                 }
                             }
                         }
-                    } else {
-                        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            items(HomeLanguages) { lang ->
-                                BentoLanguageBubble(language = lang) {
-                                    onTargetClick(Target.Videos(lang.slug))
-                                }
-                            }
+                    }
+                }
+            }
+
+            // =====================================================================
+            // 03 • STREAMING TERKINI: TAYANGAN PILIHAN TERBARU (VERTIKAL 4 VIDEO)
+            // =====================================================================
+            item {
+                Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                    Text(
+                        text = "03 • STREAMING TERKINI",
+                        color = TokoGreen,
+                        fontSize = 10.5.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        letterSpacing = 1.2.sp
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = "Tayangan Pilihan Terbaru",
+                        color = TokoText,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        items(HomeVideoSort.entries) { sortOpt ->
+                            val isSelected = sortOpt == activeSort
+                            FilterChip(
+                                selected = isSelected,
+                                onClick = { activeSort = sortOpt },
+                                label = { Text(sortOpt.label, fontSize = 11.5.sp, fontWeight = FontWeight.Bold) },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = TokoGreen,
+                                    selectedLabelColor = Color.White
+                                ),
+                                shape = RoundedCornerShape(999.dp)
+                            )
                         }
                     }
                 }
             }
-        }
 
-        // =====================================================================
-        // 03 • STREAMING TERKINI: TAYANGAN PILIHAN TERBARU (VERTIKAL 4 VIDEO)
-        // =====================================================================
-        item {
-            Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
-                Text(
-                    text = "03 • STREAMING TERKINI",
-                    color = TokoGreen,
-                    fontSize = 10.5.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    letterSpacing = 1.2.sp
-                )
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = "Tayangan Pilihan Terbaru",
-                    color = TokoText,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(HomeVideoSort.entries) { sortOpt ->
-                        val isSelected = sortOpt == activeSort
-                        FilterChip(
-                            selected = isSelected,
-                            onClick = { activeSort = sortOpt },
-                            label = { Text(sortOpt.label, fontSize = 11.5.sp, fontWeight = FontWeight.Bold) },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = TokoGreen,
-                                selectedLabelColor = Color.White
-                            ),
-                            shape = RoundedCornerShape(999.dp)
-                        )
-                    }
-                }
-            }
-        }
-
-        if (isLoadingLatest) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(140.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = TokoGreen)
-                }
-            }
-        } else if (latestVideos.isNotEmpty()) {
-            // 1. & 2. Tampil VERTIKAL sebanyak 4 VIDEO (Persis index.html .video-bento-grid)
-            items(latestVideos) { video ->
-                VerticalVideoBentoCard(
-                    video = video,
-                    onClick = { onVideoClick(video.id) }
-                )
-            }
-
-            // 3. Tombol [Jelajahi Semua Koleksi per Wilayah →] persis index.html
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp, bottom = 12.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Surface(
-                        shape = RoundedCornerShape(999.dp),
-                        color = Color.White,
-                        shadowElevation = 3.dp,
-                        border = BorderStroke(1.dp, Color(0x180F172A)),
-                        modifier = Modifier.clickable {
-                            onTargetClick(Target.Languages("film-riwayat-isa-al-masih"))
-                        }
+            if (isLoadingLatest) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(140.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                        CircularProgressIndicator(color = TokoGreen)
+                    }
+                }
+            } else if (latestVideos.isNotEmpty()) {
+                // 1. & 2. Tampil VERTIKAL sebanyak 4 VIDEO (Persis index.html .video-bento-grid)
+                items(latestVideos) { video ->
+                    VerticalVideoBentoCard(
+                        video = video,
+                        onClick = { onVideoClick(video.id) }
+                    )
+                }
+
+                // 3. Tombol [Jelajahi Semua Koleksi per Wilayah →] persis index.html
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp, bottom = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(999.dp),
+                            color = Color.White,
+                            shadowElevation = 3.dp,
+                            border = BorderStroke(1.dp, Color(0x180F172A)),
+                            modifier = Modifier.clickable {
+                                onTargetClick(Target.Languages("film-riwayat-isa-al-masih"))
+                            }
                         ) {
-                            Text(
-                                text = "Jelajahi Semua Koleksi per Wilayah ",
-                                color = TokoText,
-                                fontSize = 13.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f, fill = false)
-                            )
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                contentDescription = null,
-                                tint = TokoText,
-                                modifier = Modifier.size(16.dp)
-                            )
+                            Row(
+                                modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Jelajahi Semua Koleksi per Wilayah ",
+                                    color = TokoText,
+                                    fontSize = 13.5.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f, fill = false)
+                                )
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                    contentDescription = null,
+                                    tint = TokoText,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
                         }
                     }
                 }
