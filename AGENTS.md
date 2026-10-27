@@ -2,6 +2,7 @@
 
 > **Untuk siapa:** **AI** yang mengerjakan proyek TokoMedia. **WAJIB dibaca setiap sesi sebelum kerja.**
 > **Dibuat:** 18 Oktober 2026
+> **Diperbarui:** 27 Oktober 2026
 > **Repositori GitHub:** [https://github.com/suwandhih/TokoMedia](https://github.com/suwandhih/TokoMedia)
 > **Live Site (GitHub Pages):** [https://suwandhih.github.io/TokoMedia/](https://suwandhih.github.io/TokoMedia/)
 
@@ -58,6 +59,7 @@
 | **C1** | ❌ **DILARANG** meninggalkan kode coba-coba atau kode lama yang tidak terpakai di script. |
 | **C2** | Seluruh aset logo, CSS, dan logika JavaScript harus bersih, ringkas, dan berfungsi langsung. |
 | **C3** | Tidak boleh ada file sampah atau file sementara yang tertinggal setelah tugas selesai. |
+| **C4** | ❌ **DILARANG menyusun logo/brand dari potongan `Text` + ikon.** Pakai **satu berkas gambar utuh** agar proporsi pasti sama dan tidak terpengaruh skala font HP. |
 
 ---
 
@@ -66,7 +68,8 @@
 | Item | Standar |
 |---|---|
 | **Logo Resmi** | Mengikuti desain resmi `tokomedia.org`: Ikon toko hijau (pin lokasi merah) + T O K + Play hijau (O) + M E D + Pause hijau (I) + A. |
-| **Tagline Resmi** | **`MEDIA NUSANTARA`** disusun rapi di bawah logo. |
+| **Berkas Logo** | **Satu gambar utuh** `TokoMediaAndroid/app/src/main/res/drawable/ic_tm_brand.png` (1162×308, transparan) untuk header; sumber komposisi `TokoMediaAndroid/logo-preview.png`. Ikon saja: `ic_tm_logo.png`. |
+| **Tagline Resmi** | **`MEDIA NUSANTARA`** sudah menyatu di dalam gambar logo, sejajar di bawah wordmark. |
 | **Kategori Bahasa Teratas** | **`Indonesia (Bahasa Nasional)`** selalu tampil di urutan paling atas halaman kategori/wilayah. |
 | **Accordion Kepulauan** | Seluruh accordion kepulauan default-nya **tertutup rapi (collapsed)**. |
 | **GitHub Pages** | Branch `main` dengan root path `/` di [https://suwandhih.github.io/TokoMedia/](https://suwandhih.github.io/TokoMedia/). |
@@ -75,6 +78,8 @@
 | **Panduan ulang** | `prompt.md` untuk membangun UI yang sama |
 | **Peta koneksi** | `datapemetaan.md` untuk aplikasi lain |
 | **CMS demo hero** | `https://suwandhih.my.id/cms_tokomedia.html` mengelola isi Pusat Media Nusantara; endpoint data `https://suwandhih.my.id/cms_tokomedia_api.php` |
+| **APK Android** | `TokoMediaAndroid/TokoMedia-debug.apk` (tidak masuk Git — diabaikan `.gitignore`) |
+| **Responsif Android** | Batas skala font `MAX_FONT_SCALE = 1.3f` (`Theme.kt`); rasio logo `BRAND_LOGO_ASPECT` (`Theme.kt`). Wajib diuji di 320dp & 430dp. |
 
 ---
 
@@ -90,3 +95,16 @@
 - Jangan tulis token atau password di Git, dokumentasi, atau riwayat pekerjaan.
 - CMS demo saat ini tanpa login sesuai persetujuan client; jangan menambahkan kredensial ke repository. Jika dipakai produksi, wajib tambahkan autentikasi server-side.
 - File CMS yang berjalan di Rumahweb berada berdampingan dengan API di `/home/suwj4466/public_html/`: `cms_tokomedia.html`, `cms_tokomedia_api.php`, dan `cms_tokomedia_data.json`.
+
+---
+
+## F. Pelajaran Android Native (27 Okt 2026) — Jangan Diulang
+
+| # | Pelajaran | Aturan turunan |
+|---|---|---|
+| **F1** | Logo yang disusun dari potongan `Text` + ikon **selalu rapuh**: lebar `Text` ikut skala font HP, ikon/spasi tetap dp → rumus selalu salah. | Pakai **satu gambar utuh** (C4). |
+| **F2** | Ukuran tetap (`height(56.dp)`, `Row` tanpa `weight`) menyebabkan tumpang tindih di layar sempit / font besar. | Pakai `weight`, `heightIn(min)`, `maxLines`, dan `BoxWithConstraints`. |
+| **F3** | Menguji banyak kombinasi (3 lebar × 3 skala font) memakan waktu lama dan emulator bisa macet. | **Uji hanya bagian yang direvisi**, di **1–2 kondisi ekstrem** (mis. 320dp + font 2.0). |
+| **F4** | Emulator `Pixel_7` pernah macet di package manager saat install. | Ganti AVD (mis. `uji-alkitab`) atau reboot; **jangan ulangi install yang sama berkali-kali**. |
+| **F5** | Emulator crash `SIGILL` di `libhwui` bila memakai GPU host. | Jalankan emulator dengan `-gpu swiftshader_indirect`. |
+| **F6** | Uji lewat `file://` selalu gagal karena origin `null` ditolak CORS. | Uji lewat `http://`/`https://` atau langsung di APK. |

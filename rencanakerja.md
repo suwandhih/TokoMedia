@@ -1,13 +1,13 @@
 # 📋 RENCANA KERJA — TokoMedia
 
 > **Berkas ini adalah catatan tunggal semua pekerjaan TokoMedia.**
-> **Status Terkini (27 Okt 2026):** Aplikasi Android Native kini **responsif** di semua ukuran layar & skala font HP. Web UI tetap dibekukan; CMS demo terpisah dipakai untuk mengubah isi Pusat Media Nusantara.
+> **Status Terkini (27 Okt 2026):** Aplikasi Android Native kini **responsif** di semua ukuran layar & skala font HP, dan **logo header memakai satu gambar utuh** (`ic_tm_brand.png`) sehingga proporsional di semua HP. Web UI tetap dibekukan; CMS demo terpisah dipakai untuk mengubah isi Pusat Media Nusantara.
 
 ---
 
 ## 🚀 FOKUS UTAMA: BABAK BARU — PENGEMBANGAN ANDROID NATIVE
 
-Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di https://tokomedia.org:8009/index.php/api/ (bebas CORS, data live real-time).
+Target: Aplikasi Android (TokoMediaAndroid) terhubung ke API TokoMedia melalui bridge `https://suwandhih.my.id/tm-bridge.php` (token di server, tanpa hambatan CORS). **Tercapai** — lihat A1–A28.
 
 | # | Tahap Pekerjaan Android | Status | Estimasi | Keterangan |
 |---|---|---|---|---|
@@ -35,10 +35,10 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | **A22** | **Mengaktifkan pencarian dan mode terang/gelap** | ✅ SELESAI | 23 Okt 2026 | Pencarian diperkuat dengan tombol dan tombol keyboard Search, hasil dapat dibuka ke detail, serta endpoint teruji mengembalikan 30 hasil. Ikon tema kini benar-benar mengganti Material light/dark color scheme melalui state aplikasi. Build APK debug berhasil. |
 | **A23** | **Menyempurnakan background gelap dan hasil pencarian bahasa** | ✅ SELESAI | 23 Okt 2026 | Background home, pencarian, top bar, dan dock mengikuti color scheme gelap. Kartu hasil pencarian memakai surface aktif dan menampilkan kata kunci terformat di bawah judul, misalnya `Jawa`, sesuai contoh client. Endpoint `search` teruji HTTP 200 dengan 30 hasil; build APK debug berhasil. |
 | **A24** | **Memperbaiki UI Android agar responsif di semua ukuran layar & skala font HP** | ✅ SELESAI | 27 Okt 2026 | Akar masalah: tata letak memakai tinggi/lebar tetap (`height(56.dp)`, `height(58.dp)`, `Row` tanpa `weight`) sehingga teks tumpang tindih saat skala font HP besar dan layar sempit. Perbaikan: (1) `MAX_FONT_SCALE = 1.3f` di `Theme.kt` + pembatasan `LocalDensity` di `MainActivity.kt`; (2) logo header dihitung dari lebar tersedia (`BoxWithConstraints`) dan tombol aksi mengecil di layar < 360dp; (3) dock bawah memakai `heightIn(min = 56.dp)` + label `maxLines = 1`; (4) kartu bento: badge & label jumlah bahasa memakai `weight` + ellipsis, ikon 30dp; (5) baris kanal/Suka di layar detail turun baris otomatis bila lebar < 330dp; (6) grid Indeks A–Z menjadi 1 kolom bila lebar < 340dp agar nama bahasa panjang tidak terpotong. Teruji di 320dp/360dp/430dp dengan font 1.0/1.3/2.0 — tidak ada tumpang tindih. Build APK debug (22,8 MB) bersih. |
-| **A27** | **Tagline MEDIA NUSANTARA disejajarkan di bawah wordmark** | ✅ SELESAI | 27 Okt 2026 | Sebelumnya tagline berada di bawah ikon toko sehingga terlihat terpisah dari tulisan `TOK▶MED‖A`. Tagline dipindah ke dalam `Column` yang sama dengan wordmark sehingga tepat sejajar di bawahnya, sesuai contoh client. Teruji di 430dp/font 1.0 dan 360dp/font 1.3. Build APK debug (23,3 MB) bersih. |
-| **A26** | **Memperbaiki logo header yang tertimpa tombol aksi** | ✅ SELESAI | 27 Okt 2026 | Rumus ukuran logo di `SpatialTopBar` tidak memperhitungkan skala font HP, sehingga teks `TOK▶MED‖A` meluber dan huruf terakhir tertimpa tombol pencarian/tema (paling jelas saat tombol Back muncul). Rumus diganti menjadi `(lebarTersedia − 66dp) / (5.6 × fontScale)` dengan `fontScale` dari `LocalDensity`, ditambah `clipToBounds()` sebagai pengaman. Teruji di 320dp/360dp/430dp dengan font 1.0/1.3/2.0, dengan dan tanpa tombol Back — logo selalu utuh. Build APK debug (23,3 MB) bersih. |
-| **A25** | **Mengganti logo TM dengan logo resmi (toko hijau + pin merah)** | ✅ SELESAI | 27 Okt 2026 | Logo yang sebelumnya digambar manual (kotak hijau + karakter `⌂`) diganti dengan berkas logo resmi `Logo TM (Transparent).png` yang disalin ke `res/drawable/ic_tm_logo.png` (192×192). Dipakai di header (`SpatialTopBar`) dan avatar kanal di layar detail (`VideoDetailScreen`). Sekaligus dibuat ikon peluncur `res/mipmap-*/ic_launcher.png` (48–192 px, dipangkas ke area konten) dan didaftarkan di `AndroidManifest.xml` (`android:icon` & `android:roundIcon`). Teruji di 320dp/360dp/430dp dengan font 1.0/1.3/2.0 — logo tampil tajam dan tata letak tetap rapi. Build APK debug (23,3 MB) bersih. |
-| **A28** | **Logo header diganti satu gambar utuh (ikon + TOK▶MED‖A + tagline)** | ✅ SELESAI | 27 Okt 2026 | Akar masalah: logo disusun dari 7 potongan (gambar ikon + 3 `Text` + tombol play + 2 bar pause + `Text` tagline). Lebar `Text` ikut skala font HP sedangkan ikon/spasi tetap dp, sehingga rumus ukuran selalu menebak terlalu kecil dan logo tampak tidak proporsional. Solusi: seluruh logo digabung menjadi satu berkas gambar `res/drawable/ic_tm_brand.png` (1162×308, transparan) hasil komposisi `logo-preview.png`. Di `SpatialTopBar` blok 7 potongan diganti **satu** `Image` dengan tinggi dipatok (36dp; 30dp bila lebar < 360dp) dan lebar mengikuti rasio `BRAND_LOGO_ASPECT` (1162/308) di `Theme.kt`; ditambah batas `maxWidth / BRAND_LOGO_ASPECT` agar logo mengecil sendiri bila ruang sempit. Efek: proporsi selalu sama di semua ukuran layar, tidak terpengaruh pengaturan ukuran huruf HP, dan tidak ada lagi rumus yang bisa salah. Kode & import yang tidak terpakai (`CircleShape`, `PlayArrow`, `LocalDensity`, `sp`) dihapus. Teruji di 430dp/font 1.0 dan 320dp/font 2.0 — logo utuh, tajam, dan proporsional. Build APK debug (23,3 MB) bersih. |
+| **A28** | **Logo header diganti satu gambar utuh (ikon + TOK▶MED‖A + tagline)** | ✅ SELESAI | 27 Okt 2026 | Akar masalah: logo disusun dari 7 potongan (gambar ikon + 3 `Text` + tombol play + 2 bar pause + `Text` tagline). Lebar `Text` ikut skala font HP sedangkan ikon/spasi tetap dp, sehingga rumus ukuran selalu menebak terlalu kecil dan logo tampak tidak proporsional. Solusi: seluruh logo digabung menjadi satu berkas gambar `res/drawable/ic_tm_brand.png` (1162×308, transparan) hasil komposisi `logo-preview.png`. Di `SpatialTopBar` blok 7 potongan diganti **satu** `Image` dengan tinggi dipatok (36dp; 30dp bila lebar < 360dp) dan lebar mengikuti rasio `BRAND_LOGO_ASPECT` (1162/308) di `Theme.kt`; ditambah batas `maxWidth / BRAND_LOGO_ASPECT` agar logo mengecil sendiri bila ruang sempit. Efek: proporsi selalu sama di semua ukuran layar, tidak terpengaruh pengaturan ukuran huruf HP, dan tidak ada lagi rumus yang bisa salah. Kode & import yang tidak terpakai (`CircleShape`, `PlayArrow`, `LocalDensity`, `sp`) dihapus. Teruji di 430dp/font 1.0 dan 320dp/font 2.0 — logo utuh, tajam, dan proporsional. Build APK debug (23,3 MB) bersih. Commit `d930fbe`. |
+| **A27** | **Tagline MEDIA NUSANTARA disejajarkan di bawah wordmark** | ✅ SELESAI | 27 Okt 2026 | Sebelumnya tagline berada di bawah ikon toko sehingga terlihat terpisah dari tulisan `TOK▶MED‖A`. Tagline dipindah ke dalam `Column` yang sama dengan wordmark sehingga tepat sejajar di bawahnya, sesuai contoh client. Teruji di 430dp/font 1.0 dan 360dp/font 1.3. Build APK debug (23,3 MB) bersih. Commit `f45a4e3`. |
+| **A26** | **Memperbaiki logo header yang tertimpa tombol aksi** | ✅ SELESAI | 27 Okt 2026 | Rumus ukuran logo di `SpatialTopBar` tidak memperhitungkan skala font HP, sehingga teks `TOK▶MED‖A` meluber dan huruf terakhir tertimpa tombol pencarian/tema (paling jelas saat tombol Back muncul). Rumus diganti menjadi `(lebarTersedia − 66dp) / (5.6 × fontScale)` dengan `fontScale` dari `LocalDensity`, ditambah `clipToBounds()` sebagai pengaman. Teruji di 320dp/360dp/430dp dengan font 1.0/1.3/2.0, dengan dan tanpa tombol Back — logo selalu utuh. Build APK debug (23,3 MB) bersih. Commit `bbd718c`. |
+| **A25** | **Mengganti logo TM dengan logo resmi (toko hijau + pin merah)** | ✅ SELESAI | 27 Okt 2026 | Logo yang sebelumnya digambar manual (kotak hijau + karakter `⌂`) diganti dengan berkas logo resmi `Logo TM (Transparent).png` yang disalin ke `res/drawable/ic_tm_logo.png` (192×192). Dipakai di header (`SpatialTopBar`) dan avatar kanal di layar detail (`VideoDetailScreen`). Sekaligus dibuat ikon peluncur `res/mipmap-*/ic_launcher.png` (48–192 px, dipangkas ke area konten) dan didaftarkan di `AndroidManifest.xml` (`android:icon` & `android:roundIcon`). Teruji di 320dp/360dp/430dp dengan font 1.0/1.3/2.0 — logo tampil tajam dan tata letak tetap rapi. Build APK debug (23,3 MB) bersih. Commit `70af6ae`. |
 
 ---
 
@@ -57,6 +57,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 
 | Bagian | Isi |
 |---|---|
+| [🚀](#-fokus-utama-babak-baru--pengembangan-android-native) | **FOKUS UTAMA: Pengembangan Android Native** |
 | [A](#a-ringkasan-status) | Ringkasan Status |
 | [B](#b-arsitektur-sistem) | Arsitektur Sistem |
 | [C](#c-riwayat-pekerjaan-selesai) | Riwayat Pekerjaan Selesai |
@@ -93,7 +94,7 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | 19 | **Perbarui `DEPLOY.md` (langkah token & troubleshooting CORS)** | ✅ SELESAI | 20 Okt 2026 |
 | 20 | **Putuskan status folder source code API client di repo publik** | ⬜ BELUM | — |
 | 21 | **Rotasi token API (wajib — token lama masih bisa diakses)** | ⬜ BELUM | — |
-| 22 | **Sambungkan aplikasi Android ke API** | ⬜ BELUM | — |
+| 22 | **Sambungkan aplikasi Android ke API** | ✅ SELESAI | 22 Okt 2026 |
 | 23 | **Jawab pertanyaan penempatan API client (arsitektur sinkronisasi data)** | ✅ SELESAI | 20 Okt 2026 |
 | 24 | **Buat panduan `PERBAIKAN-CORS-INFINITYFREE.md`** | ⚠️ SALAH — sudah dihapus, diganti `TEMUAN-TANTANGAN-AES-INFINITYFREE.md` | 20 Okt 2026 |
 | 25 | **Temukan Live API client di `tokomedia.org:8009` (sebelumnya disangka belum dipasang)** | ✅ SELESAI | 20 Okt 2026 |
@@ -107,6 +108,10 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 | 31 | **Arahkan UI GitHub Pages ke API Rumahweb** | ✅ SELESAI | 21 Okt 2026 |
 | 32 | **Uji endpoint dengan token asli** | ✅ SELESAI — `status=200`, 7 kategori | 21 Okt 2026 |
 | 33 | **Hapus akun FTP sementara `tmup2`** | ⬜ BELUM | — |
+| 34 | **Perbaiki UI Android agar responsif di semua ukuran layar & skala font HP** | ✅ SELESAI | 27 Okt 2026 |
+| 35 | **Ganti logo TM dengan logo resmi + ikon peluncur** | ✅ SELESAI | 27 Okt 2026 |
+| 36 | **Logo header jadi satu gambar utuh (proporsional di semua HP)** | ✅ SELESAI | 27 Okt 2026 |
+| 37 | **Perbarui dokumentasi `AGENTS.md`, `prompt.md`, `rencanakerja.md`** | ✅ SELESAI | 27 Okt 2026 |
 
 ---
 
@@ -114,31 +119,34 @@ Target: Menyambungkan aplikasi Android (TokoMediaAndroid) ke Live API client di 
 
 ```mermaid
 flowchart LR
-    A["UI TokoMedia<br/>GitHub Pages<br/>suwandhih.github.io/TokoMedia"] -->|"POST + token"| B["API Salinan<br/>InfinityFree<br/>suwandhih.site.je"]
-    B --> C[("MySQL<br/>InfinityFree<br/>16.586 video<br/>snapshot 14 Okt 2026")]
-    D["Aplikasi Android<br/>(rencana: bisa dikonfigurasi)"] -.->|"default"| B
-    D -.->|"alternatif"| E
-    F["UI via ?api="] -.->|"uji cepat"| E
-    E["Live API Client<br/>tokomedia.org:8009<br/>CodeIgniter 3.1.13<br/>PHP 5.6.29"]
-    E --> G[("TM DB<br/>MySQL client<br/>data real-time")]
-    A -.->|"❌ diblokir tantangan AES"| B
+    A["Web UI<br/>GitHub Pages<br/>suwandhih.github.io/TokoMedia"] -->|"POST path + parameter"| B["Bridge<br/>Rumahweb<br/>suwandhih.my.id/tm-bridge.php"]
+    D["Aplikasi Android<br/>TokoMediaAndroid"] -->|"POST path + parameter"| B
+    B -->|"tambah token di server"| E["API TokoMedia<br/>suwandhih.my.id/index.php/api"]
+    E --> G[("MySQL Rumahweb<br/>suwj4466_tm")]
+    C["CMS hero<br/>cms_tokomedia.html"] --> H["cms_tokomedia_api.php"]
+    H --> I[("cms_tokomedia_data.json")]
+    D -.->|"baca isi hero"| H
+    X["InfinityFree<br/>suwandhih.site.je"] -.->|"⛔ ditinggalkan<br/>tantangan AES"| B
+    Y["Live API client<br/>tokomedia.org:8009"] -.->|"⛔ tidak dipakai<br/>tanpa CORS"| B
 ```
 
-> **Catatan (20 Okt 2026):** Live API client **ternyata sudah ada** di `tokomedia.org:8009` — sebelumnya disangka belum dipasang. Namun Live API (a) **tidak punya CORS**, dan (b) **belum punya** endpoint `category/tree` + `aplikasi/list` yang wajib dipakai UI. Karena itu server sendiri tetap menjadi pilihan utama. Rincian di bagian **H**.
+> **Catatan (27 Okt 2026):** jalur produksi adalah **GitHub Pages / Android → bridge Rumahweb → API Rumahweb → MySQL**. Token hanya ada di server bridge, sehingga pengunjung tidak pernah diminta token.
 >
-> ⚠️ **Koreksi (20 Okt 2026):** panah `A --> B` di atas **tidak jalan**. Bukan karena CORS, tetapi karena InfinityFree memasang tantangan JavaScript AES di depan seluruh akun — lihat **C23**. UI perlu host API pengganti (**D7**).
+> **Sejarah (20 Okt 2026):** InfinityFree ditinggalkan karena memasang tantangan JavaScript AES di depan seluruh akun (lihat **C23**), dan Live API client `tokomedia.org:8009` tidak dipakai karena tanpa CORS serta tidak punya endpoint `category/tree` + `aplikasi/list` (lihat **H**).
 
 | Bagian | Tempat | Status |
 |---|---|---|
-| Tampilan (`index.html`) | GitHub Pages | ✅ Jalan |
-| API salinan (PHP CodeIgniter 3) | InfinityFree `suwandhih.site.je` | ✅ Terpasang & jalan — **dipakai UI** |
-| Database (16.586 video) | MySQL InfinityFree | ✅ Terisi (snapshot 14 Okt 2026) |
-| Live API client | `tokomedia.org:8009` | ✅ **Jalan** — tapi tanpa CORS & endpoint tidak lengkap |
-| Database live client | MySQL client | ✅ Real-time (data asli) |
-| Aplikasi Android | Lokal (belum rilis) | ⬜ Masih data statis — rencana bisa dikonfigurasi |
+| Tampilan (`index.html`) | GitHub Pages | ✅ Jalan (dibekukan) |
+| Bridge API | Rumahweb `suwandhih.my.id/tm-bridge.php` | ✅ **Aktif** — dipakai Web UI & Android |
+| API (PHP CodeIgniter 3) | Rumahweb `suwandhih.my.id/index.php/api` | ✅ Jalan, token di server |
+| Database | MySQL Rumahweb `suwj4466_tm` | ✅ Terisi |
+| CMS hero | Rumahweb `cms_tokomedia.html` + `cms_tokomedia_api.php` | ✅ Jalan (demo tanpa login) |
+| Aplikasi Android | `TokoMediaAndroid` (APK debug) | ✅ Terhubung bridge, UI responsif, logo 1 gambar |
+| Live API client | `tokomedia.org:8009` | ⛔ Tidak dipakai (tanpa CORS, endpoint tidak lengkap) |
+| API salinan lama | InfinityFree `suwandhih.site.je` | ⛔ Ditinggalkan (tantangan AES) |
 
-**Akun InfinityFree:** `if0_43217990` — domain `suwandhih.site.je` — HTTPS valid.
-**Live API client:** `https://tokomedia.org:8009/index.php/api/` — Apache/2.2.15 (CentOS), PHP 5.6.29, CodeIgniter 3.1.13.
+**Bridge aktif:** `https://suwandhih.my.id/tm-bridge.php` — token diinjeksi di server, pengunjung tidak pernah melihat token.
+**Live API client (arsip):** `https://tokomedia.org:8009/index.php/api/` — Apache/2.2.15 (CentOS), PHP 5.6.29, CodeIgniter 3.1.13.
 
 ---
 
@@ -666,6 +674,18 @@ Token tetap dibaca dari `window.TM_CONFIG` (tidak ditulis di `index.html`).
 | B5 | Uji responsive PC & HP. |
 | C1 | Dilarang meninggalkan kode coba-coba / tidak terpakai. |
 | C3 | Tidak boleh ada berkas sampah atau sementara. |
+| C4 | Dilarang menyusun logo dari potongan `Text` + ikon — pakai satu gambar utuh. |
+
+**Pelajaran Android (27 Okt 2026):**
+
+| # | Pelajaran |
+|---|---|
+| P1 | Logo dari potongan `Text` + ikon selalu rapuh (lebar teks ikut skala font, ikon tidak). |
+| P2 | Ukuran tetap (`height(56.dp)`, `Row` tanpa `weight`) menyebabkan tumpang tindih. |
+| P3 | Uji hanya bagian yang direvisi, di 1–2 kondisi ekstrem (320dp + font 2.0). |
+| P4 | Emulator macet saat install → ganti AVD atau reboot, jangan ulangi install yang sama. |
+| P5 | Emulator crash `SIGILL` di `libhwui` → jalankan dengan `-gpu swiftshader_indirect`. |
+| P6 | Uji lewat `file://` selalu gagal (origin `null` ditolak CORS). |
 
 ---
 

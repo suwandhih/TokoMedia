@@ -2,6 +2,7 @@
 
 > Untuk AI lain. Baca `AGENTS.md` dan `datapemetaan.md` sebelum mengubah kode.
 > Jangan tulis token, password, atau isi `secrets.local.php` ke Git.
+> **Diperbarui:** 27 Oktober 2026 — mencakup Web UI (GitHub Pages) **dan** Android Native.
 
 ## Hasil yang harus sama
 
@@ -15,6 +16,32 @@ Buat satu halaman `index.html` di GitHub Pages yang menampilkan data yang sama d
 - Video diputar di halaman GitHub, tidak membuka `tokomedia.org`.
 
 Alamat live: `https://suwandhih.github.io/TokoMedia/`
+
+## Logo & tagline (WAJIB satu gambar)
+
+Logo **tidak boleh** disusun dari potongan `Text` + ikon. Lebar `Text` ikut skala font HP sedangkan ikon dan spasi tetap dp, sehingga rumus ukuran selalu salah dan logo tampak tidak proporsional.
+
+| Item | Berkas | Ukuran |
+|---|---|---|
+| Logo lengkap (ikon + `TOK▶MED‖A` + tagline) | `TokoMediaAndroid/app/src/main/res/drawable/ic_tm_brand.png` | 1162×308, transparan |
+| Sumber komposisi | `TokoMediaAndroid/logo-preview.png` | 1162×308 |
+| Ikon saja (avatar kanal, ikon peluncur) | `res/drawable/ic_tm_logo.png`, `res/mipmap-*/ic_launcher.png` | 256×256 |
+
+Cara pakai di Compose: patok **tinggi**, lebar mengikuti rasio `BRAND_LOGO_ASPECT` (`Theme.kt` = 1162/308).
+
+```kotlin
+val logoHeight = minOf(
+    if (maxWidth < 360.dp) 30.dp else 36.dp,
+    maxWidth / BRAND_LOGO_ASPECT
+)
+Image(
+    painter = painterResource(R.drawable.ic_tm_brand),
+    contentDescription = "TokoMedia — Media Nusantara",
+    modifier = Modifier.height(logoHeight).width(logoHeight * BRAND_LOGO_ASPECT)
+)
+```
+
+Efeknya: proporsi selalu sama di semua ukuran layar, **tidak terpengaruh pengaturan ukuran huruf HP**, dan tidak ada rumus yang bisa salah.
 
 ## Arsitektur yang wajib dipakai
 
@@ -127,11 +154,28 @@ Detail video mengembalikan `source` berupa playlist `.m3u8`. Pasang `hls.js` han
 
 ## Uji wajib
 
+**Web UI (GitHub Pages):**
+
 1. Buka situs GitHub Pages. Tidak ada dialog token.
 2. `category/tree` mengembalikan 7 root.
 3. Halaman Musi memuat video dan tidak menampilkan `Endpoint tidak diizinkan`.
 4. Halaman tonton menampilkan elemen `<video>`, bukan tautan keluar.
 5. Uji di lebar PC dan 430px.
+
+**Android Native (APK):**
+
+1. Header: logo utuh & proporsional di **430dp/font 1.0** dan **320dp/font 2.0**.
+2. Tidak ada teks tumpang tindih di dock, kartu bento, dan layar detail.
+3. Pemutar video freeze tetap di atas saat halaman detail di-scroll.
+
+**Cara uji cepat di emulator:**
+
+```powershell
+$adb = "C:\Users\suwan\AppData\Local\Android\Sdk\platform-tools\adb.exe"
+& $adb shell wm size 720x1600; & $adb shell wm density 360   # = 320dp
+& $adb shell settings put system font_scale 2.0              # skala font ekstrem
+& $adb shell wm size reset; & $adb shell wm density reset    # kembali normal
+```
 
 Jangan menguji `index.html` lewat `file://`. Origin lokal `null` memang ditolak CORS dan bukan bukti API rusak.
 
@@ -141,3 +185,6 @@ Jangan menguji `index.html` lewat `file://`. Origin lokal `null` memang ditolak 
 - Jangan tulis token atau password di repo, log, atau dokumentasi.
 - Jangan biarkan skrip PHP sementara di web root.
 - Jangan anggap Live API client sebagai target UI ini.
+- **Jangan susun logo dari potongan `Text` + ikon** — pakai satu gambar utuh.
+- **Jangan uji seluruh aplikasi** saat hanya satu bagian yang direvisi.
+- Jangan tinggalkan berkas sementara (screenshot uji, APK ganda) setelah tugas selesai.
