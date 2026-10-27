@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.OptIn
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,6 +50,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -60,6 +62,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
+import org.tokomedia.app.R
 import org.tokomedia.app.data.api.VideoDetailDto
 import org.tokomedia.app.data.api.VideoDto
 import org.tokomedia.app.data.repository.TokoMediaRepository
@@ -241,10 +244,14 @@ fun VideoDetailScreen(
                                         modifier = Modifier
                                             .size(36.dp)
                                             .clip(CircleShape)
-                                            .background(TokoGreen),
+                                            .background(Color.White),
                                         contentAlignment = Alignment.Center
                                     ) {
-                                        Text("⌂", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                                        Image(
+                                            painter = painterResource(R.drawable.ic_tm_logo),
+                                            contentDescription = "Logo Tokomedia",
+                                            modifier = Modifier.size(32.dp)
+                                        )
                                     }
                                     Spacer(Modifier.width(8.dp))
                                     Column(modifier = Modifier.weight(1f)) {

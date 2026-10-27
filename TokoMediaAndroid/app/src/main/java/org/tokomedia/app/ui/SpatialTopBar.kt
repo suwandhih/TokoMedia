@@ -1,5 +1,6 @@
 package org.tokomedia.app.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -32,9 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.tokomedia.app.R
 
 @Composable
 fun SpatialTopBar(
@@ -108,19 +111,15 @@ fun SpatialTopBar(
             ) {
                 BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
                     val logoFont = ((maxWidth.value - 58f) / 6.9f).coerceIn(9f, 16f)
-                    val markSize = (logoFont * 1.4f).dp
+                    val markSize = (logoFont * 1.75f).dp
                     Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        // Ikon Toko Miniatur Hijau
-                        Box(
-                            modifier = Modifier
-                                .size(markSize)
-                                .clip(RoundedCornerShape(4.dp))
-                                .background(TokoGreen),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text("⌂", color = Color.White, fontSize = (logoFont * 0.8f).sp, fontWeight = FontWeight.Bold)
-                        }
+                        // Logo resmi TokoMedia (ikon toko hijau + pin lokasi merah)
+                        Image(
+                            painter = painterResource(R.drawable.ic_tm_logo),
+                            contentDescription = "Logo TokoMedia",
+                            modifier = Modifier.size(markSize)
+                        )
                         Spacer(Modifier.width(5.dp))
                         Text("TOK", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = logoFont.sp, maxLines = 1, softWrap = false)
                         Spacer(Modifier.width(2.dp))
