@@ -11,7 +11,16 @@ data class CmsHomeContentDto(
     @SerializedName("title") val title: String = "Film, Video &\nAplikasi Kitab Suci\nNusantara.",
     @SerializedName("description") val description: String = "Nikmati ribuan tayangan rohani bermakna, kisah para nabi, serta aplikasi Kitab Suci Android dalam bahasa ibu dari Sabang sampai Merauke.",
     @SerializedName("primaryButton") val primaryButton: String = "Tonton Tayangan Sorotan",
-    @SerializedName("secondaryButton") val secondaryButton: String = "Jelajahi Wilayah"
+    @SerializedName("secondaryButton") val secondaryButton: String = "Jelajahi Wilayah",
+    @SerializedName("sec01Eyebrow") val sec01Eyebrow: String = "01 • KATEGORI UTAMA",
+    @SerializedName("sec01Title") val sec01Title: String = "Pilih Format Media",
+    @SerializedName("sec01Sub") val sec01Sub: String = "Ketuk kartu untuk melihat daftar bahasa per wilayah",
+    @SerializedName("sec02Eyebrow") val sec02Eyebrow: String = "02 • EKSPLORASI BAHASA",
+    @SerializedName("sec02Title") val sec02Title: String = "Kategori Bahasa & Format",
+    @SerializedName("sec03Eyebrow") val sec03Eyebrow: String = "03 • STREAMING TERKINI",
+    @SerializedName("sec03Title") val sec03Title: String = "Tayangan Pilihan Terbaru",
+    @SerializedName("exploreAllButton") val exploreAllButton: String = "Jelajahi Semua Koleksi per Wilayah",
+    @SerializedName("languageListButton") val languageListButton: String = "Daftar Bahasa"
 )
 
 data class ApiResponse<T>(

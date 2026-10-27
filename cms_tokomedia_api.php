@@ -15,7 +15,16 @@ $default = [
     'title' => 'Film, Video &\nAplikasi Kitab Suci\nNusantara.',
     'description' => 'Nikmati ribuan tayangan rohani bermakna, kisah para nabi, serta aplikasi Kitab Suci Android dalam bahasa ibu dari Sabang sampai Merauke.',
     'primaryButton' => 'Tonton Tayangan Sorotan',
-    'secondaryButton' => 'Jelajahi Wilayah'
+    'secondaryButton' => 'Jelajahi Wilayah',
+    'sec01Eyebrow' => '01 • KATEGORI UTAMA',
+    'sec01Title' => 'Pilih Format Media',
+    'sec01Sub' => 'Ketuk kartu untuk melihat daftar bahasa per wilayah',
+    'sec02Eyebrow' => '02 • EKSPLORASI BAHASA',
+    'sec02Title' => 'Kategori Bahasa & Format',
+    'sec03Eyebrow' => '03 • STREAMING TERKINI',
+    'sec03Title' => 'Tayangan Pilihan Terbaru',
+    'exploreAllButton' => 'Jelajahi Semua Koleksi per Wilayah',
+    'languageListButton' => 'Daftar Bahasa'
 ];
 
 function respond($payload, $status = 200) {

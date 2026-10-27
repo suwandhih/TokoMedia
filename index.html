@@ -1690,7 +1690,16 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
     title: 'Film, Video &\nAplikasi Kitab Suci\nNusantara.',
     description: 'Nikmati ribuan tayangan rohani bermakna, kisah para nabi, serta aplikasi Kitab Suci Android dalam bahasa ibu dari Sabang sampai Merauke.',
     primaryButton: 'Tonton Tayangan Sorotan',
-    secondaryButton: 'Jelajahi Wilayah'
+    secondaryButton: 'Jelajahi Wilayah',
+    sec01Eyebrow: '01 • KATEGORI UTAMA',
+    sec01Title: 'Pilih Format Media',
+    sec01Sub: 'Ketuk kartu untuk melihat daftar bahasa per wilayah',
+    sec02Eyebrow: '02 • EKSPLORASI BAHASA',
+    sec02Title: 'Kategori Bahasa & Format',
+    sec03Eyebrow: '03 • STREAMING TERKINI',
+    sec03Title: 'Tayangan Pilihan Terbaru',
+    exploreAllButton: 'Jelajahi Semua Koleksi per Wilayah',
+    languageListButton: 'Daftar Bahasa'
   };
 
   function cmsValue(key) {
@@ -1977,7 +1986,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
         '</div>' +
         '<div class="cat-bento-card__bot">' +
         '<span class="cat-bento-card__count">' + esc(c.countLabel) + '</span>' +
-        '<span class="cat-bento-card__go">Daftar Bahasa &rsaquo;</span>' +
+        '<span class="cat-bento-card__go">' + cmsHtml('languageListButton') + ' &rsaquo;</span>' +
         '</div></a>'
       );
     }).join('');
@@ -2037,8 +2046,8 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '<!-- Kategori Utama Bento -->' +
       '<section>' +
       '<div class="sec-head">' +
-      '<div><span class="sec-eyebrow">01 &bull; KATEGORI UTAMA</span><h2 class="sec-title">Pilih Format Media</h2></div>' +
-      '<span class="sec-sub">Ketuk kartu untuk melihat daftar bahasa per wilayah</span>' +
+      '<div><span class="sec-eyebrow">' + cmsHtml('sec01Eyebrow') + '</span><h2 class="sec-title">' + cmsHtml('sec01Title') + '</h2></div>' +
+      '<span class="sec-sub">' + cmsHtml('sec01Sub') + '</span>' +
       '</div>' +
       '<div class="cat-bento-grid">' + catCardsHtml + '</div>' +
       '</section>' +
@@ -2046,7 +2055,7 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '<!-- Kategori Bahasa & Format -->' +
       '<section class="glass-panel">' +
       '<div class="sec-head">' +
-      '<div><span class="sec-eyebrow">02 &bull; EKSPLORASI BAHASA</span><h2 class="sec-title">Kategori Bahasa &amp; Format</h2></div>' +
+      '<div><span class="sec-eyebrow">' + cmsHtml('sec02Eyebrow') + '</span><h2 class="sec-title">' + cmsHtml('sec02Title') + '</h2></div>' +
       '<div class="view-switch" role="group" aria-label="Mode tampilan bahasa">' +
       '<button type="button" class="' + (langViewMode === 'az' ? 'active' : '') + '" data-lview="az">Indeks A–Z</button>' +
       '<button type="button" class="' + (langViewMode === 'bubbles' ? 'active' : '') + '" data-lview="bubbles">Galeri Ikon</button>' +
@@ -2067,12 +2076,12 @@ window.TM_PAYLOAD = {"app":{"name":"TOKO MEDIA","brand":{"logo":"assets/logo-ico
       '<!-- Tayangan Pilihan Terbaru -->' +
       '<section>' +
       '<div class="sec-head">' +
-      '<div><span class="sec-eyebrow">03 &bull; STREAMING TERKINI</span><h2 class="sec-title">Tayangan Pilihan Terbaru</h2></div>' +
+      '<div><span class="sec-eyebrow">' + cmsHtml('sec03Eyebrow') + '</span><h2 class="sec-title">' + cmsHtml('sec03Title') + '</h2></div>' +
       renderSortChipsHtml() +
       '</div>' +
       '<div class="video-bento-grid">' + homeFeaturedVideos.map(renderVideoCardHtml).join('') + '</div>' +
       '<div style="text-align:center;margin-top:20px">' +
-      '<a href="#languages/film-riwayat-isa-al-masih" class="btn-glass" style="display:inline-flex;padding:12px 28px;border-radius:999px;font-weight:700">Jelajahi Semua Koleksi per Wilayah &rarr;</a>' +
+      '<a href="#languages/film-riwayat-isa-al-masih" class="btn-glass" style="display:inline-flex;padding:12px 28px;border-radius:999px;font-weight:700">' + cmsHtml('exploreAllButton') + ' &rarr;</a>' +
       '</div>' +
       '</section>';
   }

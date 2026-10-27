@@ -317,7 +317,7 @@ fun SpatialHomeScreen(
             item {
                 Column(modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) {
                     Text(
-                        text = "01 • KATEGORI UTAMA",
+                        text = cmsContent.sec01Eyebrow,
                         color = TokoGreen,
                         fontSize = 10.5.sp,
                         fontWeight = FontWeight.ExtraBold,
@@ -325,14 +325,14 @@ fun SpatialHomeScreen(
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        text = "Pilih Format Media",
+                        text = cmsContent.sec01Title,
                         color = TokoText,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.ExtraBold
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        text = "Ketuk kartu untuk melihat daftar bahasa per wilayah",
+                        text = cmsContent.sec01Sub,
                         color = TokoMuted,
                         fontSize = 12.5.sp
                     )
@@ -341,7 +341,10 @@ fun SpatialHomeScreen(
 
             item {
                 val firstCat = BentoCategories[0]
-                FullWidthBentoCard(category = firstCat) { onTargetClick(firstCat.target) }
+                FullWidthBentoCard(
+                    category = firstCat,
+                    languageListLabel = cmsContent.languageListButton
+                ) { onTargetClick(firstCat.target) }
             }
 
             item {
@@ -381,7 +384,7 @@ fun SpatialHomeScreen(
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
                         Text(
-                            text = "02 • EKSPLORASI BAHASA",
+                            text = cmsContent.sec02Eyebrow,
                             color = TokoGreen,
                             fontSize = 10.5.sp,
                             fontWeight = FontWeight.ExtraBold,
@@ -389,7 +392,7 @@ fun SpatialHomeScreen(
                         )
                         Spacer(Modifier.height(2.dp))
                         Text(
-                            text = "Kategori Bahasa & Format",
+                            text = cmsContent.sec02Title,
                             color = TokoText,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.ExtraBold
@@ -560,7 +563,7 @@ fun SpatialHomeScreen(
             item {
                 Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
                     Text(
-                        text = "03 • STREAMING TERKINI",
+                        text = cmsContent.sec03Eyebrow,
                         color = TokoGreen,
                         fontSize = 10.5.sp,
                         fontWeight = FontWeight.ExtraBold,
@@ -568,7 +571,7 @@ fun SpatialHomeScreen(
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        text = "Tayangan Pilihan Terbaru",
+                        text = cmsContent.sec03Title,
                         color = TokoText,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.ExtraBold
@@ -636,7 +639,7 @@ fun SpatialHomeScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "Jelajahi Semua Koleksi per Wilayah ",
+                                    text = cmsContent.exploreAllButton + " ",
                                     color = TokoText,
                                     fontSize = 13.5.sp,
                                     fontWeight = FontWeight.Bold,
@@ -825,7 +828,11 @@ private fun AzLanguageCard(
 }
 
 @Composable
-private fun FullWidthBentoCard(category: BentoCategory, onClick: () -> Unit) {
+private fun FullWidthBentoCard(
+    category: BentoCategory,
+    languageListLabel: String,
+    onClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -902,7 +909,7 @@ private fun FullWidthBentoCard(category: BentoCategory, onClick: () -> Unit) {
                     modifier = Modifier.weight(1f, fill = false)
                 )
                 Text(
-                    text = "Daftar Bahasa ›",
+                    text = languageListLabel + " ›",
                     color = TokoText,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,

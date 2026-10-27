@@ -21,7 +21,7 @@
 <body>
   <main>
     <h1>CMS Pusat Media Nusantara</h1>
-    <p>Demo sederhana untuk mengubah satu kolom hero TokoMedia.</p>
+    <p>Demo sederhana untuk mengubah teks Pusat Media Nusantara, judul section, dan tombol pada TokoMedia.</p>
     <form id="cmsForm">
       <label for="label">Label kecil</label>
       <input id="label" required>
@@ -38,6 +38,37 @@
       <label for="secondaryButton">Tombol kedua</label>
       <input id="secondaryButton" required>
 
+      <h2 style="margin:26px 0 0;font-size:17px">Section 01 — Kategori Utama</h2>
+      <label for="sec01Eyebrow">Label kecil section 01</label>
+      <input id="sec01Eyebrow" required>
+
+      <label for="sec01Title">Judul section 01</label>
+      <input id="sec01Title" required>
+
+      <label for="sec01Sub">Keterangan section 01</label>
+      <input id="sec01Sub" required>
+
+      <h2 style="margin:26px 0 0;font-size:17px">Section 02 — Eksplorasi Bahasa</h2>
+      <label for="sec02Eyebrow">Label kecil section 02</label>
+      <input id="sec02Eyebrow" required>
+
+      <label for="sec02Title">Judul section 02</label>
+      <input id="sec02Title" required>
+
+      <h2 style="margin:26px 0 0;font-size:17px">Section 03 — Streaming Terkini</h2>
+      <label for="sec03Eyebrow">Label kecil section 03</label>
+      <input id="sec03Eyebrow" required>
+
+      <label for="sec03Title">Judul section 03</label>
+      <input id="sec03Title" required>
+
+      <h2 style="margin:26px 0 0;font-size:17px">Tombol Lainnya</h2>
+      <label for="exploreAllButton">Tombol "Jelajahi Semua Koleksi"</label>
+      <input id="exploreAllButton" required>
+
+      <label for="languageListButton">Tombol "Daftar Bahasa"</label>
+      <input id="languageListButton" required>
+
       <button type="button" id="loadButton" class="secondary">Muat Isi Saat Ini</button>
       <button type="submit">Simpan Perubahan</button>
       <div id="status" role="status"></div>
@@ -45,7 +76,13 @@
   </main>
   <script>
     const endpoint = 'cms_tokomedia_api.php';
-    const fields = ['label', 'title', 'description', 'primaryButton', 'secondaryButton'];
+    const fields = [
+      'label', 'title', 'description', 'primaryButton', 'secondaryButton',
+      'sec01Eyebrow', 'sec01Title', 'sec01Sub',
+      'sec02Eyebrow', 'sec02Title',
+      'sec03Eyebrow', 'sec03Title',
+      'exploreAllButton', 'languageListButton'
+    ];
     const status = document.getElementById('status');
     const form = document.getElementById('cmsForm');
 
