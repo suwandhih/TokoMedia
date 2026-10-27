@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -181,7 +183,9 @@ fun SpatialHomeScreen(
                             color = TokoGreen,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            letterSpacing = 1.sp
+                            letterSpacing = 1.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
 
@@ -212,7 +216,7 @@ fun SpatialHomeScreen(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(46.dp)
+                            .heightIn(min = 46.dp)
                     ) {
                         Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(6.dp))
@@ -220,7 +224,9 @@ fun SpatialHomeScreen(
                             text = cmsContent.primaryButton,
                             color = Color.White,
                             fontSize = 13.5.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
 
@@ -240,7 +246,10 @@ fun SpatialHomeScreen(
                             text = "${cmsContent.secondaryButton} ",
                             color = TokoText,
                             fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false)
                         )
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowForward,
@@ -351,14 +360,16 @@ fun SpatialHomeScreen(
                                 .clip(RoundedCornerShape(999.dp))
                                 .background(if (langMode == LangViewMode.AZ) TokoGreen else Color.Transparent)
                                 .clickable { langMode = LangViewMode.AZ }
-                                .padding(horizontal = 14.dp, vertical = 6.dp),
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = "Indeks A–Z",
                                 color = if (langMode == LangViewMode.AZ) Color.White else TokoMuted,
                                 fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                softWrap = false
                             )
                         }
 
@@ -367,14 +378,16 @@ fun SpatialHomeScreen(
                                 .clip(RoundedCornerShape(999.dp))
                                 .background(if (langMode == LangViewMode.BUBBLES) TokoGreen else Color.Transparent)
                                 .clickable { langMode = LangViewMode.BUBBLES }
-                                .padding(horizontal = 14.dp, vertical = 6.dp),
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = "Galeri Ikon",
                                 color = if (langMode == LangViewMode.BUBBLES) Color.White else TokoMuted,
                                 fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                softWrap = false
                             )
                         }
                     }
@@ -405,20 +418,24 @@ fun SpatialHomeScreen(
                                 )
                             }
                             Spacer(Modifier.width(12.dp))
-                            Column {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "BAHASA BERAWALAN HURUF $selectedLetter",
                                     color = TokoGreen,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.ExtraBold,
-                                    letterSpacing = 1.sp
+                                    letterSpacing = 1.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                                 Spacer(Modifier.height(2.dp))
                                 Text(
                                     text = "${filteredLanguages.size} Bahasa Tersedia",
                                     color = TokoText,
                                     fontSize = 18.sp,
-                                    fontWeight = FontWeight.ExtraBold
+                                    fontWeight = FontWeight.ExtraBold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
                         }
@@ -452,21 +469,26 @@ fun SpatialHomeScreen(
 
                         Spacer(Modifier.height(16.dp))
 
-                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            filteredLanguages.chunked(2).forEach { pair ->
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                                ) {
-                                    pair.forEach { lang ->
-                                        AzLanguageCard(
-                                            language = lang,
-                                            modifier = Modifier.weight(1f)
-                                        ) {
-                                            onTargetClick(Target.Videos(lang.slug))
+                        // Di layar sempit nama bahasa panjang tidak muat 2 kolom,
+                        // jadi grid turun menjadi 1 kolom agar nama tetap utuh.
+                        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                            val columns = if (maxWidth < 340.dp) 1 else 2
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                filteredLanguages.chunked(columns).forEach { group ->
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                                    ) {
+                                        group.forEach { lang ->
+                                            AzLanguageCard(
+                                                language = lang,
+                                                modifier = Modifier.weight(1f)
+                                            ) {
+                                                onTargetClick(Target.Videos(lang.slug))
+                                            }
                                         }
+                                        repeat(columns - group.size) { Spacer(Modifier.weight(1f)) }
                                     }
-                                    if (pair.size < 2) Spacer(Modifier.weight(1f))
                                 }
                             }
                         }
@@ -561,14 +583,17 @@ fun SpatialHomeScreen(
                         }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+                            modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = "Jelajahi Semua Koleksi per Wilayah ",
                                 color = TokoText,
                                 fontSize = 13.5.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f, fill = false)
                             )
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
@@ -652,15 +677,20 @@ private fun VerticalVideoBentoCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f, fill = false)
+                ) {
                     Text(
                         text = "Tokomedia",
                         color = TokoGreen,
                         fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        softWrap = false
                     )
                     Spacer(Modifier.width(3.dp))
                     Text(
@@ -674,7 +704,10 @@ private fun VerticalVideoBentoCard(
                 Text(
                     text = "${video.watchcounter} views • ${video.dateschedule.orEmpty()}",
                     color = TokoMuted,
-                    fontSize = 11.sp
+                    fontSize = 11.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
             }
         }
@@ -689,7 +722,7 @@ private fun AzLanguageCard(
 ) {
     Surface(
         modifier = modifier
-            .height(58.dp)
+            .heightIn(min = 58.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(14.dp),
         color = Color(0xFFF8FAFC),
@@ -697,10 +730,10 @@ private fun AzLanguageCard(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 10.dp, vertical = 6.dp),
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -727,7 +760,8 @@ private fun AzLanguageCard(
                     fontSize = 12.5.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
                 )
             }
             Icon(
@@ -754,7 +788,7 @@ private fun FullWidthBentoCard(category: BentoCategory, onClick: () -> Unit) {
         Column {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
@@ -768,6 +802,7 @@ private fun FullWidthBentoCard(category: BentoCategory, onClick: () -> Unit) {
                 }
                 Box(
                     modifier = Modifier
+                        .weight(1f, fill = false)
                         .clip(RoundedCornerShape(99.dp))
                         .background(Color.White)
                         .padding(horizontal = 10.dp, vertical = 4.dp)
@@ -777,7 +812,10 @@ private fun FullWidthBentoCard(category: BentoCategory, onClick: () -> Unit) {
                         color = TokoText,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 0.8.sp
+                        letterSpacing = 0.8.sp,
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
@@ -801,20 +839,25 @@ private fun FullWidthBentoCard(category: BentoCategory, onClick: () -> Unit) {
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = category.countLabel,
                     color = category.accentColor,
                     fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
                 Text(
                     text = "Daftar Bahasa ›",
                     color = TokoText,
-                    fontSize = 12.5.sp,
-                    fontWeight = FontWeight.Bold
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    softWrap = false
                 )
             }
         }
@@ -835,13 +878,13 @@ private fun MiniBentoCard(category: BentoCategory, modifier: Modifier, onClick: 
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .size(34.dp)
-                        .clip(RoundedCornerShape(10.dp))
+                        .size(30.dp)
+                        .clip(RoundedCornerShape(9.dp))
                         .background(category.iconBg),
                     contentAlignment = Alignment.Center
                 ) {
@@ -851,20 +894,23 @@ private fun MiniBentoCard(category: BentoCategory, modifier: Modifier, onClick: 
                         "app" -> Icons.Filled.PhoneAndroid
                         else -> Icons.Filled.VideoLibrary
                     }
-                    Icon(icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
+                    Icon(icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                 }
                 Box(
                     modifier = Modifier
+                        .weight(1f, fill = false)
                         .clip(RoundedCornerShape(99.dp))
                         .background(Color.White)
-                        .padding(horizontal = 7.dp, vertical = 3.dp)
+                        .padding(horizontal = 5.dp, vertical = 3.dp)
                 ) {
                     Text(
                         text = category.badge,
                         color = TokoText,
-                        fontSize = 8.5.sp,
+                        fontSize = 7.5.sp,
                         fontWeight = FontWeight.Bold,
-                        maxLines = 1
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
@@ -898,14 +944,17 @@ private fun MiniBentoCard(category: BentoCategory, modifier: Modifier, onClick: 
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = category.countLabel,
                     color = category.accentColor,
                     fontSize = 10.5.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
                 Text(text = "›", color = TokoText, fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }

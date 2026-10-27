@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -227,72 +228,100 @@ fun VideoDetailScreen(
 
                         Spacer(Modifier.height(14.dp))
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(36.dp)
-                                        .clip(CircleShape)
-                                        .background(TokoGreen),
-                                    contentAlignment = Alignment.Center
+                        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                            // Di layar sempit tombol Suka turun ke baris berikutnya agar nama kanal tetap utuh.
+                            val stackActions = maxWidth < 330.dp
+
+                            val channelInfo: @Composable (Modifier) -> Unit = { infoModifier ->
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = infoModifier
                                 ) {
-                                    Text("⌂", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                                }
-                                Spacer(Modifier.width(8.dp))
-                                Column {
-                                    Text(
-                                        text = "Tokomedia ✔",
-                                        color = TokoGreen,
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        text = "Publikasi ${item.dateschedule.orEmpty()}",
-                                        color = TokoMuted,
-                                        fontSize = 11.sp
-                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .size(36.dp)
+                                            .clip(CircleShape)
+                                            .background(TokoGreen),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text("⌂", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                                    }
+                                    Spacer(Modifier.width(8.dp))
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = "Tokomedia ✔",
+                                            color = TokoGreen,
+                                            fontSize = 13.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                        Text(
+                                            text = "Publikasi ${item.dateschedule.orEmpty()}",
+                                            color = TokoMuted,
+                                            fontSize = 11.sp,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
                                 }
                             }
 
-                            Surface(
-                                shape = RoundedCornerShape(99.dp),
-                                color = if (isLiked) Color(0xFFE11D48) else Color.White,
-                                border = BorderStroke(1.dp, Color(0xFFE11D48)),
-                                shadowElevation = 1.dp,
-                                modifier = Modifier.clickable {
-                                    if (!isLiked) {
-                                        isLiked = true
-                                        likeCount += 1
-                                        scope.launch {
-                                            val likeRes = repository.likeVideo(item.id)
-                                            if (likeRes.isSuccess && (likeRes.getOrNull() ?: 0L) > 0L) {
-                                                likeCount = likeRes.getOrNull()!!
+                            val likeButton: @Composable () -> Unit = {
+                                Surface(
+                                    shape = RoundedCornerShape(99.dp),
+                                    color = if (isLiked) Color(0xFFE11D48) else Color.White,
+                                    border = BorderStroke(1.dp, Color(0xFFE11D48)),
+                                    shadowElevation = 1.dp,
+                                    modifier = Modifier.clickable {
+                                        if (!isLiked) {
+                                            isLiked = true
+                                            likeCount += 1
+                                            scope.launch {
+                                                val likeRes = repository.likeVideo(item.id)
+                                                if (likeRes.isSuccess && (likeRes.getOrNull() ?: 0L) > 0L) {
+                                                    likeCount = likeRes.getOrNull()!!
+                                                }
                                             }
                                         }
                                     }
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Favorite,
+                                            contentDescription = "Suka",
+                                            tint = if (isLiked) Color.White else Color(0xFFE11D48),
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                        Spacer(Modifier.width(6.dp))
+                                        Text(
+                                            text = if (likeCount > 0) "Suka · $likeCount" else "Suka",
+                                            color = if (isLiked) Color.White else Color(0xFFE11D48),
+                                            fontSize = 12.5.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            maxLines = 1,
+                                            softWrap = false
+                                        )
+                                    }
                                 }
-                            ) {
+                            }
+
+                            if (stackActions) {
+                                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    channelInfo(Modifier.fillMaxWidth())
+                                    likeButton()
+                                }
+                            } else {
                                 Row(
-                                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Favorite,
-                                        contentDescription = "Suka",
-                                        tint = if (isLiked) Color.White else Color(0xFFE11D48),
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                    Spacer(Modifier.width(6.dp))
-                                    Text(
-                                        text = if (likeCount > 0) "Suka · $likeCount" else "Suka",
-                                        color = if (isLiked) Color.White else Color(0xFFE11D48),
-                                        fontSize = 12.5.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                                    channelInfo(Modifier.weight(1f))
+                                    likeButton()
                                 }
                             }
                         }

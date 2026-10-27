@@ -6,6 +6,10 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
+// Batas atas skala font sistem. Di atas nilai ini tata letak Spatial Bento
+// (dock, header, kartu bento) mulai tumpang tindih pada layar sempit.
+const val MAX_FONT_SCALE = 1.3f
+
 // TokoMedia Spatial Bento Palette (Sesuai index.html Mode HP 430px)
 val TokoGreen = Color(0xFF059669)
 val TokoGreenLight = Color(0xFF10B981)

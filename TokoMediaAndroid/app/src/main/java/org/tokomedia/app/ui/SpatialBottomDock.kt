@@ -8,10 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -67,7 +67,7 @@ fun SpatialBottomDock(
             modifier = Modifier
                 .widthIn(max = 410.dp)
                 .fillMaxWidth()
-                .height(56.dp),
+                .heightIn(min = 56.dp),
             shape = RoundedCornerShape(999.dp),
             color = MaterialTheme.colorScheme.surface.copy(alpha = 0.97f),
             shadowElevation = 10.dp,
@@ -75,7 +75,7 @@ fun SpatialBottomDock(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -85,10 +85,10 @@ fun SpatialBottomDock(
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight()
                             .clip(RoundedCornerShape(999.dp))
                             .background(if (isSelected) TokoGreen else Color.Transparent)
-                            .clickable { onTabSelected(tab) },
+                            .clickable { onTabSelected(tab) }
+                            .padding(vertical = 6.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Column(
@@ -107,7 +107,9 @@ fun SpatialBottomDock(
                                 color = if (isSelected) Color.White else TokoMuted,
                                 fontSize = 10.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
-                                maxLines = 1
+                                maxLines = 1,
+                                softWrap = false,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     }

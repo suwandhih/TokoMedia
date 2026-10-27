@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -51,6 +52,10 @@ fun SpatialTopBar(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.95f))
     ) {
+        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        // Tombol aksi mengecil di layar sempit agar logo tetap punya ruang.
+        val actionSize = if (maxWidth < 360.dp) 36.dp else 42.dp
+        val actionIcon = if (maxWidth < 360.dp) 18.dp else 20.dp
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -61,7 +66,7 @@ fun SpatialTopBar(
             IconButton(
                 onClick = onMenuClick,
                 modifier = Modifier
-                    .size(42.dp)
+                    .size(actionSize)
                     .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.surface)
             ) {
@@ -69,17 +74,17 @@ fun SpatialTopBar(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = "Menu",
                     tint = TokoText,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(actionIcon)
                 )
             }
 
             // Tombol Back (muncul jika canGoBack true, sama seperti screenshot)
             if (canGoBack) {
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(4.dp))
                 IconButton(
                     onClick = onBackClick,
                     modifier = Modifier
-                        .size(42.dp)
+                        .size(actionSize)
                         .clip(RoundedCornerShape(12.dp))
                         .background(MaterialTheme.colorScheme.surface)
                 ) {
@@ -87,73 +92,78 @@ fun SpatialTopBar(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Kembali",
                         tint = TokoText,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(actionIcon)
                     )
                 }
             }
 
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(8.dp))
 
             // Logo TokoMedia Resmi + Tagline MEDIA NUSANTARA
+            // Ukuran logo dihitung dari lebar tersedia agar tidak terpotong di layar sempit.
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .clickable { onHomeClick() }
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    // Ikon Toko Miniatur Hijau
-                    Box(
-                        modifier = Modifier
-                            .size(22.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(TokoGreen),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("⌂", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                    }
-                    Spacer(Modifier.width(5.dp))
-                    Text("T", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
-                    Text("O", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
-                    Text("K", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
-                    Spacer(Modifier.width(2.dp))
-                    // Tombol Play Hijau
-                    Box(
-                        modifier = Modifier
-                            .size(15.dp)
-                            .clip(CircleShape)
-                            .background(TokoGreen),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size(10.dp))
-                    }
-                    Spacer(Modifier.width(2.dp))
-                    Text("M", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
-                    Text("E", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
-                    Text("D", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
-                    Spacer(Modifier.width(2.dp))
-                    // Pause Bar Hijau
-                    Row {
-                        Box(modifier = Modifier.width(3.dp).height(12.dp).background(TokoGreen, RoundedCornerShape(1.dp)))
+                BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                    val logoFont = ((maxWidth.value - 58f) / 6.9f).coerceIn(9f, 16f)
+                    val markSize = (logoFont * 1.4f).dp
+                    Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        // Ikon Toko Miniatur Hijau
+                        Box(
+                            modifier = Modifier
+                                .size(markSize)
+                                .clip(RoundedCornerShape(4.dp))
+                                .background(TokoGreen),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("⌂", color = Color.White, fontSize = (logoFont * 0.8f).sp, fontWeight = FontWeight.Bold)
+                        }
+                        Spacer(Modifier.width(5.dp))
+                        Text("TOK", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = logoFont.sp, maxLines = 1, softWrap = false)
                         Spacer(Modifier.width(2.dp))
-                        Box(modifier = Modifier.width(3.dp).height(12.dp).background(TokoGreen, RoundedCornerShape(1.dp)))
+                        // Tombol Play Hijau
+                        Box(
+                            modifier = Modifier
+                                .size((logoFont * 0.95f).dp)
+                                .clip(CircleShape)
+                                .background(TokoGreen),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size((logoFont * 0.62f).dp))
+                        }
+                        Spacer(Modifier.width(2.dp))
+                        Text("MED", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = logoFont.sp, maxLines = 1, softWrap = false)
+                        Spacer(Modifier.width(2.dp))
+                        // Pause Bar Hijau
+                        Row {
+                            Box(modifier = Modifier.width(3.dp).height((logoFont * 0.75f).dp).background(TokoGreen, RoundedCornerShape(1.dp)))
+                            Spacer(Modifier.width(2.dp))
+                            Box(modifier = Modifier.width(3.dp).height((logoFont * 0.75f).dp).background(TokoGreen, RoundedCornerShape(1.dp)))
+                        }
+                        Spacer(Modifier.width(2.dp))
+                        Text("A", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = logoFont.sp, maxLines = 1, softWrap = false)
                     }
-                    Spacer(Modifier.width(2.dp))
-                    Text("A", color = TokoText, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
+                    Text(
+                        text = "MEDIA NUSANTARA",
+                        color = TokoMuted,
+                        fontSize = (logoFont * 0.47f).coerceAtLeast(6f).sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = (logoFont * 0.1f).sp,
+                        maxLines = 1,
+                        softWrap = false
+                    )
+                    }
                 }
-                Text(
-                    text = "MEDIA NUSANTARA",
-                    color = TokoMuted,
-                    fontSize = 7.5.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.6.sp
-                )
             }
 
             // Tombol Search
             IconButton(
                 onClick = onSearchClick,
                 modifier = Modifier
-                    .size(42.dp)
+                    .size(actionSize)
                     .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.surface)
             ) {
@@ -161,17 +171,17 @@ fun SpatialTopBar(
                     imageVector = Icons.Filled.Search,
                     contentDescription = "Cari",
                     tint = TokoMuted,
-                    modifier = Modifier.size(19.dp)
+                    modifier = Modifier.size(actionIcon)
                 )
             }
 
-            Spacer(Modifier.width(6.dp))
+            Spacer(Modifier.width(2.dp))
 
             // Tombol Tema Light
             IconButton(
                 onClick = onThemeToggle,
                 modifier = Modifier
-                    .size(42.dp)
+                    .size(actionSize)
                     .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.surface)
             ) {
@@ -179,9 +189,10 @@ fun SpatialTopBar(
                     imageVector = if (isDarkTheme) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
                     contentDescription = if (isDarkTheme) "Mode terang" else "Mode gelap",
                     tint = TokoMuted,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(actionIcon)
                 )
             }
+        }
         }
 
         // Ribbon Status Breadcrumbs Dinamis (Identik index.html & Screenshot)
