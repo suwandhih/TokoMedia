@@ -10,6 +10,10 @@ import androidx.compose.ui.graphics.Color
 // (dock, header, kartu bento) mulai tumpang tindih pada layar sempit.
 const val MAX_FONT_SCALE = 1.3f
 
+// Rasio lebar:tinggi gambar logo TokoMedia (ic_tm_brand.png = 1162 x 308).
+// Dipakai untuk menghitung lebar logo dari tinggi yang dipatok.
+const val BRAND_LOGO_ASPECT = 1162f / 308f
+
 // TokoMedia Spatial Bento Palette (Sesuai index.html Mode HP 430px)
 val TokoGreen = Color(0xFF059669)
 val TokoGreenLight = Color(0xFF10B981)
