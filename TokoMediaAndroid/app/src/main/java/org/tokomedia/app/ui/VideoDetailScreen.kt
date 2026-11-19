@@ -1,5 +1,6 @@
 package org.tokomedia.app.ui
 
+import android.net.Uri
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.OptIn
@@ -52,12 +53,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
@@ -66,6 +71,25 @@ import org.tokomedia.app.R
 import org.tokomedia.app.data.api.VideoDetailDto
 import org.tokomedia.app.data.api.VideoDto
 import org.tokomedia.app.data.repository.TokoMediaRepository
+
+// API mengirim path HLS dengan spasi mentah; Media3 menolak URI seperti itu.
+private fun encodeSourceUrl(raw: String): String = raw.replace(" ", "%20")
+
+private fun buildPlayerErrorMessage(error: PlaybackException): String {
+    val httpCode = (error.cause as? HttpDataSource.InvalidResponseCodeException)?.responseCode?.toString()
+        ?: Regex("\\b(4\\d{2}|5\\d{2})\\b").find(error.message.orEmpty())?.value
+    return when (error.errorCode) {
+        PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS ->
+            if (httpCode != null) "Video belum tersedia di server (kode $httpCode)."
+            else "Video belum tersedia di server."
+        PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND ->
+            "File video tidak ditemukan di server."
+        PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
+        PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT ->
+            "Tidak ada koneksi internet. Periksa jaringan Anda."
+        else -> "Video gagal diputar."
+    }
+}
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -86,6 +110,10 @@ fun VideoDetailScreen(
     var isLiked by remember { mutableStateOf(false) }
     var likeCount by remember { mutableStateOf(0L) }
 
+        // Status pemutar: pesan galat HLS dan penghitung percobaan ulang
+        var playerError by remember { mutableStateOf<String?>(null) }
+        var retryCount by remember { mutableStateOf(0) }
+
     // Form Tanggapan Anda
     var formName by remember { mutableStateOf("") }
     var formEmail by remember { mutableStateOf("") }
@@ -100,14 +128,22 @@ fun VideoDetailScreen(
     }
 
     DisposableEffect(exoPlayer) {
+            val listener = object : Player.Listener {
+                override fun onPlayerError(error: PlaybackException) {
+                    playerError = buildPlayerErrorMessage(error)
+                }
+            }
+            exoPlayer.addListener(listener)
         onDispose {
+                exoPlayer.removeListener(listener)
             exoPlayer.release()
         }
     }
 
-    LaunchedEffect(videoId) {
+        LaunchedEffect(videoId, retryCount) {
         isLoading = true
         errorMessage = null
+            playerError = null
         val result = repository.getVideoDetail(videoId)
         if (result.isSuccess) {
             val data = result.getOrNull()
@@ -116,10 +152,11 @@ fun VideoDetailScreen(
                 likeCount = data.favcounter
                 relatedVideos = data.recomended.orEmpty()
                 if (data.source.isNotEmpty()) {
-                    val mediaItem = MediaItem.fromUri(data.source)
-                    exoPlayer.setMediaItem(mediaItem)
+                        exoPlayer.setMediaItem(MediaItem.fromUri(Uri.parse(encodeSourceUrl(data.source))))
                     exoPlayer.prepare()
                     exoPlayer.playWhenReady = true
+                    } else {
+                        playerError = "Link video tidak tersedia untuk tayangan ini."
                 }
             } else {
                 errorMessage = "Detail tayangan tidak tersedia. Silakan kembali dan coba lagi."
@@ -153,6 +190,24 @@ fun VideoDetailScreen(
         ) {
             if (isLoading) {
                 CircularProgressIndicator(color = TokoGreen)
+                        } else if (playerError != null) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                Text(
+                                    text = playerError.orEmpty(),
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    textAlign = TextAlign.Center
+                                )
+                                Button(
+                                    onClick = { retryCount++ },
+                                    modifier = Modifier.padding(top = 12.dp)
+                                ) {
+                                    Text("Coba Lagi")
+                                }
+                            }
             } else if (errorMessage != null) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(16.dp)) {
                     Text(
